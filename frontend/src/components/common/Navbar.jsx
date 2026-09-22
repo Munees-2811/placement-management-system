@@ -47,8 +47,14 @@ const Navbar = () => {
               <div className="hidden sm:flex items-center gap-2 px-2 text-xs">
                 <span className="text-slate-400">Hi,</span>
                 <span className="font-semibold text-slate-200">{user?.name}</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  {user?.role}
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${
+                  user?.role === 'ADMIN'
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                    : user?.role === 'PLACEMENT_OFFICER'
+                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                    : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
+                }`}>
+                  {user?.role?.replace('_', ' ')}
                 </span>
               </div>
 

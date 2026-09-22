@@ -8,7 +8,7 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    role: 'student',
+    role: 'STUDENT',
   });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -147,10 +147,9 @@ const Register = () => {
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm cursor-pointer"
                 >
-                  <option value="student">Student</option>
-                  <option value="tpo">Training & Placement Officer (TPO)</option>
-                  <option value="company">Recruiting Company / Employer</option>
-                  <option value="admin">Administrator</option>
+                  <option value="STUDENT">Student</option>
+                  <option value="PLACEMENT_OFFICER">Placement Officer</option>
+                  <option value="ADMIN">Administrator</option>
                 </select>
               </div>
             </div>

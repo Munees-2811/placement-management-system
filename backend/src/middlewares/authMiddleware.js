@@ -30,11 +30,13 @@ export const protect = async (req, res, next) => {
 };
 
 export const authorizeRoles = (...roles) => {
+  const normalizedRoles = roles.map((r) => r.toUpperCase());
   return (req, res, next) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+    const userRole = req.user?.role?.toUpperCase();
+    if (!req.user || !normalizedRoles.includes(userRole)) {
       return res.status(403).json({
         success: false,
-        message: `Role (${req.user?.role}) is not authorized to access this resource`,
+        message: `Role (${req.user?.role || 'UNKNOWN'}) is not authorized to access this resource`,
       });
     }
     next();

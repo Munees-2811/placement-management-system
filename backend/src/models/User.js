@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { localUserStore } from './userStore.js';
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,8 +29,10 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['student', 'tpo', 'company', 'admin'],
-      default: 'student',
+      enum: ['STUDENT', 'PLACEMENT_OFFICER', 'ADMIN'],
+      default: 'STUDENT',
+      uppercase: true,
+      trim: true,
     },
   },
   {
@@ -53,6 +56,34 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const MongooseUser = mongoose.model('User', userSchema);
+
+// Hybrid User Model: Uses MongoDB when connected, transparently uses localUserStore when MongoDB is offline
+const User = {
+  get schema() {
+    return MongooseUser.schema;
+  },
+
+  findOne(...args) {
+    if (mongoose.connection.readyState === 1) {
+      return MongooseUser.findOne(...args);
+    }
+    return localUserStore.findOne(...args);
+  },
+
+  findById(...args) {
+    if (mongoose.connection.readyState === 1) {
+      return MongooseUser.findById(...args);
+    }
+    return localUserStore.findById(...args);
+  },
+
+  create(...args) {
+    if (mongoose.connection.readyState === 1) {
+      return MongooseUser.create(...args);
+    }
+    return localUserStore.create(...args);
+  },
+};
 
 export default User;

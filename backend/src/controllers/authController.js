@@ -31,8 +31,9 @@ export const registerUser = async (req, res, next) => {
     }
 
     // Role safety check - allowed roles
-    const validRoles = ['student', 'tpo', 'company', 'admin'];
-    const assignedRole = role && validRoles.includes(role) ? role : 'student';
+    const validRoles = ['STUDENT', 'PLACEMENT_OFFICER', 'ADMIN'];
+    const normalizedRole = role ? role.toUpperCase() : 'STUDENT';
+    const assignedRole = validRoles.includes(normalizedRole) ? normalizedRole : 'STUDENT';
 
     const user = await User.create({
       name,

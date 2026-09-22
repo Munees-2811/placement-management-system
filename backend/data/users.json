@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "6ab2ad6b0c830a4e4924efed",
+    "name": "Munees Munees",
+    "email": "munees7539@gmail.com",
+    "password": "$2a$10$yK9HwLdrg8H12RUi/2aTg.Urt4UfT7/aVgRYM9BYMRMzU.bN2OCvu",
+    "role": "STUDENT",
+    "createdAt": "2026-09-22T16:31:39.885Z",
+    "updatedAt": "2026-09-22T16:31:39.885Z"
+  },
+  {
+    "_id": "6ab2ade56ecf36b6732cdaa2",
+    "name": "senthil",
+    "email": "senthil34@gmail.com",
+    "password": "$2a$10$SC2LdOdmIRZOA4I6EF4WJeSaYJeqp0TvOzB8Gh/R9Xh5gJygWMYq2",
+    "role": "ADMIN",
+    "createdAt": "2026-09-22T16:33:41.952Z",
+    "updatedAt": "2026-09-22T16:33:41.952Z"
+  }
+]

@@ -20,6 +20,22 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/officer-portal"
+        element={
+          <ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin-portal"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
       {/* Catch-all fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

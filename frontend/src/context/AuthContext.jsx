@@ -11,6 +11,13 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(true);
 
+  const logout = React.useCallback(() => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }, []);
+
   // Sync / verify user session on mount
   useEffect(() => {
     const verifyUser = async () => {
@@ -30,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     verifyUser();
-  }, [token]);
+  }, [token, logout]);
 
   const login = async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
@@ -50,13 +57,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', userToken);
     localStorage.setItem('user', JSON.stringify(userData));
     return response.data;
-  };
-
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
   };
 
   return (
