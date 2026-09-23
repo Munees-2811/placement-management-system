@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { GraduationCap, LogIn, UserPlus, LogOut, LayoutDashboard } from 'lucide-react';
+import { GraduationCap, LogIn, UserPlus, LogOut, LayoutDashboard, User } from 'lucide-react';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -31,7 +31,7 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation Links */}
-        <nav className="flex items-center gap-3">
+        <nav className="flex items-center gap-2">
           {isAuthenticated ? (
             <>
               <Link
@@ -39,14 +39,24 @@ const Navbar = () => {
                 className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
               >
                 <LayoutDashboard className="w-4 h-4 text-indigo-400" />
-                <span>Dashboard</span>
+                <span className="hidden sm:inline">Dashboard</span>
               </Link>
 
-              <div className="h-5 w-px bg-slate-800 hidden sm:block" />
+              {user?.role === 'STUDENT' && (
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                >
+                  <User className="w-4 h-4 text-violet-400" />
+                  <span className="hidden sm:inline">My Profile</span>
+                </Link>
+              )}
+
+              <div className="h-5 w-px bg-slate-800 hidden sm:block mx-1" />
 
               <div className="hidden sm:flex items-center gap-2 px-2 text-xs">
                 <span className="text-slate-400">Hi,</span>
-                <span className="font-semibold text-slate-200">{user?.name}</span>
+                <span className="font-semibold text-slate-200">{user?.name?.split(' ')[0]}</span>
                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${
                   user?.role === 'ADMIN'
                     ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'

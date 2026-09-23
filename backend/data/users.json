@@ -16,5 +16,23 @@
     "role": "ADMIN",
     "createdAt": "2026-09-22T16:33:41.952Z",
     "updatedAt": "2026-09-22T16:33:41.952Z"
+  },
+  {
+    "_id": "6ab3e4a0dc4145799e8ffd70",
+    "name": "Student Tester",
+    "email": "student_tester@placement.edu",
+    "password": "$2a$10$5xdlmUeIr6ho/swHwlE1ZuYuawYv7PhemvYOKlWfDvpC/EKRQZFn.",
+    "role": "STUDENT",
+    "createdAt": "2026-09-23T14:39:28.365Z",
+    "updatedAt": "2026-09-23T14:39:28.366Z"
+  },
+  {
+    "_id": "6ab3e9f66ece8a0db15b576a",
+    "name": "anbu",
+    "email": "anbu24@gmail.com",
+    "password": "$2a$10$UXdyUdi6vSBFlfdjN1KJZeQ.1/dXmF8zCQHbeo3wNgQ6dx8pDO0E2",
+    "role": "PLACEMENT_OFFICER",
+    "createdAt": "2026-09-23T15:02:14.454Z",
+    "updatedAt": "2026-09-23T15:02:14.454Z"
   }
 ]

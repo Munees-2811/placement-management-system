@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
+import studentProfileRoutes from './routes/studentProfileRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 const app = express();
@@ -29,8 +30,14 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.send('Student Placement Management System API is running successfully.');
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/student/profile', studentProfileRoutes);
 
 // Error Middlewares
 app.use(notFound);

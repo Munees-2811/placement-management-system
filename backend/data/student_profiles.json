@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "6ab3e4a0dc4145799e8ffd71",
+    "user": "6ab3e4a0dc4145799e8ffd70",
+    "phone": "+91 9123456780",
+    "department": "Information Technology",
+    "batch": "2023-2027",
+    "cgpa": 9.15,
+    "bio": "Passionate full-stack developer eager to learn and build modern scalable apps.",
+    "skills": [
+      "React",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "TailwindCSS",
+      "TypeScript"
+    ],
+    "projects": [],
+    "certifications": [],
+    "resume": {
+      "url": "https://storage.example.com/resumes/student_tester_cv.pdf",
+      "fileName": "Student_Tester_Resume.pdf",
+      "updatedAt": "2026-09-23T14:39:28.390Z"
+    },
+    "createdAt": "2026-09-23T14:39:28.372Z",
+    "updatedAt": "2026-09-23T14:39:28.390Z"
+  },
+  {
+    "_id": "6ab3e8de32ba36cf8544dba8",
+    "user": "6ab2ad6b0c830a4e4924efed",
+    "phone": "+917539956534",
+    "department": "Data Science and Artificial Intelligence",
+    "batch": "2024-2028",
+    "cgpa": 8.5,
+    "bio": "",
+    "skills": [
+      "Python",
+      "Java",
+      "Git",
+      "REST APIs",
+      "Data Structures",
+      "React",
+      "Node.js",
+      "Express.js",
+      "MongoDB"
+    ],
+    "projects": [],
+    "certifications": [],
+    "resume": {
+      "url": "",
+      "fileName": "",
+      "updatedAt": null
+    },
+    "createdAt": "2026-09-23T14:57:34.524Z",
+    "updatedAt": "2026-09-23T14:59:38.771Z"
+  }
+]
