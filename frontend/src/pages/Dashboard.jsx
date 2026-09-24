@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getStudentProfile,
@@ -43,6 +44,7 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  Building2,
 } from 'lucide-react';
 
 const getRoleBadgeClasses = (role) => {
@@ -321,6 +323,14 @@ const StudentDashboard = () => {
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-center">
+            <Link
+              to="/companies"
+              id="student-dashboard-companies-btn"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-medium transition-colors shadow-sm"
+            >
+              <Building2 className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Companies</span>
+            </Link>
             <button
               onClick={fetchProfile}
               disabled={loadingProfile}
@@ -610,6 +620,14 @@ const OfficerAdminDashboard = () => {
             <p className="text-slate-400 text-sm">Placement Management System Portal • Authenticated via JWT</p>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-center">
+            <Link
+              to="/companies"
+              id="officer-dashboard-companies-btn"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all shadow-md shadow-indigo-600/20"
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Manage Companies</span>
+            </Link>
             <button onClick={testApiConnection} disabled={checkingHealth} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors shadow-sm disabled:opacity-50">
               <RefreshCw className={`w-3.5 h-3.5 ${checkingHealth ? 'animate-spin' : ''}`} />
               Test API

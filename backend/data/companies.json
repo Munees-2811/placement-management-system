@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "7bc1001a1c920b5e4835a001",
+    "companyName": "Google",
+    "industry": "Technology & Cloud Computing",
+    "location": "Bengaluru, Karnataka, India",
+    "website": "https://careers.google.com",
+    "description": "Google LLC is an American multinational technology company focusing on search engine technology, online advertising, cloud computing, computer software, and artificial intelligence.",
+    "contactPerson": "Priya Sharma (University Relations Lead)",
+    "contactEmail": "priya.sharma@google.com",
+    "createdAt": "2026-09-20T10:00:00.000Z",
+    "updatedAt": "2026-09-20T10:00:00.000Z"
+  },
+  {
+    "_id": "7bc1002b2d931c6f5946b002",
+    "companyName": "Microsoft",
+    "industry": "Software & Productivity",
+    "location": "Hyderabad, Telangana, India",
+    "website": "https://careers.microsoft.com",
+    "description": "Microsoft Corporation develops, licenses, and supports a wide range of software products, services, and devices, empowering every person and organization on the planet to achieve more.",
+    "contactPerson": "Rajesh Varma (Campus Recruitment Head)",
+    "contactEmail": "rajesh.varma@microsoft.com",
+    "createdAt": "2026-09-21T11:30:00.000Z",
+    "updatedAt": "2026-09-21T11:30:00.000Z"
+  },
+  {
+    "_id": "7bc1003c3e942d7a6057c003",
+    "companyName": "Amazon Web Services",
+    "industry": "Cloud Infrastructure & E-Commerce",
+    "location": "Chennai, Tamil Nadu, India",
+    "website": "https://aws.amazon.com",
+    "description": "Amazon Web Services provides on-demand cloud computing platforms and APIs to individuals, companies, and governments, on a metered pay-as-you-go basis.",
+    "contactPerson": "Deepa Nambiar (Talent Acquisition Specialist)",
+    "contactEmail": "nambiar.deepa@amazon.com",
+    "createdAt": "2026-09-22T09:15:00.000Z",
+    "updatedAt": "2026-09-22T09:15:00.000Z"
+  },
+  {
+    "_id": "7bc1004d4f953e8b7168d004",
+    "companyName": "Zoho Corporation",
+    "industry": "SaaS & Enterprise Applications",
+    "location": "Chennai, Tamil Nadu, India",
+    "website": "https://www.zoho.com",
+    "description": "Zoho Corporation is an Indian multinational technology company that makes computer software and web-based business tools including CRM, office suite, and enterprise cloud solutions.",
+    "contactPerson": "Karthik Subramanian (Placement Liaison)",
+    "contactEmail": "karthik.s@zohocorp.com",
+    "createdAt": "2026-09-23T14:20:00.000Z",
+    "updatedAt": "2026-09-23T14:20:00.000Z"
+  }
+]

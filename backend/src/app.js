@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
 import studentProfileRoutes from './routes/studentProfileRoutes.js';
+import companyRoutes from './routes/companyRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 const app = express();
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/student/profile', studentProfileRoutes);
+app.use('/api/companies', companyRoutes);
 
 // Error Middlewares
 app.use(notFound);

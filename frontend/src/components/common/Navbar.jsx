@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { GraduationCap, LogIn, UserPlus, LogOut, LayoutDashboard, User } from 'lucide-react';
+import { GraduationCap, LogIn, UserPlus, LogOut, LayoutDashboard, User, Building2 } from 'lucide-react';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -35,11 +35,21 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Link
+                id="nav-dashboard-link"
                 to="/dashboard"
                 className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
               >
                 <LayoutDashboard className="w-4 h-4 text-indigo-400" />
                 <span className="hidden sm:inline">Dashboard</span>
+              </Link>
+
+              <Link
+                id="nav-companies-link"
+                to="/companies"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+              >
+                <Building2 className="w-4 h-4 text-sky-400" />
+                <span className="hidden sm:inline">Companies</span>
               </Link>
 
               {user?.role === 'STUDENT' && (

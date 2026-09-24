@@ -176,7 +176,55 @@ Open your browser and navigate to: `http://localhost:5173`
 | `GET` | `/api/auth/me` | Retrieve authenticated user profile | Protected (Bearer Token) |
 
 ### Supported User Roles
-- `student` (default)
-- `tpo` (Training & Placement Officer)
-- `company` (Recruiter)
-- `admin` (System Administrator)
+- `STUDENT` (Student Candidate)
+- `PLACEMENT_OFFICER` (Placement Liaison / TPO)
+- `ADMIN` (System Administrator)
+
+---
+
+## 🏢 Company Management Module
+
+### Overview
+The **Company Management Module** allows placement departments to manage enterprise recruiters, corporate partnerships, campus recruitment contacts, and hiring guidelines.
+
+### Role-Based Access Control (RBAC) Matrix
+
+| Operation | HTTP Route | Access Level | Description |
+|---|---|---|---|
+| **List Companies** | `GET /api/companies` | `STUDENT`, `PLACEMENT_OFFICER`, `ADMIN` | View and search all partner companies |
+| **View Company** | `GET /api/companies/:id` | `STUDENT`, `PLACEMENT_OFFICER`, `ADMIN` | View full details, contacts, and overview |
+| **Create Company** | `POST /api/companies` | `PLACEMENT_OFFICER`, `ADMIN` **Only** | Register a new partner company |
+| **Edit Company** | `PUT /api/companies/:id` | `PLACEMENT_OFFICER`, `ADMIN` **Only** | Update company profile and contact details |
+| **Delete Company** | `DELETE /api/companies/:id` | `PLACEMENT_OFFICER`, `ADMIN` **Only** | Remove company from placement directory |
+
+*Note: Students have strict read-only access. Attempting to create, edit, or delete companies results in a `403 Forbidden` response.*
+
+### Company Fields & Schema
+
+- **`companyName`** *(String, Required, Indexed)*: Unique official corporate name (2 - 120 characters).
+- **`industry`** *(String, Required)*: Industry or business domain (e.g., Software & Cloud, Fintech, Automotive).
+- **`location`** *(String, Required)*: Primary corporate/campus office or recruitment location.
+- **`website`** *(String, Optional)*: Official website URL with automated prefix formatting and regex validation.
+- **`description`** *(String, Optional)*: Detailed profile of company, work culture, and recruitment overview (up to 2000 characters).
+- **`contactPerson`** *(String, Required)*: Primary HR or university recruitment liaison.
+- **`contactEmail`** *(String, Required)*: Validated corporate email address of contact person.
+- **`createdBy`** *(ObjectId Ref)*: Identifier of the admin or officer who registered the company.
+- **`createdAt` / `updatedAt`** *(Timestamps)*: Automatic Mongoose timestamps.
+
+### Frontend Features
+
+- **Responsive Company Directory (`/companies`)**:
+  - Live instantaneous search by company name, location, or keywords.
+  - Industry categorization dropdown filter.
+  - Dual layout options: **Interactive Grid Cards** and **Data-Dense Table View**.
+  - Metric counters: Total Partner Companies, Industries Represented, and Recruitment Hubs.
+- **Role-Aware UI Adaptation**:
+  - **Officer / Admin View**: Displays `+ Add Company` action, row edit/delete triggers, and direct edit shortcuts.
+  - **Student View**: Informative banner indicating read-only access, hides all mutating controls, provides direct contact person inspection and website links.
+- **Company Modal (`CompanyModal.jsx`)**:
+  - Pre-filled edit mode and fresh creation mode.
+  - Live client-side validation with real-time error messages, URL tester, and character countdown (0 / 2000).
+- **Detail Inspection Modal (`CompanyDetailModal.jsx`)**:
+  - Deep inspection modal with company monogram, industry tags, one-click email copying, and visit link.
+- **Safe Deletion (`DeleteConfirmModal.jsx`)**:
+  - Explicit confirmation modal displaying company information before permanent removal.
