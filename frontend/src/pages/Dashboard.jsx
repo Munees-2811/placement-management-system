@@ -45,6 +45,9 @@ import {
   ChevronUp,
   Loader2,
   Building2,
+  Briefcase,
+  Calendar,
+  Award,
 } from 'lucide-react';
 
 const getRoleBadgeClasses = (role) => {
@@ -323,6 +326,14 @@ const StudentDashboard = () => {
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-center">
+            <Link
+              to="/drives"
+              id="student-dashboard-drives-btn"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-xs shadow-md shadow-indigo-600/20 transition-all hover:scale-[1.02]"
+            >
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Available Drives</span>
+            </Link>
             <Link
               to="/companies"
               id="student-dashboard-companies-btn"
@@ -619,14 +630,22 @@ const OfficerAdminDashboard = () => {
             </div>
             <p className="text-slate-400 text-sm">Placement Management System Portal • Authenticated via JWT</p>
           </div>
-          <div className="flex items-center gap-2 self-start sm:self-center">
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+            <Link
+              to="/drives"
+              id="officer-dashboard-drives-btn"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-medium transition-all shadow-md shadow-indigo-600/20"
+            >
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Manage Drives</span>
+            </Link>
             <Link
               to="/companies"
               id="officer-dashboard-companies-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all shadow-md shadow-indigo-600/20"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-all shadow-sm"
             >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Manage Companies</span>
+              <Building2 className="w-3.5 h-3.5 text-sky-400" />
+              <span>Companies</span>
             </Link>
             <button onClick={testApiConnection} disabled={checkingHealth} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors shadow-sm disabled:opacity-50">
               <RefreshCw className={`w-3.5 h-3.5 ${checkingHealth ? 'animate-spin' : ''}`} />
@@ -700,6 +719,65 @@ const OfficerAdminDashboard = () => {
                 {token ? `${token.substring(0, 32)}...` : 'None'}
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Placement Operations Command Hub */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Placement Drives Card */}
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/20 shadow-xl flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-2xl bg-indigo-600/10 border border-indigo-500/30 text-indigo-400">
+                <Briefcase className="w-6 h-6" />
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                Drive Management
+              </span>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Campus Placement Drives</h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-6">
+              Create and schedule campus recruitment drives, specify academic thresholds (CGPA, allowed backlogs, eligible branches), and manage drive statuses.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/drives"
+              id="cmd-manage-drives-btn"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all hover:scale-[1.02]"
+            >
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Launch Drives Portal</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Companies Registry Card */}
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-sky-950/40 via-slate-900 to-slate-900 border border-sky-500/20 shadow-xl flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-2xl bg-sky-600/10 border border-sky-500/30 text-sky-400">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-300 border border-sky-500/20">
+                Partner Registry
+              </span>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Partner Companies Directory</h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-6">
+              Register corporate partners, maintain campus HR points-of-contact, catalog corporate websites, and manage industry domain details.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/companies"
+              id="cmd-manage-companies-btn"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold shadow-sm transition-all hover:scale-[1.02]"
+            >
+              <Building2 className="w-3.5 h-3.5 text-sky-400" />
+              <span>Manage Companies</span>
+            </Link>
           </div>
         </div>
       </div>

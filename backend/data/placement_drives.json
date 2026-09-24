@@ -1,0 +1,83 @@
+[
+  {
+    "_id": "8cd1001a1c920b5e4835b001",
+    "company": "7bc1001a1c920b5e4835a001",
+    "companyData": {
+      "companyName": "Google",
+      "industry": "Technology & Cloud Computing",
+      "location": "Bengaluru, Karnataka, India",
+      "website": "https://careers.google.com"
+    },
+    "jobRole": "Software Engineer - University Graduate",
+    "jobDescription": "Build next-generation technologies that change how millions of users connect, explore, and interact with information and one another. You will work on software development across scalable distributed systems, cloud services, and client applications.",
+    "salaryPackage": "28 LPA (Base + Benefits + Equity)",
+    "eligibleDepartments": [
+      "Computer Science and Engineering",
+      "Information Technology",
+      "Data Science & AI"
+    ],
+    "minimumCGPA": 8,
+    "maximumBacklogs": 0,
+    "graduationYear": 2026,
+    "applicationDeadline": "2026-10-15T23:59:59.000Z",
+    "driveDate": "2026-10-25T09:00:00.000Z",
+    "status": "UPCOMING",
+    "createdAt": "2026-09-22T10:00:00.000Z",
+    "updatedAt": "2026-09-22T10:00:00.000Z"
+  },
+  {
+    "_id": "8cd1002b2d931c6f5946b002",
+    "company": "7bc1002b2d931c6f5946b002",
+    "companyData": {
+      "companyName": "Microsoft",
+      "industry": "Software & Productivity",
+      "location": "Hyderabad, Telangana, India",
+      "website": "https://careers.microsoft.com"
+    },
+    "jobRole": "Cloud Solution Engineer",
+    "jobDescription": "Join our Microsoft Azure engineering team designing, implementing, and deploying enterprise-scale cloud workloads. Candidates should demonstrate sound problem solving, algorithms, and networking fundamentals.",
+    "salaryPackage": "22 LPA",
+    "eligibleDepartments": [
+      "Computer Science and Engineering",
+      "Information Technology",
+      "Electronics and Communication Engineering",
+      "Electrical and Electronics Engineering"
+    ],
+    "minimumCGPA": 7.5,
+    "maximumBacklogs": 0,
+    "graduationYear": 2026,
+    "applicationDeadline": "2026-10-10T23:59:59.000Z",
+    "driveDate": "2026-10-18T09:30:00.000Z",
+    "status": "UPCOMING",
+    "createdAt": "2026-09-23T11:00:00.000Z",
+    "updatedAt": "2026-09-23T11:00:00.000Z"
+  },
+  {
+    "_id": "8cd1003c3e942d7a6057b003",
+    "company": "7bc1004d4f953e8b7168d004",
+    "companyData": {
+      "companyName": "Zoho Corporation",
+      "industry": "SaaS & Enterprise Applications",
+      "location": "Chennai, Tamil Nadu, India",
+      "website": "https://www.zoho.com"
+    },
+    "jobRole": "Product Developer",
+    "jobDescription": "Develop high-performance enterprise applications in Zoho suite. Responsibility encompasses core full-stack application development, database indexing, user interface optimization, and security practices.",
+    "salaryPackage": "9.5 LPA",
+    "eligibleDepartments": [
+      "Computer Science and Engineering",
+      "Information Technology",
+      "Electronics and Communication Engineering",
+      "Mechanical Engineering",
+      "Civil Engineering"
+    ],
+    "minimumCGPA": 7,
+    "maximumBacklogs": 1,
+    "graduationYear": 2026,
+    "applicationDeadline": "2026-10-05T23:59:59.000Z",
+    "driveDate": "2026-10-12T10:00:00.000Z",
+    "status": "ONGOING",
+    "createdAt": "2026-09-24T09:00:00.000Z",
+    "updatedAt": "2026-09-24T09:00:00.000Z"
+  }
+]

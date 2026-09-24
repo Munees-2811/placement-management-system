@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, BookOpen, Calendar, Phone, Edit3, UserCheck, GraduationCap } from 'lucide-react';
+import { Award, BookOpen, Calendar, Phone, Edit3, UserCheck, GraduationCap, AlertTriangle } from 'lucide-react';
 
 const AcademicStatsCard = ({ profile, onEdit }) => {
   const cgpa = profile?.cgpa !== null && profile?.cgpa !== undefined ? Number(profile.cgpa).toFixed(2) : null;
@@ -42,7 +42,7 @@ const AcademicStatsCard = ({ profile, onEdit }) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* CGPA Card */}
         <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
@@ -115,6 +115,34 @@ const AcademicStatsCard = ({ profile, onEdit }) => {
               )}
             </div>
             <div className="text-[11px] text-slate-400 mt-1">Placement Alerts SMS / Call</div>
+          </div>
+        </div>
+
+        {/* Backlogs Card */}
+        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
+            <span className="flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+              Backlogs
+            </span>
+          </div>
+          <div>
+            <div className={`text-3xl font-extrabold ${
+              (profile?.backlogs ?? 0) === 0
+                ? 'text-emerald-400'
+                : (profile?.backlogs ?? 0) <= 2
+                ? 'text-amber-400'
+                : 'text-rose-400'
+            }`}>
+              {profile?.backlogs ?? 0}
+            </div>
+            <div className={`text-[11px] mt-1 ${
+              (profile?.backlogs ?? 0) === 0
+                ? 'text-emerald-500'
+                : 'text-rose-400'
+            }`}>
+              {(profile?.backlogs ?? 0) === 0 ? 'No active backlogs ✓' : 'Active arrears'}
+            </div>
           </div>
         </div>
       </div>

@@ -103,6 +103,11 @@ const studentProfileSchema = new mongoose.Schema(
       max: [10, 'CGPA cannot exceed 10.0'],
       default: null,
     },
+    backlogs: {
+      type: Number,
+      min: [0, 'Backlogs cannot be negative'],
+      default: 0,
+    },
     bio: {
       type: String,
       trim: true,

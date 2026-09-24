@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { GraduationCap, LogIn, UserPlus, LogOut, LayoutDashboard, User, Building2 } from 'lucide-react';
+import { GraduationCap, LogIn, UserPlus, LogOut, LayoutDashboard, User, Building2, Briefcase } from 'lucide-react';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -41,6 +41,15 @@ const Navbar = () => {
               >
                 <LayoutDashboard className="w-4 h-4 text-indigo-400" />
                 <span className="hidden sm:inline">Dashboard</span>
+              </Link>
+
+              <Link
+                id="nav-drives-link"
+                to="/drives"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+              >
+                <Briefcase className="w-4 h-4 text-indigo-400" />
+                <span className="hidden sm:inline">Drives</span>
               </Link>
 
               <Link

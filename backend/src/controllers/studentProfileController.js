@@ -13,6 +13,7 @@ const getOrCreateProfile = async (userId) => {
       department: '',
       batch: '',
       cgpa: null,
+      backlogs: 0,
       bio: '',
       skills: [],
       projects: [],
@@ -63,7 +64,7 @@ export const getMyProfile = async (req, res, next) => {
 // @access  Private (Authenticated)
 export const updateBasicProfile = async (req, res, next) => {
   try {
-    const { phone, department, batch, cgpa, bio } = req.body;
+    const { phone, department, batch, cgpa, backlogs, bio } = req.body;
 
     // Validate CGPA if provided
     let parsedCgpa = null;
@@ -77,12 +78,25 @@ export const updateBasicProfile = async (req, res, next) => {
       }
     }
 
+    // Validate backlogs if provided
+    let parsedBacklogs = undefined;
+    if (backlogs !== undefined && backlogs !== null && backlogs !== '') {
+      parsedBacklogs = Number(backlogs);
+      if (isNaN(parsedBacklogs) || parsedBacklogs < 0 || !Number.isInteger(parsedBacklogs)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Backlogs must be a non-negative whole number',
+        });
+      }
+    }
+
     const updates = {};
     if (phone !== undefined) updates.phone = phone.trim();
     if (department !== undefined) updates.department = department.trim();
     if (batch !== undefined) updates.batch = batch.trim();
     if (parsedCgpa !== null) updates.cgpa = parsedCgpa;
     if (cgpa === '' || cgpa === null) updates.cgpa = null;
+    if (parsedBacklogs !== undefined) updates.backlogs = parsedBacklogs;
     if (bio !== undefined) updates.bio = bio.trim();
 
     await StudentProfile.findOneAndUpdate(

@@ -22,6 +22,7 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
     department: '',
     batch: '',
     cgpa: '',
+    backlogs: '0',
     bio: '',
   });
   const [errors, setErrors] = useState({});
@@ -33,6 +34,7 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
         department: profile.department || '',
         batch: profile.batch || '',
         cgpa: profile.cgpa !== null && profile.cgpa !== undefined ? String(profile.cgpa) : '',
+        backlogs: profile.backlogs !== null && profile.backlogs !== undefined ? String(profile.backlogs) : '0',
         bio: profile.bio || '',
       });
       setErrors({});
@@ -45,6 +47,12 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
       const val = Number(form.cgpa);
       if (isNaN(val) || val < 0 || val > 10) {
         errs.cgpa = 'CGPA must be between 0.0 and 10.0';
+      }
+    }
+    if (form.backlogs !== '') {
+      const bl = Number(form.backlogs);
+      if (isNaN(bl) || bl < 0 || !Number.isInteger(bl)) {
+        errs.backlogs = 'Backlogs must be a non-negative whole number (0, 1, 2…)';
       }
     }
     if (form.bio && form.bio.length > 500) {
@@ -73,6 +81,7 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
       department: form.department.trim(),
       batch: form.batch.trim(),
       cgpa: form.cgpa !== '' ? Number(form.cgpa) : null,
+      backlogs: form.backlogs !== '' ? Number(form.backlogs) : 0,
       bio: form.bio.trim(),
     };
     onSave(payload);
@@ -192,6 +201,35 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
                 <p className="text-rose-400 text-xs mt-1">{errors.cgpa}</p>
               )}
             </div>
+          </div>
+
+          {/* Active Backlogs */}
+          <div>
+            <label htmlFor="backlogs" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <GraduationCap className="w-3.5 h-3.5 text-rose-400" />
+              Active Backlogs
+              <span className="text-slate-500 font-normal text-[10px] ml-1">(standing arrears)</span>
+            </label>
+            <input
+              id="backlogs"
+              name="backlogs"
+              type="number"
+              step="1"
+              min="0"
+              max="20"
+              value={form.backlogs}
+              onChange={handleChange}
+              placeholder="0"
+              className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all ${
+                errors.backlogs ? 'border-rose-500' : 'border-slate-800'
+              }`}
+            />
+            {errors.backlogs && (
+              <p className="text-rose-400 text-xs mt-1">{errors.backlogs}</p>
+            )}
+            <p className="text-slate-500 text-[11px] mt-1">
+              Enter 0 if you have no active backlogs. This is used for drive eligibility checks.
+            </p>
           </div>
 
           {/* Bio */}

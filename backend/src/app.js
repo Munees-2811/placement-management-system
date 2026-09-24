@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
 import studentProfileRoutes from './routes/studentProfileRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
+import placementDriveRoutes from './routes/placementDriveRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 const app = express();
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/student/profile', studentProfileRoutes);
 app.use('/api/companies', companyRoutes);
+app.use('/api/drives', placementDriveRoutes);
 
 // Error Middlewares
 app.use(notFound);
