@@ -8,6 +8,7 @@ import {
   getMyEligibility,
 } from '../api/placementDriveApi';
 import { getCompanies } from '../api/companyApi';
+import { getMyApplications, applyToPlacementDrive } from '../api/applicationApi';
 
 import DriveCard from '../components/drives/DriveCard';
 import DriveTableView from '../components/drives/DriveTableView';
@@ -15,6 +16,7 @@ import DriveModal from '../components/drives/DriveModal';
 import DriveDetailModal from '../components/drives/DriveDetailModal';
 import DeleteDriveModal from '../components/drives/DeleteDriveModal';
 import DriveFilterBar from '../components/drives/DriveFilterBar';
+import ApplyConfirmModal from '../components/applications/ApplyConfirmModal';
 
 import {
   Briefcase,
@@ -40,6 +42,12 @@ const PlacementDrives = () => {
 
   // Eligibility map: { [driveId]: EligibilityResult } — only populated for STUDENT role
   const [eligibilityMap, setEligibilityMap] = useState({});
+
+  // Applications map: { [driveId]: Application } — only populated for STUDENT role
+  const [applicationMap, setApplicationMap] = useState({});
+  const [applyModalOpen, setApplyModalOpen] = useState(false);
+  const [driveToApply, setDriveToApply] = useState(null);
+  const [applying, setApplying] = useState(false);
 
   // Filters & View State
   const [search, setSearch] = useState('');
@@ -69,7 +77,7 @@ const PlacementDrives = () => {
 
   const canManage = user?.role === 'PLACEMENT_OFFICER' || user?.role === 'ADMIN';
 
-  // Load drives and companies
+  // Load drives, companies, student eligibility & applications
   const loadData = async () => {
     try {
       setLoading(true);
@@ -78,15 +86,26 @@ const PlacementDrives = () => {
         getDrives(),
         getCompanies().catch(() => ({ data: [] })),
       ];
-      // Fetch eligibility map only for students
+      // Fetch eligibility and applications only for students
       if (user?.role === 'STUDENT') {
         promises.push(getMyEligibility().catch(() => ({ data: {} })));
+        promises.push(getMyApplications().catch(() => ({ data: [] })));
       }
       const results = await Promise.all(promises);
       setDrives(results[0].data || []);
       setCompanies(results[1].data || []);
-      if (user?.role === 'STUDENT' && results[2]) {
-        setEligibilityMap(results[2].data || {});
+      if (user?.role === 'STUDENT') {
+        if (results[2]) {
+          setEligibilityMap(results[2].data || {});
+        }
+        if (results[3]) {
+          const appMap = {};
+          (results[3].data || []).forEach((app) => {
+            const dId = app.placementDrive?._id || app.placementDrive;
+            if (dId) appMap[String(dId)] = app;
+          });
+          setApplicationMap(appMap);
+        }
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load placement drives');
@@ -186,6 +205,30 @@ const PlacementDrives = () => {
       showToast(err.response?.data?.message || err.message || 'Operation failed', 'error');
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Handle student apply action
+  const handleOpenApply = (drive) => {
+    setDriveToApply(drive);
+    setApplyModalOpen(true);
+  };
+
+  const handleConfirmApply = async ({ placementDrive, remarks }) => {
+    try {
+      setApplying(true);
+      const res = await applyToPlacementDrive({ placementDrive, remarks });
+      setApplicationMap((prev) => ({
+        ...prev,
+        [String(placementDrive)]: res.data,
+      }));
+      showToast(`Successfully applied for "${driveToApply?.jobRole || 'placement drive'}"!`);
+      setApplyModalOpen(false);
+      setDriveToApply(null);
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to submit application', 'error');
+    } finally {
+      setApplying(false);
     }
   };
 
@@ -425,6 +468,8 @@ const PlacementDrives = () => {
                 onDelete={handleOpenDelete}
                 onView={handleOpenView}
                 eligibility={eligibilityMap[drive._id] || null}
+                application={applicationMap[drive._id] || null}
+                onApply={handleOpenApply}
                 isStudent={user?.role === 'STUDENT'}
               />
             ))}
@@ -437,6 +482,8 @@ const PlacementDrives = () => {
             onDelete={handleOpenDelete}
             onView={handleOpenView}
             eligibilityMap={eligibilityMap}
+            applicationMap={applicationMap}
+            onApply={handleOpenApply}
             isStudent={user?.role === 'STUDENT'}
           />
         )}
@@ -465,6 +512,8 @@ const PlacementDrives = () => {
         canManage={canManage}
         onEdit={handleOpenEdit}
         eligibility={inspectingDrive ? eligibilityMap[inspectingDrive._id] || null : null}
+        application={inspectingDrive ? applicationMap[inspectingDrive._id] || null : null}
+        onApply={handleOpenApply}
         isStudent={user?.role === 'STUDENT'}
       />
 
@@ -477,6 +526,19 @@ const PlacementDrives = () => {
         onConfirm={handleConfirmDelete}
         drive={deletingDrive}
         deleting={deleting}
+      />
+
+      <ApplyConfirmModal
+        isOpen={applyModalOpen}
+        onClose={() => {
+          setApplyModalOpen(false);
+          setDriveToApply(null);
+        }}
+        drive={driveToApply}
+        onApply={handleConfirmApply}
+        applying={applying}
+        eligibility={driveToApply ? eligibilityMap[driveToApply._id] || null : null}
+        user={user}
       />
     </div>
   );

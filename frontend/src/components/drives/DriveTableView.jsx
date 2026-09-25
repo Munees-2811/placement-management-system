@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Building2,
   Calendar,
@@ -80,7 +81,17 @@ const EligibilityPill = ({ eligibility }) => {
   );
 };
 
-const DriveTableView = ({ drives, canManage, onEdit, onDelete, onView, eligibilityMap = {}, isStudent }) => {
+const DriveTableView = ({
+  drives,
+  canManage,
+  onEdit,
+  onDelete,
+  onView,
+  eligibilityMap = {},
+  isStudent,
+  applicationMap = {},
+  onApply,
+}) => {
   return (
     <div className="bg-slate-900/60 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
       <div className="overflow-x-auto">
@@ -100,6 +111,12 @@ const DriveTableView = ({ drives, canManage, onEdit, onDelete, onView, eligibili
             {drives.map((drive) => {
               const companyName = drive.company?.companyName || 'Corporate Partner';
               const eligibility = eligibilityMap[drive._id] || null;
+              const application = applicationMap[drive._id] || null;
+              const hasApplied = Boolean(application);
+              const isDeadlinePassed = drive.applicationDeadline
+                ? new Date(drive.applicationDeadline).getTime() < Date.now()
+                : false;
+              const canApply = isStudent && !hasApplied && eligibility?.eligible && !isDeadlinePassed;
               return (
                 <tr
                   key={drive._id}
@@ -168,10 +185,20 @@ const DriveTableView = ({ drives, canManage, onEdit, onDelete, onView, eligibili
                     </div>
                   </td>
 
-                  {/* Eligibility pill — student only column */}
+                  {/* Status / Eligibility pill — student only column */}
                   {isStudent && (
                     <td className="py-4 px-6">
-                      <EligibilityPill eligibility={eligibility} />
+                      {hasApplied ? (
+                        <Link
+                          to="/applications"
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-300 bg-sky-500/10 border border-sky-500/30 px-2.5 py-0.5 rounded-full hover:bg-sky-500/20 transition-colors"
+                        >
+                          <CheckCircle2 className="w-3 h-3 text-sky-400" />
+                          <span>Applied ({application.status})</span>
+                        </Link>
+                      ) : (
+                        <EligibilityPill eligibility={eligibility} />
+                      )}
                     </td>
                   )}
 
@@ -196,7 +223,15 @@ const DriveTableView = ({ drives, canManage, onEdit, onDelete, onView, eligibili
 
                   {/* Actions */}
                   <td className="py-4 px-6 text-right">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-1.5">
+                      {isStudent && canApply && (
+                        <button
+                          onClick={() => onApply ? onApply(drive) : onView(drive)}
+                          className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors"
+                        >
+                          Apply
+                        </button>
+                      )}
                       <button
                         id={`drive-table-view-btn-${drive._id}`}
                         onClick={() => onView(drive)}

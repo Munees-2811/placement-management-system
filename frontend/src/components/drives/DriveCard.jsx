@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Briefcase,
   Building2,
@@ -110,7 +111,7 @@ const EligibilityBanner = ({ eligibility }) => {
   );
 };
 
-const DriveCard = ({ drive, canManage, onEdit, onDelete, onView, eligibility, isStudent }) => {
+const DriveCard = ({ drive, canManage, onEdit, onDelete, onView, eligibility, isStudent, application, onApply }) => {
   const company = drive.company || {};
   const companyName = company.companyName || 'Corporate Partner';
   const gradient = getGradientForName(companyName);
@@ -134,8 +135,9 @@ const DriveCard = ({ drive, canManage, onEdit, onDelete, onView, eligibility, is
     ? new Date(drive.applicationDeadline).getTime() < Date.now()
     : false;
 
-  // Students can only view (not apply) if not eligible or deadline passed
-  const canApply = isStudent && eligibility?.eligible && !isDeadlinePassed;
+  const hasApplied = Boolean(application);
+  // Students can only apply if eligible, deadline hasn't passed, and haven't already applied
+  const canApply = isStudent && !hasApplied && eligibility?.eligible && !isDeadlinePassed;
 
   return (
     <div
@@ -291,13 +293,23 @@ const DriveCard = ({ drive, canManage, onEdit, onDelete, onView, eligibility, is
           <span>View Details</span>
         </button>
 
-        {/* Student Apply / Not-Eligible indicator */}
+        {/* Student Apply / Not-Eligible / Applied indicator */}
         {isStudent && (
           <div>
-            {canApply ? (
+            {hasApplied ? (
+              <Link
+                to="/applications"
+                id={`drive-applied-badge-${drive._id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-xs font-semibold transition-colors"
+                title="View your application status"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-sky-400" />
+                <span>Applied ({application.status})</span>
+              </Link>
+            ) : canApply ? (
               <button
                 id={`drive-apply-btn-${drive._id}`}
-                onClick={() => onView(drive)}
+                onClick={() => onApply ? onApply(drive) : onView(drive)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-all hover:scale-[1.02] shadow-md shadow-emerald-600/20"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />

@@ -6,6 +6,7 @@ import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard';
 import Companies from '../pages/Companies';
 import PlacementDrives from '../pages/PlacementDrives';
+import Applications from '../pages/Applications';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
 const AppRoutes = () => {
@@ -35,6 +36,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <PlacementDrives />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/applications"
+        element={
+          <ProtectedRoute>
+            <Applications />
           </ProtectedRoute>
         }
       />

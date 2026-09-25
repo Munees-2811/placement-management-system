@@ -1,0 +1,12 @@
+[
+  {
+    "_id": "4bbfe8b5839a9fd00ad2653a",
+    "student": "6ab3e4a0dc4145799e8ffd70",
+    "placementDrive": "8cbc8732be578b58adaee942",
+    "appliedAt": "2026-09-25T13:13:28.828Z",
+    "status": "INTERVIEW",
+    "remarks": "Panel interview scheduled for Oct 12, 10:00 AM.",
+    "createdAt": "2026-09-25T13:13:28.828Z",
+    "updatedAt": "2026-09-25T13:13:28.865Z"
+  }
+]

@@ -26,6 +26,8 @@ import EditProfileModal from '../components/student/EditProfileModal';
 import ProjectModal from '../components/student/ProjectModal';
 import CertificationModal from '../components/student/CertificationModal';
 import ResumeModal from '../components/student/ResumeModal';
+import { getMyApplications } from '../api/applicationApi';
+import ApplicationStatusBadge from '../components/applications/ApplicationStatusBadge';
 
 import {
   LogOut,
@@ -48,6 +50,7 @@ import {
   Briefcase,
   Calendar,
   Award,
+  ClipboardList,
 } from 'lucide-react';
 
 const getRoleBadgeClasses = (role) => {
@@ -67,6 +70,7 @@ const getRoleBadgeClasses = (role) => {
 const StudentDashboard = () => {
   const { user, token, logout } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [applications, setApplications] = useState([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -119,8 +123,12 @@ const StudentDashboard = () => {
     try {
       setLoadingProfile(true);
       setProfileError(null);
-      const res = await getStudentProfile();
-      setProfile(res.data);
+      const [profileRes, appsRes] = await Promise.all([
+        getStudentProfile(),
+        getMyApplications().catch(() => ({ data: [] })),
+      ]);
+      setProfile(profileRes.data);
+      setApplications(appsRes.data || []);
     } catch (err) {
       setProfileError(err.response?.data?.message || err.message || 'Failed to load profile');
     } finally {
@@ -325,7 +333,15 @@ const StudentDashboard = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-center">
+          <div className="flex items-center gap-2 self-start sm:self-center flex-wrap">
+            <Link
+              to="/applications"
+              id="student-dashboard-applications-btn"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-colors shadow-sm"
+            >
+              <ClipboardList className="w-3.5 h-3.5 text-emerald-400" />
+              <span>My Applications ({applications.length})</span>
+            </Link>
             <Link
               to="/drives"
               id="student-dashboard-drives-btn"
@@ -396,6 +412,69 @@ const StudentDashboard = () => {
               }
             }}
           />
+
+          {/* Active Applications Tracker Section */}
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 shadow-xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <ClipboardList className="w-5 h-5 text-indigo-400" />
+                <h2 className="text-lg font-bold text-white">Placement Applications Tracker</h2>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                  {applications.length} Applied
+                </span>
+              </div>
+              <Link
+                to="/applications"
+                className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-semibold"
+              >
+                <span>View Full Tracker</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {applications.length === 0 ? (
+              <div className="p-6 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-center">
+                <p className="text-xs text-slate-400 mb-3">You have not submitted applications to any placement drives yet.</p>
+                <Link
+                  to="/drives"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all shadow-md shadow-indigo-600/20"
+                >
+                  <Briefcase className="w-3.5 h-3.5" />
+                  <span>Browse Available Drives &amp; Apply</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {applications.slice(0, 2).map((app) => (
+                  <div key={app._id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] text-indigo-400 font-semibold block">
+                          {app.placementDrive?.company?.companyName || 'Corporate Partner'}
+                        </span>
+                        <h4 className="text-sm font-bold text-white line-clamp-1">{app.placementDrive?.jobRole}</h4>
+                      </div>
+                      <ApplicationStatusBadge status={app.status} size="xs" />
+                    </div>
+
+                    {app.remarks && (
+                      <p className="text-xs text-slate-300 line-clamp-2 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                        <span className="text-indigo-400 font-semibold">Remarks: </span>
+                        {app.remarks}
+                      </p>
+                    )}
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-800/60">
+                      <span>Applied: {new Date(app.appliedAt).toLocaleDateString()}</span>
+                      <Link to="/applications" className="text-indigo-400 hover:underline">
+                        Track Application →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Academic & Contact Info */}
           <div ref={academicRef} className="scroll-mt-6">
@@ -632,6 +711,14 @@ const OfficerAdminDashboard = () => {
           </div>
           <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
             <Link
+              to="/applications"
+              id="officer-dashboard-applicants-btn"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-medium transition-all shadow-sm"
+            >
+              <ClipboardList className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Manage Applicants</span>
+            </Link>
+            <Link
               to="/drives"
               id="officer-dashboard-drives-btn"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-medium transition-all shadow-md shadow-indigo-600/20"
@@ -724,7 +811,35 @@ const OfficerAdminDashboard = () => {
       </div>
 
       {/* Placement Operations Command Hub */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Placement Applications Card */}
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/20 shadow-xl flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-2xl bg-emerald-600/10 border border-emerald-500/30 text-emerald-400">
+                <ClipboardList className="w-6 h-6" />
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                Application Review
+              </span>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Student Applications</h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-6">
+              Review applicant pools, screen student profiles, shortlist candidates, track interview stages, and add evaluation remarks.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/applications"
+              id="cmd-manage-applications-btn"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+            >
+              <ClipboardList className="w-3.5 h-3.5" />
+              <span>Manage Applicants</span>
+            </Link>
+          </div>
+        </div>
+
         {/* Placement Drives Card */}
         <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/20 shadow-xl flex flex-col justify-between">
           <div>
