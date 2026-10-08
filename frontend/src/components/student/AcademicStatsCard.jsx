@@ -1,157 +1,109 @@
 import React from 'react';
-import { Award, BookOpen, Calendar, Phone, Edit3, UserCheck, GraduationCap, AlertTriangle } from 'lucide-react';
+import { Edit3, Award, BookOpen, Calendar, Phone, AlertTriangle, UserCheck } from 'lucide-react';
 
 const AcademicStatsCard = ({ profile, onEdit }) => {
-  const cgpa = profile?.cgpa !== null && profile?.cgpa !== undefined ? Number(profile.cgpa).toFixed(2) : null;
+  const cgpa = profile?.cgpa !== null && profile?.cgpa !== undefined
+    ? Number(profile.cgpa).toFixed(2)
+    : null;
 
   const getCgpaStatus = (val) => {
-    if (!val) return { label: 'Not Provided', color: 'text-slate-400 bg-slate-800/40 border-slate-700' };
-    const num = Number(val);
-    if (num >= 9.0) return { label: 'Outstanding (O)', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' };
-    if (num >= 8.0) return { label: 'First Class with Distinction', color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/30' };
-    if (num >= 7.0) return { label: 'First Class', color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30' };
-    if (num >= 6.0) return { label: 'Second Class', color: 'text-amber-400 bg-amber-500/10 border-amber-500/30' };
-    return { label: 'Eligible', color: 'text-slate-300 bg-slate-800 border-slate-700' };
+    if (!val) return { label: 'Not set', cls: 'sd-badge--neutral' };
+    const n = Number(val);
+    if (n >= 9.0) return { label: 'Outstanding', cls: 'sd-badge--green' };
+    if (n >= 8.0) return { label: 'Distinction', cls: 'sd-badge--blue' };
+    if (n >= 7.0) return { label: 'First Class', cls: 'sd-badge--teal' };
+    if (n >= 6.0) return { label: 'Second Class', cls: 'sd-badge--amber' };
+    return { label: 'Eligible', cls: 'sd-badge--neutral' };
   };
 
-  const status = getCgpaStatus(cgpa);
+  const backlogs = profile?.backlogs ?? 0;
+  const cgpaStatus = getCgpaStatus(cgpa);
+
+  const fields = [
+    {
+      icon: <Award style={{ width: 14, height: 14, color: '#f59e0b' }} />,
+      label: 'CGPA',
+      value: cgpa ? (
+        <span style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+          <span style={{ fontSize: '22px', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.5px' }}>{cgpa}</span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>/ 10.0</span>
+        </span>
+      ) : <span style={{ fontSize: '14px', color: '#475569', fontStyle: 'italic' }}>Not set</span>,
+      badge: <span className={`sd-badge ${cgpaStatus.cls}`}>{cgpaStatus.label}</span>,
+    },
+    {
+      icon: <AlertTriangle style={{ width: 14, height: 14, color: backlogs === 0 ? '#22c55e' : backlogs <= 2 ? '#f59e0b' : '#ef4444' }} />,
+      label: 'Backlogs',
+      value: (
+        <span style={{
+          fontSize: '22px',
+          fontWeight: 700,
+          color: backlogs === 0 ? '#22c55e' : backlogs <= 2 ? '#f59e0b' : '#ef4444',
+          letterSpacing: '-0.5px',
+        }}>{backlogs}</span>
+      ),
+      badge: (
+        <span className={`sd-badge ${backlogs === 0 ? 'sd-badge--green' : backlogs <= 2 ? 'sd-badge--amber' : 'sd-badge--red'}`}>
+          {backlogs === 0 ? 'Clear' : 'Active arrears'}
+        </span>
+      ),
+    },
+    {
+      icon: <BookOpen style={{ width: 14, height: 14, color: '#818cf8' }} />,
+      label: 'Department',
+      value: <span style={{ fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}>{profile?.department || <span style={{ color: '#475569', fontStyle: 'italic', fontWeight: 400 }}>Not specified</span>}</span>,
+    },
+    {
+      icon: <Calendar style={{ width: 14, height: 14, color: '#38bdf8' }} />,
+      label: 'Batch / Year',
+      value: <span style={{ fontSize: '14px', fontWeight: 600, color: '#f1f5f9' }}>{profile?.batch || <span style={{ color: '#475569', fontStyle: 'italic', fontWeight: 400 }}>Not specified</span>}</span>,
+    },
+    {
+      icon: <Phone style={{ width: 14, height: 14, color: '#34d399' }} />,
+      label: 'Phone',
+      value: <span style={{ fontSize: '14px', fontWeight: 600, color: '#f1f5f9', fontFamily: 'monospace' }}>{profile?.phone || <span style={{ color: '#475569', fontStyle: 'italic', fontWeight: 400, fontFamily: 'inherit' }}>Not specified</span>}</span>,
+    },
+  ];
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-sm relative overflow-hidden">
-      {/* Decorative gradient glow */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none" />
-
-      <div className="flex items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-indigo-600/10 text-indigo-400 border border-indigo-500/20">
-            <GraduationCap className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-white tracking-tight">Academic & Contact Info</h2>
-            <p className="text-xs text-slate-400">Verified placement eligibility credentials</p>
-          </div>
+    <div className="sd-section">
+      <div className="sd-section__header">
+        <div>
+          <h2 className="sd-section__title">Academic Details</h2>
+          <p className="sd-section__sub">Verified placement eligibility credentials</p>
         </div>
-
-        <button
-          onClick={onEdit}
-          type="button"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors shadow-sm"
-        >
-          <Edit3 className="w-3.5 h-3.5 text-indigo-400" />
-          <span>Edit Details</span>
+        <button onClick={onEdit} type="button" className="sd-btn sd-btn--ghost">
+          <Edit3 style={{ width: 14, height: 14 }} />
+          Edit Details
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {/* CGPA Card */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
-            <span className="flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5 text-amber-400" />
-              CGPA Score
-            </span>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-extrabold text-white">
-                {cgpa ?? '—'}
-              </span>
-              <span className="text-xs text-slate-500 font-medium">/ 10.0</span>
+      <div className="sd-stats-grid">
+        {fields.map((f) => (
+          <div key={f.label} className="sd-stat-cell">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '8px' }}>
+              {f.icon}
+              <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{f.label}</span>
             </div>
-            <div className={`mt-2 inline-block px-2 py-0.5 rounded-md text-[11px] font-semibold border ${status.color}`}>
-              {status.label}
-            </div>
+            <div style={{ marginBottom: '4px' }}>{f.value}</div>
+            {f.badge && <div style={{ marginTop: '4px' }}>{f.badge}</div>}
           </div>
-        </div>
-
-        {/* Department Card */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
-            <span className="flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
-              Department
-            </span>
-          </div>
-          <div>
-            <div className="text-base font-bold text-white line-clamp-2">
-              {profile?.department || (
-                <span className="text-slate-500 italic font-normal text-sm">Not specified</span>
-              )}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-1">Undergraduate / Degree</div>
-          </div>
-        </div>
-
-        {/* Batch / Year Card */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-              Batch / Year
-            </span>
-          </div>
-          <div>
-            <div className="text-base font-bold text-white">
-              {profile?.batch || (
-                <span className="text-slate-500 italic font-normal text-sm">Not specified</span>
-              )}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-1">Graduation Batch</div>
-          </div>
-        </div>
-
-        {/* Phone Contact Card */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
-            <span className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
-              Phone Number
-            </span>
-          </div>
-          <div>
-            <div className="text-base font-bold text-white font-mono">
-              {profile?.phone || (
-                <span className="text-slate-500 italic font-normal text-sm font-sans">Not specified</span>
-              )}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-1">Placement Alerts SMS / Call</div>
-          </div>
-        </div>
-
-        {/* Backlogs Card */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">
-            <span className="flex items-center gap-1.5">
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
-              Backlogs
-            </span>
-          </div>
-          <div>
-            <div className={`text-3xl font-extrabold ${
-              (profile?.backlogs ?? 0) === 0
-                ? 'text-emerald-400'
-                : (profile?.backlogs ?? 0) <= 2
-                ? 'text-amber-400'
-                : 'text-rose-400'
-            }`}>
-              {profile?.backlogs ?? 0}
-            </div>
-            <div className={`text-[11px] mt-1 ${
-              (profile?.backlogs ?? 0) === 0
-                ? 'text-emerald-500'
-                : 'text-rose-400'
-            }`}>
-              {(profile?.backlogs ?? 0) === 0 ? 'No active backlogs ✓' : 'Active arrears'}
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Bio / Objective */}
       {profile?.bio && (
-        <div className="mt-4 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/60 text-xs text-slate-300 flex items-start gap-2.5">
-          <UserCheck className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-          <p className="leading-relaxed">{profile.bio}</p>
+        <div style={{
+          marginTop: '16px',
+          padding: '12px 14px',
+          background: '#0f172a',
+          border: '1px solid #1e293b',
+          borderRadius: '8px',
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'flex-start',
+        }}>
+          <UserCheck style={{ width: 14, height: 14, color: '#818cf8', flexShrink: 0, marginTop: '2px' }} />
+          <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: 0 }}>{profile.bio}</p>
         </div>
       )}
     </div>
