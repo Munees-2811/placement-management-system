@@ -1,22 +1,15 @@
 import React from 'react';
 import { FileText, Upload, ExternalLink, Trash2, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 
-// Detect format badge info from fileName or url
 const getFormatInfo = (fileName, url) => {
   const name = (fileName || url || '').toLowerCase();
   if (name.includes('.docx') || name.includes('.doc')) {
-    return { label: 'DOCX', color: '#60a5fa' }; // blue
+    return { label: 'DOCX', color: '#3569A8' };
   }
   if (name.includes('.pdf')) {
-    return { label: 'PDF', color: '#f87171' }; // red
+    return { label: 'PDF', color: '#D14343' };
   }
-  if (name.includes('notion.') || name.includes('notion.so')) {
-    return { label: 'NOTION', color: '#a78bfa' };
-  }
-  if (name.includes('drive.google')) {
-    return { label: 'DRIVE', color: '#34d399' };
-  }
-  return { label: 'LINK', color: '#a78bfa' }; // violet fallback
+  return { label: 'PDF', color: '#D14343' };
 };
 
 const ResumeSection = ({ resume, onUpdateResume, onDeleteResume }) => {
@@ -31,106 +24,94 @@ const ResumeSection = ({ resume, onUpdateResume, onDeleteResume }) => {
   };
 
   return (
-    <div className="sd-section">
-      <div className="sd-section__header">
+    <div className="bg-white border border-[#E4E8EF] rounded-xl p-5 sm:p-6 shadow-sm">
+      <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-[#E4E8EF]">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-            <h2 className="sd-section__title">Resume</h2>
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="text-base font-bold text-[#202B3C]">Resume Document</h2>
             {hasResume ? (
-              <span className="sd-badge sd-badge--green" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#EBFDF5] text-[#16845B] border border-[#A7F3D0]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#16845B]" />
                 Uploaded
               </span>
             ) : (
-              <span className="sd-badge sd-badge--red" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                <AlertCircle style={{ width: 11, height: 11 }} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#FEF2F2] text-[#D14343] border border-[#FECACA]">
+                <AlertCircle size={11} strokeWidth={1.8} />
                 Missing
               </span>
             )}
           </div>
-          <p className="sd-section__sub">Upload your resume as a PDF file (max 5 MB)</p>
+          <p className="text-xs text-[#667085]">Upload your resume as a PDF file (max 5 MB) for campus recruiters</p>
         </div>
-        <button onClick={onUpdateResume} type="button" className="sd-btn sd-btn--ghost">
-          <Upload style={{ width: 14, height: 14 }} />
-          {hasResume ? 'Replace PDF' : 'Upload PDF'}
+        <button
+          onClick={onUpdateResume}
+          type="button"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#F8FAFC] hover:bg-[#F1F5F9] text-[#202B3C] border border-[#E4E8EF] text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+        >
+          <Upload size={14} strokeWidth={1.8} className="text-[#3569A8]" />
+          <span>{hasResume ? 'Replace PDF' : 'Upload PDF'}</span>
         </button>
       </div>
 
       {hasResume ? (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '12px',
-          padding: '14px',
-          background: '#0f172a',
-          border: '1px solid #1e293b',
-          borderRadius: '8px',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
-            <div style={{
-              width: '36px', height: '42px',
-              background: '#1e293b',
-              border: '1px solid #334155',
-              borderRadius: '6px',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-            }}>
-              <FileText style={{ width: 16, height: 16, color: formatInfo.color }} />
-              <span style={{ fontSize: '8px', fontWeight: 700, color: formatInfo.color, letterSpacing: '0.1em', marginTop: '2px' }}>{formatInfo.label}</span>
+        <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-white border border-[#E4E8EF]">
+          <div className="flex items-center gap-3.5 flex-1 min-w-0">
+            <div className="w-10 h-12 rounded-lg bg-[#F8FAFC] border border-[#E4E8EF] flex flex-col items-center justify-center shrink-0">
+              <FileText size={18} strokeWidth={1.8} style={{ color: formatInfo.color }} />
+              <span className="text-[9px] font-bold tracking-wider mt-0.5" style={{ color: formatInfo.color }}>
+                {formatInfo.label}
+              </span>
             </div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
-                <CheckCircle2 style={{ width: 13, height: 13, color: '#22c55e', flexShrink: 0 }} />
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#f1f5f9' }}>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 mb-1">
+                <CheckCircle2 size={15} strokeWidth={1.8} className="text-[#16845B] shrink-0" />
+                <span className="text-sm font-semibold text-[#202B3C] truncate">
                   {resume.fileName || 'Resume Document'}
                 </span>
               </div>
               {resume.updatedAt && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#64748b' }}>
-                  <Clock style={{ width: 11, height: 11 }} />
-                  Updated {formatDate(resume.updatedAt)}
-                </span>
+                <div className="flex items-center gap-1 text-xs text-[#667085]">
+                  <Clock size={12} strokeWidth={1.8} className="text-[#94A3B8]" />
+                  <span>Updated {formatDate(resume.updatedAt)}</span>
+                </div>
               )}
-              <p style={{ fontSize: '10px', color: '#334155', fontFamily: 'monospace', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '320px' }}>
-                {resume.url}
-              </p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            <a href={resume.url} target="_blank" rel="noopener noreferrer" className="sd-btn sd-btn--ghost">
-              <ExternalLink style={{ width: 13, height: 13 }} />
-              View
+          <div className="flex items-center gap-2 shrink-0">
+            <a
+              href={resume.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#EFF6FF] text-[#3569A8] hover:bg-[#DBEAFE] border border-[#BFDBFE] text-xs font-semibold transition-colors"
+            >
+              <ExternalLink size={13} strokeWidth={1.8} />
+              <span>View</span>
             </a>
-            <button onClick={onDeleteResume} type="button" title="Remove Resume"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '5px',
-                padding: '5px 10px',
-                background: 'none',
-                border: '1px solid #1e293b',
-                borderRadius: '6px',
-                fontSize: '12px', fontWeight: 500,
-                color: '#64748b',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-              onMouseOver={e => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = '#7f1d1d'; }}
-              onMouseOut={e => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.borderColor = '#1e293b'; }}>
-              <Trash2 style={{ width: 13, height: 13 }} />
+            <button
+              onClick={onDeleteResume}
+              type="button"
+              title="Remove Resume"
+              className="p-1.5 rounded-lg text-[#D14343] hover:text-[#991B1B] hover:bg-[#FEF2F2] transition-colors cursor-pointer"
+            >
+              <Trash2 size={14} strokeWidth={1.8} />
             </button>
           </div>
         </div>
       ) : (
-        <div className="sd-empty-state">
-          <p className="sd-empty-state__title">No resume uploaded</p>
-          <p className="sd-empty-state__body">
-            Upload your resume as a <strong style={{ color: '#f87171' }}>PDF file</strong> (max 5 MB). It will be saved and viewable by recruiters.
+        <div className="text-center py-12 px-4 rounded-xl border border-dashed border-[#CBD5E1] bg-[#FAFCFE]">
+          <FileText className="w-10 h-10 text-[#94A3B8] mx-auto mb-2.5" />
+          <p className="text-sm font-semibold text-[#202B3C] mb-1">No resume uploaded</p>
+          <p className="text-xs text-[#667085] max-w-sm mx-auto mb-4 leading-relaxed">
+            Upload your resume as a <strong className="text-[#D14343]">PDF file</strong> (max 5 MB). It will be saved and visible to campus interviewers.
           </p>
-          <button onClick={onUpdateResume} type="button" className="sd-btn sd-btn--primary" style={{ marginTop: '12px' }}>
-            <Upload style={{ width: 14, height: 14 }} />
-            Upload PDF Resume
+          <button
+            onClick={onUpdateResume}
+            type="button"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#19365C] hover:bg-[#122844] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+          >
+            <Upload size={14} strokeWidth={1.8} />
+            <span>Upload PDF Resume</span>
           </button>
         </div>
       )}

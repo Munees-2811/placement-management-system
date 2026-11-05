@@ -7,43 +7,43 @@ const DeleteDriveModal = ({ isOpen, onClose, onConfirm, drive, deleting }) => {
   return (
     <div
       id="delete-drive-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget && !deleting) onClose();
       }}
     >
       <div
         id="delete-drive-dialog"
-        className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden p-6"
+        className="w-full max-w-md bg-white border border-[#E4E8EF] rounded-2xl shadow-xl overflow-hidden p-6"
       >
         <div className="flex items-center justify-between mb-4">
-          <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
+          <div className="p-3 rounded-xl bg-red-50 border border-red-100 text-[#D14343]">
             <AlertTriangle className="w-6 h-6" />
           </div>
           <button
             id="delete-drive-cancel-x-btn"
             onClick={onClose}
             disabled={deleting}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50"
+            className="p-1.5 text-[#667085] hover:text-[#202B3C] rounded-lg hover:bg-[#F1F5F9] transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <h3 id="delete-drive-title" className="text-lg font-bold text-white mb-2">
+        <h3 id="delete-drive-title" className="text-lg font-bold text-[#202B3C] mb-2">
           Delete Placement Drive?
         </h3>
-        <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+        <p className="text-sm text-[#667085] mb-4 leading-relaxed">
           Are you sure you want to cancel and delete the drive for{' '}
-          <span className="font-semibold text-white">"{drive.jobRole}"</span> by{' '}
-          <span className="font-semibold text-white">{drive.company?.companyName || 'Company'}</span>?
+          <span className="font-semibold text-[#202B3C]">"{drive.jobRole}"</span> by{' '}
+          <span className="font-semibold text-[#202B3C]">{drive.company?.companyName || 'Company'}</span>?
           This will permanently remove the drive schedule and its eligibility criteria.
         </p>
 
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80 mb-6 text-xs text-slate-400 space-y-1">
-          <div><strong className="text-slate-300">Package:</strong> {drive.salaryPackage}</div>
-          <div><strong className="text-slate-300">Status:</strong> {drive.status}</div>
-          <div><strong className="text-slate-300">Batch:</strong> {drive.graduationYear}</div>
+        <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E4E8EF] mb-6 text-xs text-[#667085] space-y-1">
+          <div><strong className="text-[#202B3C]">Package:</strong> {drive.salaryPackage}</div>
+          <div><strong className="text-[#202B3C]">Status:</strong> {drive.status}</div>
+          <div><strong className="text-[#202B3C]">Batch:</strong> {drive.graduationYear}</div>
         </div>
 
         <div className="flex items-center justify-end gap-3">
@@ -51,7 +51,7 @@ const DeleteDriveModal = ({ isOpen, onClose, onConfirm, drive, deleting }) => {
             id="delete-drive-cancel-btn"
             onClick={onClose}
             disabled={deleting}
-            className="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg text-sm font-medium text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
@@ -59,7 +59,7 @@ const DeleteDriveModal = ({ isOpen, onClose, onConfirm, drive, deleting }) => {
             id="delete-drive-proceed-btn"
             onClick={() => onConfirm(drive._id)}
             disabled={deleting}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-medium text-sm shadow-lg shadow-rose-600/25 transition-all hover:scale-[1.02] disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#D14343] hover:bg-red-700 text-white font-medium text-sm shadow-sm transition-all disabled:opacity-50"
           >
             {deleting ? (
               <>

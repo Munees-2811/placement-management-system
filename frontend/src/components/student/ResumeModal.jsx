@@ -47,7 +47,6 @@ const ResumeModal = ({ resume, isOpen, onClose, onSave, saving }) => {
 
   const handleInputChange = (e) => {
     handleFile(e.target.files?.[0]);
-    // Reset input so the same file can be re-selected
     e.target.value = '';
   };
 
@@ -95,42 +94,47 @@ const ResumeModal = ({ resume, isOpen, onClose, onSave, saving }) => {
   const isLoading = uploading || saving;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose} />
-
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isLoading) onClose();
+      }}
+    >
+      <div className="relative w-full max-w-md bg-white border border-[#E4E8EF] rounded-2xl shadow-xl overflow-hidden my-8">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-800">
+        <div className="px-6 py-4 border-b border-[#E4E8EF] flex items-center justify-between bg-[#F8FAFC]">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
-              <FileEdit className="w-4 h-4" />
+            <div className="p-2.5 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#3569A8]">
+              <FileEdit className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">
-                {resume?.url ? 'Replace Resume' : 'Upload Resume'}
+              <h2 className="text-base font-bold text-[#202B3C]">
+                {resume?.url ? 'Replace Resume Document' : 'Upload Resume Document'}
               </h2>
-              <p className="text-xs text-slate-400">PDF only · Max {MAX_SIZE_MB} MB</p>
+              <p className="text-xs text-[#667085]">PDF format only · Max {MAX_SIZE_MB} MB file size</p>
             </div>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            disabled={isLoading}
+            className="p-1.5 rounded-lg text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-
-          {/* Current resume info */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Current resume info if already uploaded */}
           {resume?.url && !selectedFile && (
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
-              <FileText className="w-5 h-5 text-indigo-400 shrink-0" />
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E4E8EF]">
+              <div className="w-8 h-9 rounded bg-[#EFF6FF] border border-[#BFDBFE] flex flex-col items-center justify-center shrink-0">
+                <FileText className="w-4 h-4 text-[#3569A8]" />
+              </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-slate-200 truncate">{resume.fileName || 'Current Resume'}</p>
-                <p className="text-[11px] text-slate-500">Currently saved — upload a new file to replace it</p>
+                <p className="text-xs font-semibold text-[#202B3C] truncate">{resume.fileName || 'Current Resume'}</p>
+                <p className="text-[11px] text-[#667085]">Currently on file — select a new PDF below to replace it</p>
               </div>
             </div>
           )}
@@ -142,21 +146,21 @@ const ResumeModal = ({ resume, isOpen, onClose, onSave, saving }) => {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onClick={() => fileInputRef.current?.click()}
-              className={`relative flex flex-col items-center justify-center gap-3 p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-200 select-none
-                ${dragOver
-                  ? 'border-indigo-500 bg-indigo-500/10'
-                  : 'border-slate-700 bg-slate-800/30 hover:border-slate-500 hover:bg-slate-800/60'
-                }`}
+              className={`relative flex flex-col items-center justify-center gap-3 p-8 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200 select-none ${
+                dragOver
+                  ? 'border-[#3569A8] bg-[#EFF6FF]'
+                  : 'border-[#CBD5E1] bg-[#F8FAFC] hover:border-[#3569A8] hover:bg-[#F1F5F9]'
+              }`}
             >
-              <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center">
-                <Upload className="w-6 h-6 text-slate-400" />
+              <div className="w-12 h-12 rounded-xl bg-white border border-[#E4E8EF] flex items-center justify-center text-[#3569A8] shadow-2xs">
+                <Upload className="w-6 h-6" />
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-slate-200">
-                  {dragOver ? 'Drop your PDF here' : 'Click to browse or drag & drop'}
+                <p className="text-sm font-semibold text-[#202B3C]">
+                  {dragOver ? 'Drop PDF file here' : 'Click to browse or drag & drop'}
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
-                  Accepts <span className="text-red-400 font-semibold">.pdf</span> files only · Max {MAX_SIZE_MB} MB
+                <p className="text-xs text-[#667085] mt-1">
+                  Accepts <span className="text-[#D14343] font-semibold">.pdf</span> documents only · Maximum {MAX_SIZE_MB} MB
                 </p>
               </div>
 
@@ -171,24 +175,23 @@ const ResumeModal = ({ resume, isOpen, onClose, onSave, saving }) => {
             </div>
           ) : (
             /* Selected file preview */
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-500/8 border border-emerald-500/25">
-              {/* PDF icon */}
-              <div className="w-10 h-12 bg-slate-800 border border-slate-700 rounded-lg flex flex-col items-center justify-center shrink-0">
-                <FileText className="w-4 h-4 text-red-400" />
-                <span className="text-[8px] font-bold text-red-400 tracking-widest mt-0.5">PDF</span>
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-[#EBFDF5] border border-[#A7F3D0]">
+              <div className="w-9 h-10 bg-white border border-[#A7F3D0] rounded-lg flex flex-col items-center justify-center shrink-0">
+                <FileText className="w-4 h-4 text-[#D14343]" />
+                <span className="text-[7px] font-bold text-[#D14343] tracking-widest mt-0.5">PDF</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5 mb-0.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <p className="text-sm font-semibold text-slate-100 truncate">{preview.name}</p>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#16845B] shrink-0" />
+                  <p className="text-xs font-semibold text-[#202B3C] truncate">{preview?.name}</p>
                 </div>
-                <p className="text-xs text-slate-500">{formatBytes(preview.size)}</p>
+                <p className="text-[11px] text-[#667085]">{formatBytes(preview?.size || 0)}</p>
               </div>
               <button
                 type="button"
                 onClick={handleRemoveFile}
-                className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-slate-800 transition-colors shrink-0"
-                title="Remove file"
+                className="p-1.5 rounded-lg text-[#667085] hover:text-[#D14343] hover:bg-white transition-colors shrink-0"
+                title="Remove selected file"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -197,29 +200,38 @@ const ResumeModal = ({ resume, isOpen, onClose, onSave, saving }) => {
 
           {/* Error */}
           {error && (
-            <div className="flex items-start gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs">
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#D14343] text-xs">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E4E8EF]">
             <button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 text-sm font-medium transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] border border-[#E4E8EF] transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || !selectedFile}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold shadow-md shadow-emerald-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#19365C] hover:bg-[#132B4A] text-white text-sm font-semibold shadow-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              {isLoading ? 'Uploading...' : resume?.url ? 'Replace Resume' : 'Upload Resume'}
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>{resume?.url ? 'Save New Resume' : 'Upload Resume'}</span>
+                </>
+              )}
             </button>
           </div>
         </form>

@@ -16,6 +16,8 @@ import {
 } from '../api/studentProfileApi';
 import api from '../api/axios';
 
+import PageHeader from '../components/common/PageHeader';
+import StatusBadge from '../components/common/StatusBadge';
 import ProfileCompletionCard from '../components/student/ProfileCompletionCard';
 import AcademicStatsCard from '../components/student/AcademicStatsCard';
 import SkillsManager from '../components/student/SkillsManager';
@@ -27,7 +29,6 @@ import ProjectModal from '../components/student/ProjectModal';
 import CertificationModal from '../components/student/CertificationModal';
 import ResumeModal from '../components/student/ResumeModal';
 import { getMyApplications } from '../api/applicationApi';
-import { getStatusConfig } from '../components/applications/ApplicationStatusBadge';
 
 import {
   LogOut,
@@ -47,23 +48,30 @@ import {
   Loader2,
   Building2,
   Briefcase,
-  ClipboardList,
+  FileCheck,
   ArrowRight,
+  BookOpen,
+  Award,
+  FileText,
+  LayoutDashboard,
+  Calendar,
+  Phone,
+  Mail,
+  GraduationCap,
+  ExternalLink,
 } from 'lucide-react';
 
-const getRoleBadgeClasses = (role) => {
-  switch (role) {
-    case 'ADMIN':
-      return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-    case 'PLACEMENT_OFFICER':
-      return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-    default:
-      return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30';
+const getUserInitials = (name) => {
+  if (!name) return 'U';
+  const parts = name.trim().split(' ');
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   }
+  return name.slice(0, 2).toUpperCase();
 };
 
 // ============================================================
-// Student Dashboard — Redesigned for production SaaS look
+// Student Dashboard — Professional Enterprise Theme
 // ============================================================
 const StudentDashboard = () => {
   const { user, token, logout } = useAuth();
@@ -73,13 +81,7 @@ const StudentDashboard = () => {
   const [profileError, setProfileError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
-
-  // Section refs for scroll-to
-  const academicRef = useRef(null);
-  const skillsRef = useRef(null);
-  const projectsRef = useRef(null);
-  const certsRef = useRef(null);
-  const resumeRef = useRef(null);
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Modal states
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -99,18 +101,6 @@ const StudentDashboard = () => {
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3500);
-  };
-
-  const scrollToSection = (section) => {
-    const map = {
-      academic: academicRef,
-      skills: skillsRef,
-      projects: projectsRef,
-      certifications: certsRef,
-      resume: resumeRef,
-    };
-    const ref = map[section];
-    if (ref?.current) ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const fetchProfile = async () => {
@@ -141,10 +131,12 @@ const StudentDashboard = () => {
       const res = await updateBasicProfile(data);
       setProfile(res.data);
       setEditProfileOpen(false);
-      showToast('Profile updated.');
+      showToast('Profile updated successfully.');
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to update profile', 'error');
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleUpdateSkills = async (skills) => {
@@ -152,24 +144,33 @@ const StudentDashboard = () => {
       setSaving(true);
       const res = await updateSkills(skills);
       setProfile(res.data);
-      showToast('Skills saved.');
+      showToast('Skills updated successfully.');
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to update skills', 'error');
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSaveProject = async (data, projectId) => {
     try {
       setSaving(true);
       let res;
-      if (projectId) { res = await updateProject(projectId, data); showToast('Project updated.'); }
-      else { res = await addProject(data); showToast('Project added.'); }
+      if (projectId) {
+        res = await updateProject(projectId, data);
+        showToast('Project updated successfully.');
+      } else {
+        res = await addProject(data);
+        showToast('Project added successfully.');
+      }
       setProfile(res.data);
       setProjectModalOpen(false);
       setEditingProject(null);
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to save project', 'error');
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteProject = async (projectId) => {
@@ -180,22 +181,31 @@ const StudentDashboard = () => {
       setProfile(res.data);
       showToast('Project removed.');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
-    } finally { setSaving(false); }
+      showToast(err.response?.data?.message || 'Failed to remove project', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSaveCert = async (data, certId) => {
     try {
       setSaving(true);
       let res;
-      if (certId) { res = await updateCertification(certId, data); showToast('Certification updated.'); }
-      else { res = await addCertification(data); showToast('Certification added.'); }
+      if (certId) {
+        res = await updateCertification(certId, data);
+        showToast('Certification updated.');
+      } else {
+        res = await addCertification(data);
+        showToast('Certification added.');
+      }
       setProfile(res.data);
       setCertModalOpen(false);
       setEditingCert(null);
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
-    } finally { setSaving(false); }
+      showToast(err.response?.data?.message || 'Failed to save certification', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteCert = async (certId) => {
@@ -204,15 +214,16 @@ const StudentDashboard = () => {
       setSaving(true);
       const res = await deleteCertification(certId);
       setProfile(res.data);
-      showToast('Removed.');
+      showToast('Certification removed.');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
-    } finally { setSaving(false); }
+      showToast(err.response?.data?.message || 'Failed to remove certification', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSaveResume = async (_resumeData, responseData) => {
     try {
-      // The modal already performed the upload; just update local profile state
       if (responseData?.data) {
         setProfile(responseData.data);
       }
@@ -224,15 +235,17 @@ const StudentDashboard = () => {
   };
 
   const handleDeleteResume = async () => {
-    if (!window.confirm('Remove your resume?')) return;
+    if (!window.confirm('Remove your resume document?')) return;
     try {
       setSaving(true);
       const res = await deleteResume();
       setProfile(res.data);
       showToast('Resume removed.');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
-    } finally { setSaving(false); }
+      showToast(err.response?.data?.message || 'Failed to remove resume', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const testApiConnection = async () => {
@@ -242,7 +255,9 @@ const StudentDashboard = () => {
       setHealthStatus({ success: true, data: res.data });
     } catch (err) {
       setHealthStatus({ success: false, message: err.response?.data?.message || err.message });
-    } finally { setCheckingHealth(false); }
+    } finally {
+      setCheckingHealth(false);
+    }
   };
 
   const testRoleEndpoint = async (endpoint, endpointName, requiredRoles) => {
@@ -250,296 +265,443 @@ const StudentDashboard = () => {
       setTestingRoleEndpoint(endpointName);
       setRoleTestResult(null);
       const res = await api.get(`/auth/${endpoint}`);
-      setRoleTestResult({ endpoint: endpointName, requiredRoles, success: true, status: res.status, message: res.data.message || 'Access authorized!' });
+      setRoleTestResult({
+        endpoint: endpointName,
+        requiredRoles,
+        success: true,
+        status: res.status,
+        message: res.data.message || 'Access authorized!',
+      });
     } catch (err) {
-      setRoleTestResult({ endpoint: endpointName, requiredRoles, success: false, status: err.response?.status || 500, message: err.response?.data?.message || err.message });
-    } finally { setTestingRoleEndpoint(''); }
-  };
-
-  const getAppStatusCls = (status) => {
-    switch (status?.toUpperCase()) {
-      case 'SELECTED': return 'sd-badge sd-badge--green';
-      case 'SHORTLISTED': return 'sd-badge sd-badge--amber';
-      case 'INTERVIEW': return 'sd-badge sd-badge--blue';
-      case 'REJECTED': return 'sd-badge sd-badge--red';
-      default: return 'sd-badge sd-badge--neutral';
+      setRoleTestResult({
+        endpoint: endpointName,
+        requiredRoles,
+        success: false,
+        status: err.response?.status || 500,
+        message: err.response?.data?.message || err.message,
+      });
+    } finally {
+      setTestingRoleEndpoint('');
     }
   };
 
-  const getAppStatusLabel = (status) => {
-    const cfg = getStatusConfig(status);
-    return cfg.label;
-  };
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'academic', label: 'Academic Credentials', icon: BookOpen },
+    { id: 'skills', label: 'Skills', icon: Award, count: profile?.skills?.length || 0 },
+    { id: 'projects', label: 'Projects', icon: Briefcase, count: profile?.projects?.length || 0 },
+    { id: 'certifications', label: 'Certifications', icon: CheckCircle2, count: profile?.certifications?.length || 0 },
+    { id: 'resume', label: 'Resume', icon: FileText, flag: profile?.resume?.url ? 'Uploaded' : 'Missing' },
+  ];
 
   return (
     <div className="sd-layout">
-      {/* Toast */}
+      {/* Toast Alert */}
       {toast && (
         <div className={`sd-toast ${toast.type === 'error' ? 'sd-toast--error' : 'sd-toast--success'}`}>
-          {toast.type === 'error'
-            ? <AlertCircle style={{ width: 15, height: 15, flexShrink: 0 }} />
-            : <CheckCircle2 style={{ width: 15, height: 15, flexShrink: 0 }} />}
-          {toast.message}
+          {toast.type === 'error' ? (
+            <AlertCircle size={16} strokeWidth={1.8} className="shrink-0" />
+          ) : (
+            <CheckCircle2 size={16} strokeWidth={1.8} className="shrink-0" />
+          )}
+          <span>{toast.message}</span>
         </div>
       )}
 
-      {/* ---- Page Header ---- */}
-      <div className="sd-page-header">
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 className="sd-page-header__title">
-              {user?.name?.split(' ')[0] || 'Student'}'s Dashboard
-            </h1>
-            <span className={`sd-badge ${getRoleBadgeClasses(user?.role)}`}>
-              {user?.role?.replace('_', ' ')}
-            </span>
+      {/* Page Header */}
+      <PageHeader
+        title="Student Profile & Placement Hub"
+        subtitle="Manage your academic portfolio, track placement eligibility, and view application status"
+        breadcrumb={[
+          { label: 'Portal', href: '/dashboard' },
+          { label: 'My Profile' },
+        ]}
+        actions={
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => setEditProfileOpen(true)}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#19365C] hover:bg-[#122844] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            >
+              <User size={14} strokeWidth={1.8} />
+              <span>Edit Profile</span>
+            </button>
+            <Link
+              to="/drives"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#202B3C] border border-[#E4E8EF] text-xs font-semibold shadow-xs transition-colors"
+            >
+              <Briefcase size={14} strokeWidth={1.8} className="text-[#3569A8]" />
+              <span>Browse Drives</span>
+            </Link>
+            <button
+              onClick={fetchProfile}
+              disabled={loadingProfile}
+              className="p-2 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#202B3C] border border-[#E4E8EF] transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+              title="Refresh profile data"
+            >
+              <RefreshCw size={14} strokeWidth={1.8} className={loadingProfile ? 'animate-spin' : ''} />
+            </button>
           </div>
-          <p className="sd-page-header__sub">{user?.email} · Placement Management System</p>
-        </div>
+        }
+      />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-          <Link to="/drives" id="student-dashboard-drives-btn" className="sd-btn sd-btn--primary">
-            <Briefcase style={{ width: 13, height: 13 }} />
-            Browse Drives
-          </Link>
-          <Link to="/applications" id="student-dashboard-applications-btn" className="sd-btn sd-btn--ghost">
-            <ClipboardList style={{ width: 13, height: 13 }} />
-            Applications
-            {applications.length > 0 && (
-              <span style={{ padding: '1px 6px', background: '#1e1b4b', color: '#818cf8', borderRadius: '4px', fontSize: '10px', fontWeight: 700 }}>
-                {applications.length}
-              </span>
-            )}
-          </Link>
-          <Link to="/companies" id="student-dashboard-companies-btn" className="sd-btn sd-btn--ghost">
-            <Building2 style={{ width: 13, height: 13 }} />
-            Companies
-          </Link>
-          <button onClick={fetchProfile} disabled={loadingProfile} className="sd-btn sd-btn--ghost" title="Refresh">
-            <RefreshCw style={{ width: 13, height: 13 }} className={loadingProfile ? 'animate-spin' : ''} />
-          </button>
-          <button onClick={logout} className="sd-btn sd-btn--danger">
-            <LogOut style={{ width: 13, height: 13 }} />
-            Logout
-          </button>
-        </div>
-      </div>
-
-      {/* ---- Loading ---- */}
+      {/* Loading State */}
       {loadingProfile && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 0', gap: '10px' }}>
-          <Loader2 style={{ width: 22, height: 22, color: '#818cf8' }} className="animate-spin" />
-          <p style={{ fontSize: '13px', color: '#64748b' }}>Loading your profile…</p>
+        <div className="flex flex-col items-center justify-center py-20 text-[#667085] gap-3">
+          <Loader2 size={24} strokeWidth={1.8} className="text-[#3569A8] animate-spin" />
+          <p className="text-xs font-medium">Loading placement profile...</p>
         </div>
       )}
 
-      {/* ---- Error ---- */}
+      {/* Error State */}
       {profileError && !loadingProfile && (
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: '10px',
-          padding: '12px 14px', background: '#1c0a0a',
-          border: '1px solid #7f1d1d', borderRadius: '8px',
-          marginBottom: '16px', fontSize: '13px', color: '#fca5a5',
-        }}>
-          <AlertCircle style={{ width: 15, height: 15, flexShrink: 0 }} />
-          <span><strong>Failed to load profile:</strong> {profileError}</span>
-          <button onClick={fetchProfile} style={{ color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', textDecoration: 'underline', padding: 0 }}>
+        <div className="mb-6 p-4 rounded-xl bg-[#FEF2F2] border border-[#FECACA] flex items-center justify-between text-xs text-[#D14343]">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={16} strokeWidth={1.8} />
+            <span><strong>Failed to load profile:</strong> {profileError}</span>
+          </div>
+          <button
+            onClick={fetchProfile}
+            className="font-semibold underline hover:text-[#991B1B] cursor-pointer"
+          >
             Retry
           </button>
         </div>
       )}
 
-      {/* ---- Main Content ---- */}
+      {/* Main Content Area */}
       {!loadingProfile && profile && (
         <>
-          {/* Profile Completion */}
-          <ProfileCompletionCard
-            profile={profile}
-            onActionClick={(action) => {
-              if (action === 'academic') setEditProfileOpen(true);
-              else scrollToSection(action);
-            }}
-          />
+          {/* Top Profile Summary Card */}
+          <div className="bg-white border border-[#E4E8EF] rounded-xl p-5 sm:p-6 mb-6 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div className="flex items-start sm:items-center gap-4 min-w-0">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#19365C] text-white text-lg sm:text-xl font-bold flex items-center justify-center shrink-0 border border-[#CBD5E1]">
+                  {getUserInitials(user?.name)}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <h2 className="text-lg sm:text-xl font-bold text-[#202B3C] truncate">
+                      {user?.name || 'Student Candidate'}
+                    </h2>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#EFF6FF] text-[#3569A8] border border-[#BFDBFE]">
+                      {user?.role?.replace('_', ' ')}
+                    </span>
+                    {profile?.cgpa !== null && profile?.cgpa !== undefined && (
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#EBFDF5] text-[#16845B] border border-[#A7F3D0]">
+                        CGPA: {Number(profile.cgpa).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
 
-          {/* Applications Tracker */}
-          <div className="sd-section" style={{ marginTop: '12px' }}>
-            <div className="sd-section__header" style={{ marginBottom: applications.length === 0 ? 0 : '12px' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                  <h2 className="sd-section__title">Recent Applications</h2>
+                  <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-[#667085]">
+                    <span className="flex items-center gap-1.5">
+                      <Mail size={13} strokeWidth={1.8} className="text-[#3569A8] shrink-0" />
+                      <span className="truncate">{user?.email}</span>
+                    </span>
+                    {profile?.department && (
+                      <span className="flex items-center gap-1.5">
+                        <GraduationCap size={13} strokeWidth={1.8} className="text-[#3569A8] shrink-0" />
+                        <span className="truncate">{profile.department}</span>
+                      </span>
+                    )}
+                    {profile?.batch && (
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={13} strokeWidth={1.8} className="text-[#3569A8] shrink-0" />
+                        <span>Batch {profile.batch}</span>
+                      </span>
+                    )}
+                    {profile?.phone && (
+                      <span className="flex items-center gap-1.5 font-mono">
+                        <Phone size={13} strokeWidth={1.8} className="text-[#16845B] shrink-0" />
+                        <span>{profile.phone}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Metrics Badge Strip */}
+              <div className="flex items-center gap-2.5 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 border-[#E4E8EF]">
+                <div className="min-w-[88px] text-center px-3 py-2 bg-[#F8FAFC] rounded-lg border border-[#E4E8EF]">
+                  <p className="text-lg font-bold text-[#202B3C] leading-none">{applications.length}</p>
+                  <p className="text-[10px] text-[#667085] font-semibold uppercase tracking-wider mt-1">Applications</p>
+                </div>
+                <div className="min-w-[88px] text-center px-3 py-2 bg-[#F8FAFC] rounded-lg border border-[#E4E8EF]">
+                  <p className="text-lg font-bold text-[#202B3C] leading-none">{profile?.skills?.length || 0}</p>
+                  <p className="text-[10px] text-[#667085] font-semibold uppercase tracking-wider mt-1">Skills</p>
+                </div>
+                <div className="min-w-[88px] text-center px-3 py-2 bg-[#F8FAFC] rounded-lg border border-[#E4E8EF]">
+                  <p className="text-lg font-bold text-[#202B3C] leading-none">{profile?.projects?.length || 0}</p>
+                  <p className="text-[10px] text-[#667085] font-semibold uppercase tracking-wider mt-1">Projects</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tab Navigation Strip */}
+          <div className="flex items-center gap-1.5 border-b border-[#E4E8EF] mb-6 overflow-x-auto pb-px">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-3.5 py-2.5 text-xs font-semibold rounded-t-lg transition-all border-b-2 whitespace-nowrap cursor-pointer ${
+                    isActive
+                      ? 'border-[#19365C] text-[#19365C] bg-white shadow-xs font-bold'
+                      : 'border-transparent text-[#667085] hover:text-[#202B3C] hover:bg-[#F5F7FA]'
+                  }`}
+                >
+                  <Icon size={15} strokeWidth={1.8} className={isActive ? 'text-[#19365C]' : 'text-[#667085]'} />
+                  <span>{tab.label}</span>
+                  {tab.count !== undefined && (
+                    <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                      isActive ? 'bg-[#EFF6FF] text-[#19365C]' : 'bg-[#F1F5F9] text-[#667085]'
+                    }`}>
+                      {tab.count}
+                    </span>
+                  )}
+                  {tab.flag && (
+                    <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-semibold ${
+                      tab.flag === 'Uploaded' ? 'bg-[#EBFDF5] text-[#16845B]' : 'bg-[#FEF2F2] text-[#D14343]'
+                    }`}>
+                      {tab.flag}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Tab Content Display */}
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              {/* Two Column Grid: Profile Completion & Academic Overview */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <ProfileCompletionCard
+                  profile={profile}
+                  onActionClick={(action) => {
+                    if (action === 'academic') setEditProfileOpen(true);
+                    else setActiveTab(action);
+                  }}
+                />
+                <AcademicStatsCard
+                  profile={profile}
+                  onEdit={() => setEditProfileOpen(true)}
+                />
+              </div>
+
+              {/* Recent Applications Tracker */}
+              <div className="bg-white border border-[#E4E8EF] rounded-xl p-5 sm:p-6 shadow-sm">
+                <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-[#E4E8EF]">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h2 className="text-base font-bold text-[#202B3C]">Recent Applications</h2>
+                      {applications.length > 0 && (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#F1F5F9] text-[#667085] border border-[#E2E8F0]">
+                          {applications.length} submitted
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-[#667085]">Review status updates from campus recruiters</p>
+                  </div>
                   {applications.length > 0 && (
-                    <span className="sd-badge sd-badge--neutral">{applications.length} total</span>
+                    <Link
+                      to="/applications"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#3569A8] hover:text-[#19365C] transition-colors"
+                    >
+                      <span>View All Applications</span>
+                      <ArrowRight size={13} strokeWidth={1.8} />
+                    </Link>
                   )}
                 </div>
-                <p className="sd-section__sub">Track your placement application status</p>
-              </div>
-              {applications.length > 0 && (
-                <Link to="/applications" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#818cf8', textDecoration: 'none', fontWeight: 600 }}>
-                  View all
-                  <ArrowRight style={{ width: 12, height: 12 }} />
-                </Link>
-              )}
-            </div>
 
-            {applications.length === 0 ? (
-              <div className="sd-empty-state">
-                <p className="sd-empty-state__title">No applications yet</p>
-                <p className="sd-empty-state__body">Browse available placement drives and apply to get started.</p>
-                <Link to="/drives" className="sd-btn sd-btn--primary" style={{ marginTop: '12px', display: 'inline-flex' }}>
-                  <Briefcase style={{ width: 13, height: 13 }} />
-                  Browse Drives
-                </Link>
-              </div>
-            ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table className="sd-table">
-                  <thead>
-                    <tr>
-                      <th>Company</th>
-                      <th>Role</th>
-                      <th>Applied</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {applications.slice(0, 5).map((app) => (
-                      <tr key={app._id}>
-                        <td style={{ fontWeight: 500, color: '#e2e8f0' }}>
-                          {app.placementDrive?.company?.companyName || '—'}
-                        </td>
-                        <td>{app.placementDrive?.jobRole || '—'}</td>
-                        <td style={{ color: '#64748b', whiteSpace: 'nowrap' }}>
-                          {new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </td>
-                        <td>
-                          <span className={getAppStatusCls(app.status)}>
-                            {getAppStatusLabel(app.status)}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {applications.length > 5 && (
-                  <div style={{ padding: '10px 12px', borderTop: '1px solid #1e293b' }}>
-                    <Link to="/applications" style={{ fontSize: '12px', color: '#818cf8', fontWeight: 600, textDecoration: 'none' }}>
-                      +{applications.length - 5} more applications →
+                {applications.length === 0 ? (
+                  <div className="text-center py-12 px-4 rounded-xl border border-dashed border-[#CBD5E1] bg-[#FAFCFE]">
+                    <Briefcase className="w-10 h-10 text-[#94A3B8] mx-auto mb-2.5" />
+                    <p className="text-sm font-semibold text-[#202B3C] mb-1">No drive applications submitted yet</p>
+                    <p className="text-xs text-[#667085] max-w-sm mx-auto mb-4 leading-relaxed">
+                      Browse upcoming campus placement drives and apply to positions matching your qualifications.
+                    </p>
+                    <Link
+                      to="/drives"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#19365C] hover:bg-[#122844] text-white text-xs font-semibold shadow-xs transition-colors"
+                    >
+                      <Briefcase size={14} strokeWidth={1.8} />
+                      <span>Browse Campus Drives</span>
                     </Link>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto rounded-lg border border-[#E4E8EF]">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#F8FAFC] border-b border-[#E4E8EF] text-[#667085] uppercase tracking-wider font-semibold text-[11px]">
+                        <tr>
+                          <th className="py-3 px-4">Company</th>
+                          <th className="py-3 px-4">Role Scope</th>
+                          <th className="py-3 px-4">Applied Date</th>
+                          <th className="py-3 px-4">Current Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#E4E8EF]">
+                        {applications.slice(0, 5).map((app) => (
+                          <tr key={app._id} className="hover:bg-[#F8FAFC] transition-colors">
+                            <td className="py-3 px-4 font-semibold text-[#202B3C]">
+                              {app.placementDrive?.company?.companyName || 'Corporate Partner'}
+                            </td>
+                            <td className="py-3 px-4 text-[#475569]">{app.placementDrive?.jobRole || '—'}</td>
+                            <td className="py-3 px-4 text-[#667085] whitespace-nowrap">
+                              {new Date(app.appliedAt).toLocaleDateString('en-IN', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              })}
+                            </td>
+                            <td className="py-3 px-4">
+                              <StatusBadge status={app.status} size="xs" />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {applications.length > 5 && (
+                      <div className="p-3 bg-[#F8FAFC] border-t border-[#E4E8EF] text-right">
+                        <Link
+                          to="/applications"
+                          className="text-xs font-semibold text-[#3569A8] hover:text-[#19365C] transition-colors"
+                        >
+                          +{applications.length - 5} more applications →
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Section group: Profile */}
-          <p className="sd-group-label">Your Profile</p>
+          {activeTab === 'academic' && (
+            <div>
+              <AcademicStatsCard
+                profile={profile}
+                onEdit={() => setEditProfileOpen(true)}
+              />
+            </div>
+          )}
 
-          <div ref={academicRef} className="scroll-mt-20">
-            <AcademicStatsCard profile={profile} onEdit={() => setEditProfileOpen(true)} />
-          </div>
+          {activeTab === 'skills' && (
+            <div>
+              <SkillsManager
+                skills={profile.skills || []}
+                onUpdateSkills={handleUpdateSkills}
+                saving={saving}
+              />
+            </div>
+          )}
 
-          <div ref={skillsRef} className="scroll-mt-20">
-            <SkillsManager
-              skills={profile.skills || []}
-              onUpdateSkills={handleUpdateSkills}
-              saving={saving}
-            />
-          </div>
+          {activeTab === 'projects' && (
+            <div>
+              <ProjectsSection
+                projects={profile.projects || []}
+                onAddProject={() => { setEditingProject(null); setProjectModalOpen(true); }}
+                onEditProject={(proj) => { setEditingProject(proj); setProjectModalOpen(true); }}
+                onDeleteProject={handleDeleteProject}
+              />
+            </div>
+          )}
 
-          {/* Section group: Portfolio */}
-          <p className="sd-group-label">Portfolio</p>
+          {activeTab === 'certifications' && (
+            <div>
+              <CertificationsSection
+                certifications={profile.certifications || []}
+                onAddCert={() => { setEditingCert(null); setCertModalOpen(true); }}
+                onEditCert={(cert) => { setEditingCert(cert); setCertModalOpen(true); }}
+                onDeleteCert={handleDeleteCert}
+              />
+            </div>
+          )}
 
-          <div ref={projectsRef} className="scroll-mt-20">
-            <ProjectsSection
-              projects={profile.projects || []}
-              onAddProject={() => { setEditingProject(null); setProjectModalOpen(true); }}
-              onEditProject={(proj) => { setEditingProject(proj); setProjectModalOpen(true); }}
-              onDeleteProject={handleDeleteProject}
-            />
-          </div>
-
-          <div ref={certsRef} className="scroll-mt-20">
-            <CertificationsSection
-              certifications={profile.certifications || []}
-              onAddCert={() => { setEditingCert(null); setCertModalOpen(true); }}
-              onEditCert={(cert) => { setEditingCert(cert); setCertModalOpen(true); }}
-              onDeleteCert={handleDeleteCert}
-            />
-          </div>
-
-          <div ref={resumeRef} className="scroll-mt-20">
-            <ResumeSection
-              resume={profile.resume}
-              onUpdateResume={() => setResumeModalOpen(true)}
-              onDeleteResume={handleDeleteResume}
-            />
-          </div>
+          {activeTab === 'resume' && (
+            <div>
+              <ResumeSection
+                resume={profile.resume}
+                onUpdateResume={() => setResumeModalOpen(true)}
+                onDeleteResume={handleDeleteResume}
+              />
+            </div>
+          )}
         </>
       )}
 
-      {/* ---- Dev Tools (collapsible) ---- */}
-      <div className="sd-devtools">
+      {/* Developer Authorization & Health Tool (Enterprise Style) */}
+      <div className="sd-devtools mt-8">
         <button
           type="button"
           onClick={() => setDevToolsOpen((o) => !o)}
           className="sd-devtools__toggle"
         >
-          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ShieldCheck style={{ width: 13, height: 13, color: '#4338ca' }} />
-            Developer Tools — Role Authorization Tester
+          <span className="flex items-center gap-2">
+            <ShieldCheck size={16} strokeWidth={1.8} className="text-[#3569A8]" />
+            <span>Developer Tools — Role Authorization Middleware Tester</span>
           </span>
-          {devToolsOpen
-            ? <ChevronUp style={{ width: 13, height: 13 }} />
-            : <ChevronDown style={{ width: 13, height: 13 }} />}
+          {devToolsOpen ? <ChevronUp size={16} strokeWidth={1.8} /> : <ChevronDown size={16} strokeWidth={1.8} />}
         </button>
 
         {devToolsOpen && (
-          <div style={{ padding: '16px', borderTop: '1px solid #1e293b', background: '#080e1a', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
-              Test server-side role validation middleware (
-              <code style={{ color: '#818cf8', background: '#1e293b', padding: '1px 5px', borderRadius: '3px', fontSize: '11px' }}>authorizeRoles</code>
-              ) with your current token — role: <strong style={{ color: '#e2e8f0' }}>{user?.role}</strong>
+          <div className="p-4 sm:p-5 border-t border-[#E4E8EF] bg-white space-y-4 text-xs">
+            <p className="text-[#667085]">
+              Verify server-side JWT authentication and role validation middleware (
+              <code className="text-[#19365C] bg-[#EFF6FF] px-1.5 py-0.5 rounded font-mono">authorizeRoles</code>
+              ) with your active token credentials. Current session role:{' '}
+              <strong className="text-[#202B3C]">{user?.role}</strong>
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-              {[
-                { label: 'User ID', value: user?._id, mono: true },
-                { label: 'Authentication', value: 'Active (JWT)', highlight: true },
-                { label: 'JWT Token', value: token ? `${token.substring(0, 28)}…` : 'None', mono: true },
-              ].map((f) => (
-                <div key={f.label} style={{ padding: '10px', background: '#0f172a', border: '1px solid #1e293b', borderRadius: '6px' }}>
-                  <div style={{ fontSize: '10px', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>{f.label}</div>
-                  <div style={{ fontSize: '11px', color: f.highlight ? '#4ade80' : '#64748b', fontFamily: f.mono ? 'monospace' : 'inherit', wordBreak: 'break-all' }}>
-                    {f.value}
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-3 bg-[#F8FAFC] border border-[#E4E8EF] rounded-lg">
+                <p className="text-[10px] text-[#667085] uppercase font-semibold tracking-wider mb-1">User ID</p>
+                <p className="font-mono text-[#202B3C] truncate">{user?._id || 'N/A'}</p>
+              </div>
+              <div className="p-3 bg-[#F8FAFC] border border-[#E4E8EF] rounded-lg">
+                <p className="text-[10px] text-[#667085] uppercase font-semibold tracking-wider mb-1">Auth Session</p>
+                <p className="font-semibold text-[#16845B]">Active (Bearer JWT)</p>
+              </div>
+              <div className="p-3 bg-[#F8FAFC] border border-[#E4E8EF] rounded-lg">
+                <p className="text-[10px] text-[#667085] uppercase font-semibold tracking-wider mb-1">JWT Token</p>
+                <p className="font-mono text-[#667085] truncate">{token ? `${token.substring(0, 24)}...` : 'None'}</p>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={testApiConnection} disabled={checkingHealth} className="sd-btn sd-btn--ghost">
-                <Activity style={{ width: 12, height: 12 }} className={checkingHealth ? 'animate-pulse' : ''} />
-                Test API Health
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={testApiConnection}
+                disabled={checkingHealth}
+                className="sd-btn sd-btn--ghost"
+              >
+                <Activity size={14} strokeWidth={1.8} className={checkingHealth ? 'animate-pulse text-[#3569A8]' : ''} />
+                <span>Test API Health</span>
               </button>
             </div>
 
             {healthStatus && (
-              <div style={{
-                padding: '10px 12px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px',
-                background: healthStatus.success ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.06)',
-                border: `1px solid ${healthStatus.success ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}`,
-                color: healthStatus.success ? '#4ade80' : '#f87171',
-              }}>
-                {healthStatus.success
-                  ? <CheckCircle2 style={{ width: 13, height: 13 }} />
-                  : <AlertCircle style={{ width: 13, height: 13 }} />}
-                {healthStatus.success
-                  ? `${healthStatus.data.message} — DB: ${healthStatus.data.database}`
-                  : healthStatus.message}
+              <div className={`p-3 rounded-lg border text-xs flex items-center gap-2.5 ${
+                healthStatus.success
+                  ? 'bg-[#EBFDF5] border-[#A7F3D0] text-[#16845B]'
+                  : 'bg-[#FEF2F2] border-[#FECACA] text-[#D14343]'
+              }`}>
+                {healthStatus.success ? (
+                  <CheckCircle2 size={16} strokeWidth={1.8} />
+                ) : (
+                  <AlertCircle size={16} strokeWidth={1.8} />
+                )}
+                <span>
+                  {healthStatus.success
+                    ? `${healthStatus.data.message} — Database: ${healthStatus.data.database}`
+                    : healthStatus.message}
+                </span>
               </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
               {[
                 { endpoint: 'student-only', label: 'Student Route', roles: ['STUDENT'], Icon: UserCheck },
                 { endpoint: 'officer-only', label: 'Officer Route', roles: ['PLACEMENT_OFFICER', 'ADMIN'], Icon: ShieldCheck },
@@ -549,35 +711,36 @@ const StudentDashboard = () => {
                   key={endpoint}
                   onClick={() => testRoleEndpoint(endpoint, label, roles)}
                   disabled={!!testingRoleEndpoint}
-                  className="sd-btn sd-btn--ghost"
-                  style={{ justifyContent: 'center', width: '100%' }}
+                  className="sd-btn sd-btn--ghost justify-center"
                 >
-                  {testingRoleEndpoint === label
-                    ? <RefreshCw style={{ width: 12, height: 12 }} className="animate-spin" />
-                    : <Icon style={{ width: 12, height: 12 }} />}
-                  Test {label}
+                  {testingRoleEndpoint === label ? (
+                    <RefreshCw size={13} strokeWidth={1.8} className="animate-spin" />
+                  ) : (
+                    <Icon size={13} strokeWidth={1.8} />
+                  )}
+                  <span>Test {label}</span>
                 </button>
               ))}
             </div>
 
             {roleTestResult && (
-              <div style={{
-                padding: '12px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'flex-start', gap: '8px',
-                background: roleTestResult.success ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.06)',
-                border: `1px solid ${roleTestResult.success ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}`,
-                color: roleTestResult.success ? '#4ade80' : '#f87171',
-              }}>
-                {roleTestResult.success
-                  ? <CheckCircle2 style={{ width: 14, height: 14, flexShrink: 0, marginTop: '1px' }} />
-                  : <ShieldAlert style={{ width: 14, height: 14, flexShrink: 0, marginTop: '1px' }} />}
+              <div className={`p-3.5 rounded-lg border text-xs flex items-start gap-3 ${
+                roleTestResult.success
+                  ? 'bg-[#EBFDF5] border-[#A7F3D0] text-[#16845B]'
+                  : 'bg-[#FEF2F2] border-[#FECACA] text-[#D14343]'
+              }`}>
+                {roleTestResult.success ? (
+                  <CheckCircle2 size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
+                ) : (
+                  <ShieldAlert size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
+                )}
                 <div>
-                  <div style={{ fontWeight: 600, marginBottom: '2px' }}>
-                    {roleTestResult.endpoint} · HTTP {roleTestResult.status} — {roleTestResult.success ? 'Authorized' : 'Forbidden'}
-                  </div>
-                  <p style={{ margin: '0 0 4px', opacity: 0.9 }}>{roleTestResult.message}</p>
-                  <p style={{ margin: 0, opacity: 0.7, fontSize: '11px' }}>
-                    Your role: <code style={{ fontFamily: 'monospace' }}>{user?.role}</code> · Required:{' '}
-                    <code style={{ fontFamily: 'monospace' }}>{roleTestResult.requiredRoles.join(', ')}</code>
+                  <p className="font-bold">
+                    {roleTestResult.endpoint} • HTTP {roleTestResult.status} ({roleTestResult.success ? 'Authorized' : 'Forbidden'})
+                  </p>
+                  <p className="mt-0.5">{roleTestResult.message}</p>
+                  <p className="text-[11px] opacity-80 mt-1 font-mono">
+                    Session Role: {user?.role} | Allowed: {roleTestResult.requiredRoles.join(', ')}
                   </p>
                 </div>
               </div>
@@ -586,7 +749,7 @@ const StudentDashboard = () => {
         )}
       </div>
 
-      {/* Modals */}
+      {/* Profile Modals */}
       <EditProfileModal
         profile={profile}
         isOpen={editProfileOpen}
@@ -620,7 +783,7 @@ const StudentDashboard = () => {
 };
 
 // ============================================================
-// Non-student (Officer / Admin) dashboard — existing feature
+// Officer / Admin Dashboard — Enterprise Theme
 // ============================================================
 const OfficerAdminDashboard = () => {
   const { user, token, logout } = useAuth();
@@ -646,259 +809,239 @@ const OfficerAdminDashboard = () => {
       setTestingRoleEndpoint(endpointName);
       setRoleTestResult(null);
       const res = await api.get(`/auth/${endpoint}`);
-      setRoleTestResult({ endpoint: endpointName, requiredRoles, success: true, status: res.status, message: res.data.message });
+      setRoleTestResult({
+        endpoint: endpointName,
+        requiredRoles,
+        success: true,
+        status: res.status,
+        message: res.data.message || 'Access authorized!',
+      });
     } catch (err) {
-      setRoleTestResult({ endpoint: endpointName, requiredRoles, success: false, status: err.response?.status || 500, message: err.response?.data?.message || err.message });
+      setRoleTestResult({
+        endpoint: endpointName,
+        requiredRoles,
+        success: false,
+        status: err.response?.status || 500,
+        message: err.response?.data?.message || err.message,
+      });
     } finally {
       setTestingRoleEndpoint('');
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden mb-8">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-white tracking-tight">
-                Welcome back, {user?.name || 'User'}!
-              </h1>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border ${getRoleBadgeClasses(user?.role)}`}>
-                {user?.role?.replace('_', ' ')}
-              </span>
-            </div>
-            <p className="text-slate-400 text-sm">Placement Management System Portal • Authenticated via JWT</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
-            <Link
-              to="/applications"
-              id="officer-dashboard-applicants-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-medium transition-all shadow-sm"
-            >
-              <ClipboardList className="w-3.5 h-3.5 text-emerald-400" />
+    <div className="sd-layout">
+      {/* Page Header */}
+      <PageHeader
+        title={`Placement Office Command Center`}
+        subtitle={`Welcome back, ${user?.name || 'Officer'}. Oversee placement operations, campus recruitment drives, and student applicants.`}
+        breadcrumb={[
+          { label: 'Portal', href: '/dashboard' },
+          { label: 'Officer Dashboard' },
+        ]}
+        actions={
+          <div className="flex items-center gap-2 flex-wrap">
+            <Link to="/applications" className="sd-btn sd-btn--primary">
+              <FileCheck size={14} strokeWidth={1.8} />
               <span>Manage Applicants</span>
             </Link>
-            <Link
-              to="/drives"
-              id="officer-dashboard-drives-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-medium transition-all shadow-md shadow-indigo-600/20"
-            >
-              <Briefcase className="w-3.5 h-3.5" />
-              <span>Manage Drives</span>
+            <Link to="/drives" className="sd-btn sd-btn--secondary">
+              <Briefcase size={14} strokeWidth={1.8} />
+              <span>Placement Drives</span>
             </Link>
-            <Link
-              to="/companies"
-              id="officer-dashboard-companies-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-all shadow-sm"
-            >
-              <Building2 className="w-3.5 h-3.5 text-sky-400" />
+            <Link to="/companies" className="sd-btn sd-btn--ghost">
+              <Building2 size={14} strokeWidth={1.8} />
               <span>Companies</span>
             </Link>
-            <button onClick={testApiConnection} disabled={checkingHealth} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors shadow-sm disabled:opacity-50">
-              <RefreshCw className={`w-3.5 h-3.5 ${checkingHealth ? 'animate-spin' : ''}`} />
-              Test API
+            <button
+              onClick={testApiConnection}
+              disabled={checkingHealth}
+              className="sd-btn sd-btn--ghost"
+              title="Test API Connection"
+            >
+              <RefreshCw size={14} strokeWidth={1.8} className={checkingHealth ? 'animate-spin' : ''} />
+              <span>Health</span>
             </button>
-            <button onClick={logout} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-medium transition-colors shadow-sm">
-              <LogOut className="w-3.5 h-3.5" />
-              Logout
-            </button>
           </div>
+        }
+      />
+
+      {healthStatus && (
+        <div className={`mb-6 p-4 rounded-xl border text-xs flex items-center gap-2.5 ${
+          healthStatus.success
+            ? 'bg-[#EBFDF5] border-[#A7F3D0] text-[#16845B]'
+            : 'bg-[#FEF2F2] border-[#FECACA] text-[#D14343]'
+        }`}>
+          {healthStatus.success ? <CheckCircle2 size={16} strokeWidth={1.8} /> : <AlertCircle size={16} strokeWidth={1.8} />}
+          <span>
+            {healthStatus.success
+              ? `Backend API Healthy: ${healthStatus.data.message} (${healthStatus.data.status})`
+              : `Connection Issue: ${healthStatus.message}`}
+          </span>
         </div>
+      )}
 
-        {healthStatus && (
-          <div className={`mt-4 p-3 rounded-xl text-xs flex items-center gap-2 border ${healthStatus.success ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-rose-500/10 border-rose-500/20 text-rose-300'}`}>
-            {healthStatus.success ? <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" /> : <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />}
-            {healthStatus.success ? `Backend API Live: ${healthStatus.data.message} (${healthStatus.data.status})` : `Backend Connection: ${healthStatus.message}`}
-          </div>
-        )}
-      </div>
-
-      {/* Profile Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="md:col-span-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
-            <User className="w-5 h-5 text-indigo-400" />
-            Profile Overview
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { label: 'Full Name', value: user?.name, Icon: User },
-              { label: 'Email Address', value: user?.email, Icon: User },
-              { label: 'Assigned Role', value: user?.role?.replace('_', ' '), Icon: Shield, colored: true },
-              { label: 'Account ID', value: user?._id, Icon: Key, mono: true, xs: true },
-            ].map(({ label, value, Icon, colored, mono, xs }) => (
-              <div key={label} className="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                  <Icon className="w-3.5 h-3.5 text-slate-500" />
-                  {label}
-                </div>
-                <div className={`${xs ? 'text-xs' : 'text-base'} font-semibold ${colored ? 'text-indigo-400' : 'text-white'} ${mono ? 'font-mono' : ''} truncate`}>
-                  {value || 'N/A'}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-indigo-400" />
-            Session Status
-          </h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80">
-              <span className="text-xs text-slate-400">Authentication</span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Active (JWT)
-              </span>
+      {/* Top Profile Summary Card */}
+      <div className="bg-white border border-[#E4E8EF] rounded-xl p-5 sm:p-6 mb-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-xl bg-[#19365C] text-white text-lg font-bold flex items-center justify-center shrink-0 border border-[#E4E8EF]">
+              {getUserInitials(user?.name)}
             </div>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80">
-              <span className="text-xs text-slate-400">Security</span>
-              <span className="text-xs font-medium text-slate-300">bcrypt hashed</span>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-lg font-bold text-[#202B3C]">{user?.name}</h2>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#EFF6FF] text-[#3569A8] border border-[#BFDBFE]">
+                  {user?.role?.replace('_', ' ')}
+                </span>
+              </div>
+              <p className="text-xs text-[#667085] flex items-center gap-3">
+                <span className="flex items-center gap-1">
+                  <Mail size={12} strokeWidth={1.8} />
+                  {user?.email}
+                </span>
+                <span className="font-mono text-[#94A3B8]">ID: {user?._id}</span>
+              </p>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
-              <div className="text-xs text-slate-400 flex items-center gap-1.5 mb-1">
-                <Key className="w-3.5 h-3.5 text-slate-500" />
-                JWT Token Attached
-              </div>
-              <div className="text-[10px] font-mono text-slate-500 truncate">
-                {token ? `${token.substring(0, 32)}...` : 'None'}
-              </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-[#F8FAFC] border border-[#E4E8EF] rounded-lg text-right">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#667085]">Auth Status</p>
+              <p className="text-xs font-bold text-[#16845B] flex items-center justify-end gap-1.5 mt-0.5">
+                <span className="w-2 h-2 rounded-full bg-[#16845B]" />
+                JWT Active
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Placement Operations Command Hub */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {/* Placement Applications Card */}
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/20 shadow-xl flex flex-col justify-between">
+      {/* Operational Hub Command Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        {/* Applicants Review */}
+        <div className="bg-white border border-[#E4E8EF] rounded-xl p-6 shadow-sm flex flex-col justify-between hover:border-[#CBD5E1] transition-all">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-2xl bg-emerald-600/10 border border-emerald-500/30 text-emerald-400">
-                <ClipboardList className="w-6 h-6" />
-              </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                Application Review
-              </span>
+            <div className="w-10 h-10 rounded-lg bg-[#EFF6FF] text-[#3569A8] flex items-center justify-center mb-4">
+              <FileCheck size={20} strokeWidth={1.8} />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Student Applications</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              Review applicant pools, screen student profiles, shortlist candidates, track interview stages, and add evaluation remarks.
+            <h3 className="text-base font-bold text-[#202B3C] mb-1.5">
+              Candidate Applications
+            </h3>
+            <p className="text-xs text-[#667085] leading-relaxed mb-6">
+              Review candidate student pools, evaluate CGPA &amp; backlogs, shortlist applicants, and advance interview stages.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/applications"
-              id="cmd-manage-applications-btn"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
-            >
-              <ClipboardList className="w-3.5 h-3.5" />
-              <span>Manage Applicants</span>
-            </Link>
-          </div>
+          <Link
+            to="/applications"
+            className="sd-btn sd-btn--primary w-full justify-center"
+          >
+            <FileCheck size={14} strokeWidth={1.8} />
+            <span>Manage Applications</span>
+          </Link>
         </div>
 
-        {/* Placement Drives Card */}
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/20 shadow-xl flex flex-col justify-between">
+        {/* Drives Scheduling */}
+        <div className="bg-white border border-[#E4E8EF] rounded-xl p-6 shadow-sm flex flex-col justify-between hover:border-[#CBD5E1] transition-all">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-2xl bg-indigo-600/10 border border-indigo-500/30 text-indigo-400">
-                <Briefcase className="w-6 h-6" />
-              </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-                Drive Management
-              </span>
+            <div className="w-10 h-10 rounded-lg bg-[#EFF6FF] text-[#19365C] flex items-center justify-center mb-4">
+              <Briefcase size={20} strokeWidth={1.8} />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Campus Placement Drives</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              Create and schedule campus recruitment drives, specify academic thresholds (CGPA, allowed backlogs, eligible branches), and manage drive statuses.
+            <h3 className="text-base font-bold text-[#202B3C] mb-1.5">
+              Campus Placement Drives
+            </h3>
+            <p className="text-xs text-[#667085] leading-relaxed mb-6">
+              Schedule corporate hiring drives, configure department and academic requirements, and announce openings.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/drives"
-              id="cmd-manage-drives-btn"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all hover:scale-[1.02]"
-            >
-              <Briefcase className="w-3.5 h-3.5" />
-              <span>Launch Drives Portal</span>
-            </Link>
-          </div>
+          <Link
+            to="/drives"
+            className="sd-btn sd-btn--secondary w-full justify-center"
+          >
+            <Briefcase size={14} strokeWidth={1.8} />
+            <span>Schedule Placement Drives</span>
+          </Link>
         </div>
 
-        {/* Companies Registry Card */}
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-sky-950/40 via-slate-900 to-slate-900 border border-sky-500/20 shadow-xl flex flex-col justify-between">
+        {/* Company Registry */}
+        <div className="bg-white border border-[#E4E8EF] rounded-xl p-6 shadow-sm flex flex-col justify-between hover:border-[#CBD5E1] transition-all">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-2xl bg-sky-600/10 border border-sky-500/30 text-sky-400">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-300 border border-sky-500/20">
-                Partner Registry
-              </span>
+            <div className="w-10 h-10 rounded-lg bg-[#F8FAFC] text-[#202B3C] flex items-center justify-center mb-4 border border-[#E4E8EF]">
+              <Building2 size={20} strokeWidth={1.8} />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Partner Companies Directory</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              Register corporate partners, maintain campus HR points-of-contact, catalog corporate websites, and manage industry domain details.
+            <h3 className="text-base font-bold text-[#202B3C] mb-1.5">
+              Partner Organizations
+            </h3>
+            <p className="text-xs text-[#667085] leading-relaxed mb-6">
+              Maintain the corporate recruiters directory, register new campus partners, and record recruiter contact personnel.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/companies"
-              id="cmd-manage-companies-btn"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold shadow-sm transition-all hover:scale-[1.02]"
-            >
-              <Building2 className="w-3.5 h-3.5 text-sky-400" />
-              <span>Manage Companies</span>
-            </Link>
-          </div>
+          <Link
+            to="/companies"
+            className="sd-btn sd-btn--ghost w-full justify-center"
+          >
+            <Building2 size={14} strokeWidth={1.8} />
+            <span>Company Directory</span>
+          </Link>
         </div>
       </div>
 
       {/* Role Authorization Tester */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <div className="bg-white border border-[#E4E8EF] rounded-xl p-6 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <ShieldCheck className="w-5 h-5 text-indigo-400" />
-          <h2 className="text-lg font-semibold text-white">Role-Based Authorization Testing</h2>
+          <ShieldCheck size={18} strokeWidth={1.8} className="text-[#3569A8]" />
+          <h2 className="text-sm font-bold text-[#202B3C]">Role-Based Access Verification</h2>
         </div>
-        <p className="text-sm text-slate-400 mb-6">
-          Test server-side role validation middleware (<code className="text-xs text-indigo-300 bg-slate-950 px-1.5 py-0.5 rounded">authorizeRoles</code>) with your current token (<span className="text-white font-semibold">{user?.role}</span>).
+        <p className="text-xs text-[#667085] mb-5">
+          Verify backend authorization middleware (<code className="text-[#19365C] bg-[#EFF6FF] px-1 py-0.5 rounded font-mono">authorizeRoles</code>) with current identity (<strong className="text-[#202B3C]">{user?.role}</strong>).
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           {[
-            { endpoint: 'student-only', label: 'Student Route', roles: ['STUDENT'], color: 'indigo', Icon: UserCheck },
-            { endpoint: 'officer-only', label: 'Officer Route', roles: ['PLACEMENT_OFFICER', 'ADMIN'], color: 'amber', Icon: ShieldCheck },
-            { endpoint: 'admin-only', label: 'Admin Route', roles: ['ADMIN'], color: 'emerald', Icon: Lock },
-          ].map(({ endpoint, label, roles, color, Icon }) => (
-            <div key={endpoint} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
+            { endpoint: 'student-only', label: 'Student Route', roles: ['STUDENT'], Icon: UserCheck },
+            { endpoint: 'officer-only', label: 'Officer Route', roles: ['PLACEMENT_OFFICER', 'ADMIN'], Icon: ShieldCheck },
+            { endpoint: 'admin-only', label: 'Admin Route', roles: ['ADMIN'], Icon: Lock },
+          ].map(({ endpoint, label, roles, Icon }) => (
+            <div key={endpoint} className="p-3.5 rounded-lg bg-[#F8FAFC] border border-[#E4E8EF] flex flex-col justify-between gap-3">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-xs font-semibold uppercase tracking-wider text-${color}-400`}>{label}</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded bg-${color}-500/10 text-${color}-300 border border-${color}-500/20`}>
-                    {roles.join(' / ')}
-                  </span>
-                </div>
+                <p className="text-xs font-semibold text-[#202B3C]">{label}</p>
+                <p className="text-[11px] text-[#667085] mt-0.5 font-mono">Allowed: {roles.join(' / ')}</p>
               </div>
               <button
                 onClick={() => testRoleEndpoint(endpoint, label, roles)}
                 disabled={!!testingRoleEndpoint}
-                className={`w-full py-2 px-3 rounded-lg bg-${color}-600/20 hover:bg-${color}-600 text-${color}-300 hover:text-white border border-${color}-500/30 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50`}
+                className="sd-btn sd-btn--ghost justify-center w-full"
               >
-                {testingRoleEndpoint === label ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Icon className="w-3.5 h-3.5" />}
-                Test Access
+                {testingRoleEndpoint === label ? (
+                  <RefreshCw size={13} strokeWidth={1.8} className="animate-spin" />
+                ) : (
+                  <Icon size={13} strokeWidth={1.8} />
+                )}
+                <span>Test Access</span>
               </button>
             </div>
           ))}
         </div>
+
         {roleTestResult && (
-          <div className={`p-4 rounded-xl border flex items-start gap-3 text-sm ${roleTestResult.success ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/10 border-rose-500/30 text-rose-300'}`}>
-            {roleTestResult.success ? <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400 mt-0.5" /> : <ShieldAlert className="w-5 h-5 shrink-0 text-rose-400 mt-0.5" />}
+          <div className={`p-4 rounded-lg border text-xs flex items-start gap-3 ${
+            roleTestResult.success
+              ? 'bg-[#EBFDF5] border-[#A7F3D0] text-[#16845B]'
+              : 'bg-[#FEF2F2] border-[#FECACA] text-[#D14343]'
+          }`}>
+            {roleTestResult.success ? (
+              <CheckCircle2 size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
+            ) : (
+              <ShieldAlert size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
+            )}
             <div>
-              <div className="font-semibold mb-0.5">{roleTestResult.endpoint} • HTTP {roleTestResult.status} {roleTestResult.success ? '(Authorized)' : '(Forbidden)'}</div>
-              <p className="text-xs opacity-90">{roleTestResult.message}</p>
-              <p className="text-[11px] opacity-75 mt-1">Your Role: <span className="font-mono font-bold">{user?.role}</span> | Required: <span className="font-mono">{roleTestResult.requiredRoles.join(', ')}</span></p>
+              <p className="font-bold">
+                {roleTestResult.endpoint} • HTTP {roleTestResult.status} ({roleTestResult.success ? 'Authorized' : 'Forbidden'})
+              </p>
+              <p className="mt-0.5">{roleTestResult.message}</p>
+              <p className="text-[11px] opacity-80 mt-1 font-mono">
+                Your Role: {user?.role} | Required: {roleTestResult.requiredRoles.join(', ')}
+              </p>
             </div>
           </div>
         )}
@@ -908,7 +1051,7 @@ const OfficerAdminDashboard = () => {
 };
 
 // ============================================================
-// Main Dashboard — routes to role-appropriate view
+// Main Dashboard Container Component
 // ============================================================
 const Dashboard = () => {
   const { user } = useAuth();

@@ -15,117 +15,91 @@ const Home = () => {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <div className="relative isolate overflow-hidden">
-      {/* Background glow effects */}
-      <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none">
-        <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-indigo-600 to-violet-500 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
-      </div>
-
+    <div className="min-h-screen bg-[#F5F7FA] text-[#202B3C]">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium text-indigo-400 mb-8 shadow-inner">
-          <Layers className="w-3.5 h-3.5" />
-          <span>Full-Stack MERN Architecture</span>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E4E8EF] text-xs font-semibold text-[#19365C] mb-8 shadow-2xs">
+          <Layers className="w-3.5 h-3.5 text-[#3569A8]" />
+          <span>University Placement &amp; Career Services Hub</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight sm:leading-none">
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#19365C] max-w-4xl mx-auto leading-tight">
           Student Placement{' '}
-          <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-sky-400 bg-clip-text text-transparent">
-            Management System
-          </span>
+          <span className="text-[#3569A8]">Management System</span>
         </h1>
 
-        <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          A centralized, role-based portal connecting students, training & placement officers (TPO), 
-          and recruiting companies seamlessly.
+        <p className="mt-5 text-base sm:text-lg text-[#667085] max-w-2xl mx-auto leading-relaxed">
+          A centralized, role-based enterprise platform connecting university students, Training &amp; Placement Officers (TPO), and recruiting partners.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           {isAuthenticated ? (
             <Link
               to="/dashboard"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base shadow-lg shadow-indigo-600/25 transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#19365C] hover:bg-[#132B4A] text-white font-semibold text-sm shadow-xs transition-colors"
             >
-              <span>Go to Dashboard ({user?.role})</span>
+              <span>Go to Dashboard ({user?.role?.replace('_', ' ')})</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           ) : (
             <>
               <Link
-                to="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base shadow-lg shadow-indigo-600/25 transition-all hover:scale-105"
+                to="/login"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#19365C] hover:bg-[#132B4A] text-white font-semibold text-sm shadow-xs transition-colors"
               >
-                <span>Get Started</span>
+                <span>Sign In to Portal</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                to="/login"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-base transition-colors"
+                to="/register"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#202B3C] border border-[#E4E8EF] font-semibold text-sm transition-colors"
               >
-                <span>Sign In</span>
+                <span>Create Student Account</span>
               </Link>
             </>
           )}
         </div>
 
         {/* Roles Supported */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20">
-              <GraduationCap className="w-6 h-6" />
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-4 gap-5 text-left">
+          <div className="p-6 rounded-xl bg-white border border-[#E4E8EF] shadow-xs hover:border-[#CBD5E1] transition-all">
+            <div className="w-11 h-11 rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#3569A8] mb-4">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Students</h3>
-            <p className="mt-2 text-sm text-slate-400">
-              Build profiles, browse eligible campus drives, track applications, and receive interview alerts.
+            <h3 className="text-base font-bold text-[#202B3C]">Students</h3>
+            <p className="mt-2 text-xs text-[#667085] leading-relaxed">
+              Build verified academic profiles, review eligibility status, apply to drives, and track selection rounds.
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-4 border border-violet-500/20">
-              <ShieldCheck className="w-6 h-6" />
+          <div className="p-6 rounded-xl bg-white border border-[#E4E8EF] shadow-xs hover:border-[#CBD5E1] transition-all">
+            <div className="w-11 h-11 rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#19365C] mb-4">
+              <ShieldCheck className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white">TPO Officers</h3>
-            <p className="mt-2 text-sm text-slate-400">
-              Manage drives, verify student credentials, publish notices, and coordinate on-campus recruitment.
+            <h3 className="text-base font-bold text-[#202B3C]">TPO Officers</h3>
+            <p className="mt-2 text-xs text-[#667085] leading-relaxed">
+              Schedule corporate drives, verify candidate credentials, coordinate interviews, and publish notices.
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4 border border-sky-500/20">
-              <Building2 className="w-6 h-6" />
+          <div className="p-6 rounded-xl bg-white border border-[#E4E8EF] shadow-xs hover:border-[#CBD5E1] transition-all">
+            <div className="w-11 h-11 rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#3569A8] mb-4">
+              <Building2 className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Companies</h3>
-            <p className="mt-2 text-sm text-slate-400">
-              Post job openings, specify eligibility criteria, review candidate resumes, and update recruitment status.
+            <h3 className="text-base font-bold text-[#202B3C]">Companies</h3>
+            <p className="mt-2 text-xs text-[#667085] leading-relaxed">
+              Publish job requisitions, set CGPA thresholds, inspect resumes, and manage applicant progression.
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/20">
-              <Briefcase className="w-6 h-6" />
+          <div className="p-6 rounded-xl bg-white border border-[#E4E8EF] shadow-xs hover:border-[#CBD5E1] transition-all">
+            <div className="w-11 h-11 rounded-lg bg-[#EBFDF5] border border-[#A7F3D0] flex items-center justify-center text-[#16845B] mb-4">
+              <Briefcase className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Administrators</h3>
-            <p className="mt-2 text-sm text-slate-400">
-              Oversee the entire placement lifecycle, manage user access, audit logs, and export placement analytics.
+            <h3 className="text-base font-bold text-[#202B3C]">Administrators</h3>
+            <p className="mt-2 text-xs text-[#667085] leading-relaxed">
+              Oversee the entire placement cycle, audit user permissions, ensure data accuracy, and export analytics.
             </p>
-          </div>
-        </div>
-
-        {/* Tech Stack Pills */}
-        <div className="mt-16 pt-10 border-t border-slate-900 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
-            Underlying Core Stack
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {['React.js (Vite)', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'Tailwind CSS', 'Axios', 'JWT & bcrypt'].map((item) => (
-              <span
-                key={item}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 text-xs font-medium text-slate-300 border border-slate-800"
-              >
-                <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
-                {item}
-              </span>
-            ))}
           </div>
         </div>
       </div>

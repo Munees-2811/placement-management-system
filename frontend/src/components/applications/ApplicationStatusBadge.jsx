@@ -13,37 +13,37 @@ export const getStatusConfig = (status) => {
     case 'SHORTLISTED':
       return {
         label: 'Shortlisted',
-        badgeClass: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
-        dotClass: 'bg-amber-400',
+        badgeClass: 'bg-amber-50 text-[#C58A25] border-amber-200',
+        dotClass: 'bg-[#C58A25]',
         Icon: Star,
       };
     case 'INTERVIEW':
       return {
         label: 'Interview Round',
-        badgeClass: 'bg-violet-500/10 text-violet-300 border-violet-500/30',
-        dotClass: 'bg-violet-400',
+        badgeClass: 'bg-blue-50 text-[#3569A8] border-blue-200',
+        dotClass: 'bg-[#3569A8]',
         Icon: Users,
       };
     case 'SELECTED':
       return {
         label: 'Selected',
-        badgeClass: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
-        dotClass: 'bg-emerald-400',
+        badgeClass: 'bg-emerald-50 text-[#16845B] border-emerald-200',
+        dotClass: 'bg-[#16845B]',
         Icon: CheckCircle2,
       };
     case 'REJECTED':
       return {
         label: 'Rejected',
-        badgeClass: 'bg-rose-500/10 text-rose-300 border-rose-500/30',
-        dotClass: 'bg-rose-400',
+        badgeClass: 'bg-red-50 text-[#D14343] border-red-200',
+        dotClass: 'bg-[#D14343]',
         Icon: XCircle,
       };
     case 'APPLIED':
     default:
       return {
         label: 'Applied',
-        badgeClass: 'bg-sky-500/10 text-sky-300 border-sky-500/30',
-        dotClass: 'bg-sky-400',
+        badgeClass: 'bg-[#F1F5F9] text-[#475569] border-[#E4E8EF]',
+        dotClass: 'bg-[#667085]',
         Icon: Clock,
       };
   }

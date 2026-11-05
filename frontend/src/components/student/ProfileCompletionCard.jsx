@@ -19,70 +19,76 @@ const ProfileCompletionCard = ({ profile, onActionClick }) => {
   const doneCount = checklist.filter((i) => i.done).length;
 
   const getBarColor = (pct) => {
-    if (pct >= 85) return '#22c55e';
-    if (pct >= 50) return '#6366f1';
-    return '#f59e0b';
+    if (pct >= 85) return '#16845B';
+    if (pct >= 50) return '#3569A8';
+    return '#C58A25';
   };
 
   const getStatusLabel = (pct) => {
-    if (pct === 100) return { text: 'Ready for Placement', cls: 'sd-badge--green' };
-    if (pct >= 70) return { text: 'Good Standing', cls: 'sd-badge--blue' };
-    return { text: 'Incomplete', cls: 'sd-badge--amber' };
+    if (pct === 100) return { text: 'Ready for Placement', badgeClass: 'bg-[#EBFDF5] text-[#16845B] border border-[#A7F3D0]' };
+    if (pct >= 70) return { text: 'Good Standing', badgeClass: 'bg-[#EFF6FF] text-[#3569A8] border border-[#BFDBFE]' };
+    return { text: 'Incomplete', badgeClass: 'bg-[#FEFCE8] text-[#C58A25] border border-[#FEF08A]' };
   };
 
   const status = getStatusLabel(percentage);
 
   return (
-    <div className="sd-section">
-      <div className="sd-section__header">
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2px' }}>
-            <h2 className="sd-section__title">Profile Completion</h2>
-            <span className={`sd-badge ${status.cls}`}>{status.text}</span>
+    <div className="bg-white border border-[#E4E8EF] rounded-xl p-5 sm:p-6 shadow-sm flex flex-col justify-between h-full">
+      <div>
+        {/* Card Header */}
+        <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-[#E4E8EF]">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-base font-bold text-[#202B3C]">Profile Completion</h2>
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${status.badgeClass}`}>
+                {status.text}
+              </span>
+            </div>
+            <p className="text-xs text-[#667085]">
+              {doneCount} of {checklist.length} sections complete · Improves company shortlisting
+            </p>
           </div>
-          <p className="sd-section__sub">
-            {doneCount} of {checklist.length} sections complete · Complete your profile to improve shortlisting chances.
-          </p>
+          <div className="text-right shrink-0">
+            <div className="flex items-baseline justify-end gap-0.5">
+              <span className="text-2xl font-bold text-[#202B3C] tracking-tight">{percentage}</span>
+              <span className="text-xs font-semibold text-[#667085]">%</span>
+            </div>
+          </div>
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <span style={{ fontSize: '28px', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.5px', lineHeight: 1 }}>
-            {percentage}
-          </span>
-          <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 500 }}>%</span>
+
+        {/* Progress bar */}
+        <div className="h-2 bg-[#E4E8EF] rounded-full overflow-hidden mb-4">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${percentage}%`,
+              backgroundColor: getBarColor(percentage),
+            }}
+          />
         </div>
-      </div>
 
-      {/* Progress bar */}
-      <div style={{ height: '6px', background: '#1e293b', borderRadius: '99px', overflow: 'hidden', margin: '16px 0' }}>
-        <div
-          style={{
-            height: '100%',
-            width: `${percentage}%`,
-            background: getBarColor(percentage),
-            borderRadius: '99px',
-            transition: 'width 0.6s ease',
-          }}
-        />
-      </div>
-
-      {/* Checklist */}
-      <div className="sd-completion-grid">
-        {checklist.map((item) => (
-          <button
-            key={item.key}
-            type="button"
-            onClick={() => onActionClick && onActionClick(item.action)}
-            className={`sd-completion-item ${item.done ? 'sd-completion-item--done' : ''}`}
-          >
-            {item.done ? (
-              <CheckCircle2 style={{ width: 15, height: 15, color: '#22c55e', flexShrink: 0 }} />
-            ) : (
-              <Circle style={{ width: 15, height: 15, color: '#475569', flexShrink: 0 }} />
-            )}
-            <span style={{ fontSize: '13px', fontWeight: 500, flex: 1, textAlign: 'left' }}>{item.label}</span>
-            <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'monospace' }}>+{item.weight}%</span>
-          </button>
-        ))}
+        {/* Checklist */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-2">
+          {checklist.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => onActionClick && onActionClick(item.action)}
+              className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-xs font-medium transition-all text-left cursor-pointer ${
+                item.done
+                  ? 'bg-[#EBFDF5] border-[#A7F3D0] text-[#16845B]'
+                  : 'bg-[#F8FAFC] border-[#E4E8EF] text-[#667085] hover:bg-white hover:border-[#CBD5E1]'
+              }`}
+            >
+              {item.done ? (
+                <CheckCircle2 size={14} strokeWidth={2} className="text-[#16845B] shrink-0" />
+              ) : (
+                <Circle size={14} strokeWidth={1.8} className="text-[#94A3B8] shrink-0" />
+              )}
+              <span className="truncate">{item.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

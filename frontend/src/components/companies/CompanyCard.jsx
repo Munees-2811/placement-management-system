@@ -12,15 +12,6 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
-const GRADIENTS = [
-  'from-indigo-600 to-violet-600',
-  'from-blue-600 to-cyan-600',
-  'from-emerald-600 to-teal-600',
-  'from-violet-600 to-purple-600',
-  'from-amber-600 to-orange-600',
-  'from-rose-600 to-pink-600',
-];
-
 const getInitials = (name) => {
   if (!name) return 'CO';
   const parts = name.trim().split(' ');
@@ -30,115 +21,103 @@ const getInitials = (name) => {
   return name.slice(0, 2).toUpperCase();
 };
 
-const getGradientForName = (name) => {
-  let hash = 0;
-  for (let i = 0; i < (name || '').length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % GRADIENTS.length;
-  return GRADIENTS[index];
-};
-
 const CompanyCard = ({ company, canManage, onEdit, onDelete, onView }) => {
-  const gradient = getGradientForName(company.companyName);
-
   return (
     <div
       id={`company-card-${company._id}`}
-      className="group relative bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 rounded-3xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-950/20 flex flex-col justify-between"
+      className="group relative bg-white border border-[#E4E8EF] hover:border-[#CBD5E1] rounded-xl p-5 transition-all duration-200 shadow-sm hover:shadow-md flex flex-col justify-between"
     >
       <div>
-        {/* Top Header */}
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <div className="flex items-center gap-3.5">
-            <div
-              className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${gradient} text-white font-bold text-base flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200 shrink-0`}
+        {/* Top Header: Avatar + Title & Location */}
+        <div className="flex items-start gap-3.5 mb-3">
+          <div className="w-11 h-11 rounded-xl bg-[#19365C] text-white font-bold text-sm flex items-center justify-center shadow-xs shrink-0">
+            {getInitials(company.companyName)}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3
+              id={`company-name-${company._id}`}
+              onClick={() => onView(company)}
+              className="text-base font-bold text-[#202B3C] group-hover:text-[#3569A8] transition-colors cursor-pointer truncate leading-tight"
+              title={company.companyName}
             >
-              {getInitials(company.companyName)}
-            </div>
-            <div>
-              <h3
-                id={`company-name-${company._id}`}
-                onClick={() => onView(company)}
-                className="text-lg font-bold text-white group-hover:text-indigo-300 transition-colors cursor-pointer line-clamp-1"
-                title={company.companyName}
-              >
-                {company.companyName}
-              </h3>
-              <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
-                <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                <span className="truncate max-w-[200px]" title={company.location}>
-                  {company.location}
-                </span>
-              </div>
+              {company.companyName}
+            </h3>
+            <div className="flex items-center gap-1.5 text-xs text-[#667085] mt-1">
+              <MapPin size={13} strokeWidth={1.8} className="text-[#3569A8] shrink-0" />
+              <span className="truncate" title={company.location}>
+                {company.location}
+              </span>
             </div>
           </div>
+        </div>
 
-          {/* Industry Tag */}
-          <span className="shrink-0 px-2.5 py-1 rounded-full text-[11px] font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-            {company.industry}
+        {/* Industry Badge */}
+        <div className="mb-3">
+          <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#EFF6FF] text-[#3569A8] border border-[#BFDBFE] max-w-full"
+            title={company.industry}
+          >
+            <Briefcase size={12} strokeWidth={1.8} className="shrink-0 text-[#3569A8]" />
+            <span className="truncate">{company.industry}</span>
           </span>
         </div>
 
         {/* Description snippet */}
-        {company.description ? (
-          <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">
-            {company.description}
-          </p>
-        ) : (
-          <p className="text-xs text-slate-500 italic mb-4">No description provided.</p>
-        )}
+        <p className="text-xs text-[#667085] line-clamp-2 mb-4 leading-relaxed min-h-[36px]">
+          {company.description || 'No detailed organization overview provided.'}
+        </p>
 
-        {/* Contact info pill */}
-        <div className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800/70 mb-4 space-y-1.5">
-          <div className="flex items-center gap-2 text-xs text-slate-300">
-            <User className="w-3.5 h-3.5 text-violet-400 shrink-0" />
-            <span className="font-medium text-slate-200 truncate">{company.contactPerson}</span>
+        {/* Contact info card */}
+        <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E4E8EF] mb-4 space-y-1.5">
+          <div className="flex items-center gap-2 text-xs text-[#202B3C]">
+            <User size={13} strokeWidth={1.8} className="text-[#3569A8] shrink-0" />
+            <span className="font-medium truncate">{company.contactPerson || 'Recruitment Coordinator'}</span>
           </div>
-          <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center text-xs">
             <a
               id={`company-email-link-${company._id}`}
               href={`mailto:${company.contactEmail}`}
-              className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 truncate"
+              className="flex items-center gap-2 text-[#3569A8] hover:text-[#19365C] truncate font-mono text-[11px]"
               title={company.contactEmail}
             >
-              <Mail className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate font-mono text-[11px]">{company.contactEmail}</span>
+              <Mail size={13} strokeWidth={1.8} className="shrink-0 text-[#94A3B8]" />
+              <span className="truncate">{company.contactEmail}</span>
             </a>
           </div>
         </div>
       </div>
 
       {/* Footer Actions */}
-      <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5">
+      <div className="pt-3 border-t border-[#E4E8EF] flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
           {company.website ? (
             <a
               id={`company-website-btn-${company._id}`}
               href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#202B3C] text-xs font-medium transition-colors"
               title="Visit official website"
             >
-              <Globe className="w-3.5 h-3.5 text-indigo-400" />
+              <Globe size={13} strokeWidth={1.8} className="text-[#3569A8]" />
               <span>Website</span>
-              <ExternalLink className="w-3 h-3 ml-0.5 opacity-60" />
+              <ExternalLink size={11} strokeWidth={1.8} className="ml-0.5 opacity-60" />
             </a>
           ) : (
-            <span className="text-[11px] text-slate-600">No website</span>
+            <span className="text-[11px] text-[#94A3B8]">No website listed</span>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {/* View Details Modal Trigger */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* View Details */}
           <button
             id={`company-view-btn-${company._id}`}
             onClick={() => onView(company)}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            title="View Details"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium text-[#3569A8] hover:text-[#19365C] hover:bg-[#EFF6FF] border border-[#BFDBFE] transition-colors cursor-pointer"
+            title="View full company details"
           >
-            <Eye className="w-4 h-4" />
+            <Eye size={13} strokeWidth={1.8} />
+            <span>View Details</span>
           </button>
 
           {/* Admin / Officer Controls */}
@@ -147,18 +126,18 @@ const CompanyCard = ({ company, canManage, onEdit, onDelete, onView }) => {
               <button
                 id={`company-edit-btn-${company._id}`}
                 onClick={() => onEdit(company)}
-                className="p-2 rounded-xl text-indigo-400 hover:text-indigo-300 hover:bg-indigo-600/10 transition-colors"
+                className="p-1 rounded-md text-[#3569A8] hover:bg-[#EFF6FF] border border-transparent hover:border-[#BFDBFE] transition-colors cursor-pointer"
                 title="Edit Company"
               >
-                <Edit3 className="w-4 h-4" />
+                <Edit3 size={14} strokeWidth={1.8} />
               </button>
               <button
                 id={`company-delete-btn-${company._id}`}
                 onClick={() => onDelete(company)}
-                className="p-2 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+                className="p-1 rounded-md text-[#D14343] hover:bg-[#FEF2F2] border border-transparent hover:border-[#FECACA] transition-colors cursor-pointer"
                 title="Delete Company"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 size={14} strokeWidth={1.8} />
               </button>
             </>
           )}

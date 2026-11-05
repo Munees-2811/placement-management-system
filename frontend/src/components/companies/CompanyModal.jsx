@@ -152,26 +152,26 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
   return (
     <div
       id="company-modal-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget && !saving) onClose();
       }}
     >
       <div
         id="company-modal-dialog"
-        className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-8"
+        className="w-full max-w-2xl bg-white border border-[#E4E8EF] rounded-2xl shadow-xl overflow-hidden my-8"
       >
         {/* Header */}
-        <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div className="px-6 py-4 border-b border-[#E4E8EF] flex items-center justify-between bg-[#F8FAFC]">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400">
+            <div className="p-2.5 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#3569A8]">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <h2 id="company-modal-title" className="text-xl font-bold text-white tracking-tight">
+              <h2 id="company-modal-title" className="text-lg font-bold text-[#202B3C] tracking-tight">
                 {isEdit ? 'Edit Company Profile' : 'Add New Partner Company'}
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#667085]">
                 {isEdit
                   ? 'Update recruiting company details, contacts, and domain'
                   : 'Register a new hiring partner for campus placement drives'}
@@ -182,21 +182,21 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
             id="company-modal-close-btn"
             onClick={onClose}
             disabled={saving}
-            className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors disabled:opacity-50"
+            className="p-1.5 text-[#667085] hover:text-[#202B3C] rounded-lg hover:bg-[#F1F5F9] transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Company Name */}
           <div>
-            <label htmlFor="company-input-name" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Company Name <span className="text-rose-400">*</span>
+            <label htmlFor="company-input-name" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+              Company Name <span className="text-[#D14343]">*</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                 <Building2 className="w-4 h-4" />
               </div>
               <input
@@ -207,16 +207,16 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                 value={formData.companyName}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`w-full pl-10 pr-4 py-2.5 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-10 pr-4 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
                   errors.companyName
-                    ? 'border-rose-500/60 focus:ring-rose-500/30'
-                    : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
+                    ? 'border-[#D14343] focus:ring-red-100'
+                    : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
                 }`}
               />
             </div>
             {errors.companyName && (
-              <p id="company-error-name" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p id="company-error-name" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.companyName}
               </p>
             )}
@@ -226,11 +226,11 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Industry */}
             <div>
-              <label htmlFor="company-input-industry" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Industry <span className="text-rose-400">*</span>
+              <label htmlFor="company-input-industry" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+                Industry <span className="text-[#D14343]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                   <Briefcase className="w-4 h-4" />
                 </div>
                 <input
@@ -241,16 +241,16 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                   value={formData.industry}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full pl-10 pr-4 py-2.5 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
                     errors.industry
-                      ? 'border-rose-500/60 focus:ring-rose-500/30'
-                      : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-[#D14343] focus:ring-red-100'
+                      : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
                   }`}
                 />
               </div>
               {errors.industry && (
-                <p id="company-error-industry" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
+                <p id="company-error-industry" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
                   {errors.industry}
                 </p>
               )}
@@ -264,7 +264,7 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                       setFormData((p) => ({ ...p, industry: ind }));
                       setErrors((p) => ({ ...p, industry: null }));
                     }}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors border border-slate-700/50"
+                    className="text-[11px] px-2 py-0.5 rounded-full bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] transition-colors border border-[#E2E8F0]"
                   >
                     + {ind.split(' ')[0]}
                   </button>
@@ -274,31 +274,31 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
 
             {/* Location */}
             <div>
-              <label htmlFor="company-input-location" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Location <span className="text-rose-400">*</span>
+              <label htmlFor="company-input-location" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+                Location <span className="text-[#D14343]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <input
                   id="company-input-location"
                   name="location"
                   type="text"
-                  placeholder="e.g. Bengaluru, Karnataka, India"
+                  placeholder="e.g. Bengaluru, Karnataka"
                   value={formData.location}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full pl-10 pr-4 py-2.5 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
                     errors.location
-                      ? 'border-rose-500/60 focus:ring-rose-500/30'
-                      : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-[#D14343] focus:ring-red-100'
+                      : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
                   }`}
                 />
               </div>
               {errors.location && (
-                <p id="company-error-location" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
+                <p id="company-error-location" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
                   {errors.location}
                 </p>
               )}
@@ -307,11 +307,11 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
 
           {/* Website */}
           <div>
-            <label htmlFor="company-input-website" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Website URL <span className="text-slate-500 font-normal lowercase">(optional)</span>
+            <label htmlFor="company-input-website" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+              Website URL <span className="text-[#667085] font-normal lowercase">(optional)</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                 <Globe className="w-4 h-4" />
               </div>
               <input
@@ -322,10 +322,10 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                 value={formData.website}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`w-full pl-10 pr-10 py-2.5 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full pl-10 pr-10 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
                   errors.website
-                    ? 'border-rose-500/60 focus:ring-rose-500/30'
-                    : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
+                    ? 'border-[#D14343] focus:ring-red-100'
+                    : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
                 }`}
               />
               {formData.website && !errors.website && (
@@ -333,7 +333,7 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                   href={formData.website.startsWith('http') ? formData.website : `https://${formData.website}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-indigo-400 hover:text-indigo-300"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#3569A8] hover:text-[#19365C]"
                   title="Test link"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -341,8 +341,8 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
               )}
             </div>
             {errors.website && (
-              <p id="company-error-website" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p id="company-error-website" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.website}
               </p>
             )}
@@ -352,11 +352,11 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Contact Person */}
             <div>
-              <label htmlFor="company-input-contact-person" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Contact Person <span className="text-rose-400">*</span>
+              <label htmlFor="company-input-contact-person" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+                Contact Person <span className="text-[#D14343]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                   <User className="w-4 h-4" />
                 </div>
                 <input
@@ -367,16 +367,16 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                   value={formData.contactPerson}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full pl-10 pr-4 py-2.5 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
                     errors.contactPerson
-                      ? 'border-rose-500/60 focus:ring-rose-500/30'
-                      : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-[#D14343] focus:ring-red-100'
+                      : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
                   }`}
                 />
               </div>
               {errors.contactPerson && (
-                <p id="company-error-contact-person" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
+                <p id="company-error-contact-person" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
                   {errors.contactPerson}
                 </p>
               )}
@@ -384,11 +384,11 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
 
             {/* Contact Email */}
             <div>
-              <label htmlFor="company-input-contact-email" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Contact Email <span className="text-rose-400">*</span>
+              <label htmlFor="company-input-contact-email" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+                Contact Email <span className="text-[#D14343]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -399,16 +399,16 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
                   value={formData.contactEmail}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full pl-10 pr-4 py-2.5 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-4 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
                     errors.contactEmail
-                      ? 'border-rose-500/60 focus:ring-rose-500/30'
-                      : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-[#D14343] focus:ring-red-100'
+                      : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
                   }`}
                 />
               </div>
               {errors.contactEmail && (
-                <p id="company-error-contact-email" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
+                <p id="company-error-contact-email" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
                   {errors.contactEmail}
                 </p>
               )}
@@ -418,45 +418,43 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
           {/* Description */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="company-input-description" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                Company Description <span className="text-slate-500 font-normal lowercase">(optional)</span>
+              <label htmlFor="company-input-description" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider">
+                Company Description <span className="text-[#667085] font-normal lowercase">(optional)</span>
               </label>
-              <span className={`text-[11px] ${formData.description.length > 2000 ? 'text-rose-400' : 'text-slate-500'}`}>
+              <span className={`text-[11px] ${formData.description.length > 2000 ? 'text-[#D14343]' : 'text-[#667085]'}`}>
                 {formData.description.length} / 2000
               </span>
             </div>
-            <div className="relative">
-              <textarea
-                id="company-input-description"
-                name="description"
-                rows={3}
-                placeholder="Overview of company culture, recruitment specializations, perks, and domain focus..."
-                value={formData.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full p-3 bg-slate-950 border rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all resize-none ${
-                  errors.description
-                    ? 'border-rose-500/60 focus:ring-rose-500/30'
-                    : 'border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/20'
-                }`}
-              />
-            </div>
+            <textarea
+              id="company-input-description"
+              name="description"
+              rows={3}
+              placeholder="Overview of company culture, recruitment specializations, perks, and domain focus..."
+              value={formData.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`w-full p-3 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all resize-none ${
+                errors.description
+                  ? 'border-[#D14343] focus:ring-red-100'
+                  : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
+              }`}
+            />
             {errors.description && (
-              <p id="company-error-description" className="mt-1 text-xs text-rose-400 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p id="company-error-description" className="mt-1 text-xs text-[#D14343] flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5" />
                 {errors.description}
               </p>
             )}
           </div>
 
           {/* Actions */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-[#E4E8EF] flex items-center justify-end gap-3">
             <button
               id="company-modal-cancel-btn"
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -464,7 +462,7 @@ const CompanyModal = ({ isOpen, onClose, onSave, company, saving }) => {
               id="company-modal-submit-btn"
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#19365C] hover:bg-[#122844] text-white font-medium text-sm shadow-sm transition-all disabled:opacity-50"
             >
               {saving ? (
                 <>

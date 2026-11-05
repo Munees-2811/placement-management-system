@@ -25,7 +25,10 @@ const SkillsManager = ({ skills = [], onUpdateSkills, saving = false }) => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); handleAddSkill(); }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddSkill();
+    }
   };
 
   const handleRemoveSkill = async (skillToRemove) => {
@@ -33,81 +36,62 @@ const SkillsManager = ({ skills = [], onUpdateSkills, saving = false }) => {
   };
 
   return (
-    <div className="sd-section">
-      <div className="sd-section__header">
+    <div className="bg-white border border-[#E4E8EF] rounded-xl p-5 sm:p-6 shadow-sm">
+      <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-[#E4E8EF]">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-            <h2 className="sd-section__title">Technical Skills</h2>
-            <span className="sd-badge sd-badge--neutral">{skills.length} added</span>
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="text-base font-bold text-[#202B3C]">Technical Skills</h2>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#F1F5F9] text-[#667085] border border-[#E2E8F0]">
+              {skills.length} added
+            </span>
           </div>
-          <p className="sd-section__sub">Add languages, frameworks, and tools that match job requirements</p>
+          <p className="text-xs text-[#667085]">Add programming languages, frameworks, and tools that match job requirements</p>
         </div>
       </div>
 
       {/* Input row */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+      <div className="flex gap-2 mb-3">
         <input
           type="text"
           value={newSkill}
           onChange={(e) => setNewSkill(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type a skill and press Enter…"
-          className="sd-input"
-          style={{ flex: 1 }}
+          placeholder="Type a skill (e.g., React, Python) and press Enter..."
+          className="flex-1 px-3 py-2 bg-white border border-[#E4E8EF] rounded-lg text-xs text-[#202B3C] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-blue-100 transition-all"
         />
         <button
           onClick={() => handleAddSkill()}
           disabled={saving || !newSkill.trim()}
           type="button"
-          className="sd-btn sd-btn--primary"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#19365C] hover:bg-[#122844] text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
         >
-          <Plus style={{ width: 14, height: 14 }} />
-          Add
+          <Plus size={14} strokeWidth={1.8} />
+          <span>Add Skill</span>
         </button>
       </div>
-      {error && <p style={{ fontSize: '12px', color: '#f87171', marginBottom: '8px' }}>{error}</p>}
+      {error && <p className="text-xs text-[#D14343] mb-2">{error}</p>}
 
       {/* Current skills */}
-      <div style={{
-        minHeight: '44px',
-        padding: '10px',
-        background: '#0f172a',
-        border: '1px solid #1e293b',
-        borderRadius: '8px',
-        marginBottom: '16px',
-      }}>
+      <div className="min-h-[48px] p-3 rounded-lg bg-[#F8FAFC] border border-[#E4E8EF] mb-4">
         {skills.length === 0 ? (
-          <p style={{ fontSize: '12px', color: '#475569', textAlign: 'center', padding: '4px 0', fontStyle: 'italic' }}>
-            No skills added yet
+          <p className="text-xs text-[#94A3B8] text-center py-2 italic">
+            No technical skills added yet
           </p>
         ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          <div className="flex flex-wrap gap-2">
             {skills.map((skill) => (
-              <span key={skill} style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '3px 10px 3px 10px',
-                background: '#1e293b',
-                border: '1px solid #334155',
-                borderRadius: '5px',
-                fontSize: '12px',
-                fontWeight: 500,
-                color: '#cbd5e1',
-              }}>
+              <span
+                key={skill}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#EFF6FF] text-[#19365C] border border-[#BFDBFE] text-xs font-semibold shadow-2xs"
+              >
                 {skill}
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(skill)}
-                  style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    color: '#64748b', padding: '1px', borderRadius: '3px',
-                  }}
-                  onMouseOver={e => e.currentTarget.style.color = '#f87171'}
-                  onMouseOut={e => e.currentTarget.style.color = '#64748b'}
+                  className="p-0.5 rounded text-[#667085] hover:text-[#D14343] hover:bg-white/60 transition-colors cursor-pointer"
+                  title="Remove skill"
                 >
-                  <X style={{ width: 11, height: 11 }} />
+                  <X size={12} strokeWidth={1.8} />
                 </button>
               </span>
             ))}
@@ -115,12 +99,12 @@ const SkillsManager = ({ skills = [], onUpdateSkills, saving = false }) => {
         )}
       </div>
 
-      {/* Suggestions */}
+      {/* Suggested skills */}
       <div>
-        <p style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
-          Quick add
+        <p className="text-[11px] font-semibold text-[#667085] uppercase tracking-wider mb-2">
+          Suggested Skills
         </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+        <div className="flex flex-wrap gap-2">
           {SUGGESTED_SKILLS.map((suggested) => {
             const alreadyHas = skills.some((s) => s.toLowerCase() === suggested.toLowerCase());
             return (
@@ -129,25 +113,18 @@ const SkillsManager = ({ skills = [], onUpdateSkills, saving = false }) => {
                 type="button"
                 onClick={() => !alreadyHas && handleAddSkill(suggested)}
                 disabled={alreadyHas || saving}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '3px 9px',
-                  background: alreadyHas ? '#0f172a' : '#1e293b',
-                  border: `1px solid ${alreadyHas ? '#1e293b' : '#334155'}`,
-                  borderRadius: '5px',
-                  fontSize: '11px',
-                  fontWeight: 500,
-                  color: alreadyHas ? '#334155' : '#94a3b8',
-                  cursor: alreadyHas ? 'default' : 'pointer',
-                  transition: 'all 0.15s',
-                }}
-                onMouseOver={e => { if (!alreadyHas) e.currentTarget.style.color = '#e2e8f0'; }}
-                onMouseOut={e => { if (!alreadyHas) e.currentTarget.style.color = '#94a3b8'; }}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border transition-colors ${
+                  alreadyHas
+                    ? 'bg-[#F1F5F9] border-[#E2E8F0] text-[#94A3B8] cursor-default'
+                    : 'bg-white border-[#E4E8EF] text-[#202B3C] hover:border-[#3569A8] hover:text-[#19365C] hover:bg-[#F8FAFC] cursor-pointer'
+                }`}
               >
-                {alreadyHas ? <Check style={{ width: 10, height: 10, color: '#22c55e' }} /> : <Plus style={{ width: 10, height: 10 }} />}
-                {suggested}
+                {alreadyHas ? (
+                  <Check size={11} strokeWidth={2} className="text-[#16845B]" />
+                ) : (
+                  <Plus size={11} strokeWidth={1.8} />
+                )}
+                <span>{suggested}</span>
               </button>
             );
           })}

@@ -52,28 +52,28 @@ const ApplicationTimeline = ({ status, appliedAt, remarks, updatedAt }) => {
               return (
                 <div key={step.id} className="flex flex-col items-center text-center">
                   <div
-                    className={`w-9 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-md ${
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
                       isCurrent
-                        ? 'bg-gradient-to-tr from-indigo-600 to-violet-500 text-white ring-4 ring-indigo-500/20 scale-105'
+                        ? 'bg-[#19365C] text-white ring-4 ring-blue-50 shadow-sm scale-105'
                         : isPast
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-slate-900 border border-slate-800 text-slate-500'
+                        ? 'bg-emerald-50 text-[#16845B] border border-emerald-200'
+                        : 'bg-[#F1F5F9] border border-[#E4E8EF] text-[#94A3B8]'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>
                   <span
-                    className={`text-[11px] font-semibold mt-2 ${
+                    className={`text-[11px] font-semibold mt-1.5 ${
                       isCurrent
-                        ? 'text-white'
+                        ? 'text-[#19365C]'
                         : isPast
-                        ? 'text-emerald-400'
-                        : 'text-slate-500'
+                        ? 'text-[#16845B]'
+                        : 'text-[#94A3B8]'
                     }`}
                   >
                     {step.label}
                   </span>
-                  <span className="text-[10px] text-slate-500 hidden sm:block">
+                  <span className="text-[10px] text-[#667085] hidden sm:block">
                     {isCurrent ? 'Current' : isPast ? 'Completed' : 'Pending'}
                   </span>
                 </div>
@@ -82,39 +82,39 @@ const ApplicationTimeline = ({ status, appliedAt, remarks, updatedAt }) => {
           </div>
 
           {/* Connecting line */}
-          <div className="absolute top-4 left-6 right-6 h-0.5 bg-slate-800 -z-10" />
+          <div className="absolute top-4.5 left-6 right-6 h-0.5 bg-[#E4E8EF] -z-10" />
         </div>
       ) : (
         /* Rejected Branch */
-        <div className="p-3.5 rounded-2xl bg-rose-950/30 border border-rose-500/30 flex items-center justify-between gap-3">
+        <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-red-100 text-[#D14343] border border-red-200 flex items-center justify-center shrink-0">
               <XCircle className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-xs font-bold text-rose-300 block">
+              <span className="text-xs font-bold text-[#D14343] block">
                 Application Decision: Not Selected
               </span>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-[#667085]">
                 Application was not moved forward for this drive.
               </span>
             </div>
           </div>
-          <span className="text-[10px] font-medium text-rose-400 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 uppercase tracking-wider">
+          <span className="text-[10px] font-semibold text-[#D14343] px-2.5 py-1 rounded-full bg-red-100 uppercase tracking-wider">
             Closed
           </span>
         </div>
       )}
 
-      {/* Remarks Section (if provided by officer or student) */}
+      {/* Remarks Section */}
       {remarks && remarks.trim().length > 0 && (
-        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-2.5 text-xs">
-          <MessageSquare className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+        <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E4E8EF] flex items-start gap-2.5 text-xs">
+          <MessageSquare className="w-4 h-4 text-[#3569A8] shrink-0 mt-0.5" />
           <div className="min-w-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-0.5">
-              Placement Officer Remarks &amp; Updates:
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#667085] block mb-0.5">
+              Placement Officer Remarks:
             </span>
-            <p className="text-slate-300 leading-relaxed whitespace-pre-line">
+            <p className="text-[#202B3C] leading-relaxed whitespace-pre-line">
               {remarks}
             </p>
           </div>
@@ -122,7 +122,7 @@ const ApplicationTimeline = ({ status, appliedAt, remarks, updatedAt }) => {
       )}
 
       {/* Timestamps */}
-      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-800/60">
+      <div className="flex items-center justify-between text-[11px] text-[#667085] pt-1 border-t border-[#E4E8EF]">
         <span>Applied on: {formattedAppliedDate || 'Recent'}</span>
         {formattedUpdatedDate && formattedUpdatedDate !== formattedAppliedDate && (
           <span>Last updated: {formattedUpdatedDate}</span>

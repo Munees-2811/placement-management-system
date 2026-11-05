@@ -22,40 +22,40 @@ const getInitials = (name) => {
 
 const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) => {
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+    <div className="bg-white border border-[#E4E8EF] rounded-2xl overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="bg-slate-950/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
+        <table className="w-full text-left text-sm text-[#202B3C]">
+          <thead className="bg-[#F8FAFC] text-xs uppercase tracking-wider text-[#667085] border-b border-[#E4E8EF]">
             <tr>
-              <th className="py-4 px-6 font-semibold">Company</th>
-              <th className="py-4 px-6 font-semibold">Industry</th>
-              <th className="py-4 px-6 font-semibold">Location</th>
-              <th className="py-4 px-6 font-semibold">Contact Liaison</th>
-              <th className="py-4 px-6 font-semibold">Website</th>
-              <th className="py-4 px-6 font-semibold text-right">Actions</th>
+              <th className="py-3.5 px-6 font-semibold">Company</th>
+              <th className="py-3.5 px-6 font-semibold">Industry</th>
+              <th className="py-3.5 px-6 font-semibold">Location</th>
+              <th className="py-3.5 px-6 font-semibold">Contact Liaison</th>
+              <th className="py-3.5 px-6 font-semibold">Website</th>
+              <th className="py-3.5 px-6 font-semibold text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-[#E4E8EF]">
             {companies.map((company) => (
               <tr
                 key={company._id}
                 id={`company-row-${company._id}`}
-                className="hover:bg-slate-800/40 transition-colors"
+                className="hover:bg-[#F8FAFC] transition-colors"
               >
                 {/* Company Name & Initials */}
                 <td className="py-4 px-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-xl bg-[#19365C] text-white font-bold text-xs flex items-center justify-center shrink-0">
                       {getInitials(company.companyName)}
                     </div>
                     <div>
                       <button
                         onClick={() => onView(company)}
-                        className="font-bold text-white hover:text-indigo-300 text-left transition-colors truncate max-w-[200px] block"
+                        className="font-semibold text-[#202B3C] hover:text-[#3569A8] text-left transition-colors truncate max-w-[200px] block"
                       >
                         {company.companyName}
                       </button>
-                      <span className="text-[11px] text-slate-500 font-mono">
+                      <span className="text-[11px] text-[#667085] font-mono">
                         {company._id.slice(-6)}
                       </span>
                     </div>
@@ -64,15 +64,15 @@ const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) =>
 
                 {/* Industry */}
                 <td className="py-4 px-6">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 whitespace-nowrap">
+                  <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE] whitespace-nowrap">
                     {company.industry}
                   </span>
                 </td>
 
                 {/* Location */}
                 <td className="py-4 px-6">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-300">
-                    <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                  <div className="flex items-center gap-1.5 text-xs text-[#667085]">
+                    <MapPin className="w-3.5 h-3.5 text-[#667085] shrink-0" />
                     <span className="truncate max-w-[180px]">{company.location}</span>
                   </div>
                 </td>
@@ -80,15 +80,15 @@ const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) =>
                 {/* Contact */}
                 <td className="py-4 px-6">
                   <div className="text-xs">
-                    <div className="font-medium text-slate-200 flex items-center gap-1">
-                      <User className="w-3 h-3 text-violet-400" />
+                    <div className="font-medium text-[#202B3C] flex items-center gap-1">
+                      <User className="w-3.5 h-3.5 text-[#667085]" />
                       {company.contactPerson}
                     </div>
                     <a
                       href={`mailto:${company.contactEmail}`}
-                      className="text-indigo-400 hover:text-indigo-300 font-mono text-[11px] flex items-center gap-1 mt-0.5"
+                      className="text-[#3569A8] hover:underline font-mono text-[11px] flex items-center gap-1 mt-0.5"
                     >
-                      <Mail className="w-3 h-3 text-slate-500" />
+                      <Mail className="w-3 h-3 text-[#94A3B8]" />
                       {company.contactEmail}
                     </a>
                   </div>
@@ -105,14 +105,14 @@ const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) =>
                       }
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+                      className="inline-flex items-center gap-1 text-xs text-[#3569A8] hover:underline font-medium"
                     >
                       <Globe className="w-3.5 h-3.5" />
                       <span className="truncate max-w-[120px]">Visit</span>
-                      <ExternalLink className="w-3 h-3 opacity-60" />
+                      <ExternalLink className="w-3 h-3 opacity-70" />
                     </a>
                   ) : (
-                    <span className="text-xs text-slate-600">—</span>
+                    <span className="text-xs text-[#94A3B8]">—</span>
                   )}
                 </td>
 
@@ -122,7 +122,7 @@ const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) =>
                     <button
                       id={`table-view-btn-${company._id}`}
                       onClick={() => onView(company)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                      className="p-1.5 rounded-lg text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] transition-colors"
                       title="View Details"
                     >
                       <Eye className="w-4 h-4" />
@@ -132,7 +132,7 @@ const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) =>
                         <button
                           id={`table-edit-btn-${company._id}`}
                           onClick={() => onEdit(company)}
-                          className="p-1.5 rounded-lg text-indigo-400 hover:text-indigo-300 hover:bg-indigo-600/10 transition-colors"
+                          className="p-1.5 rounded-lg text-[#3569A8] hover:text-[#19365C] hover:bg-[#EFF6FF] transition-colors"
                           title="Edit Company"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -140,7 +140,7 @@ const CompanyTableView = ({ companies, canManage, onEdit, onDelete, onView }) =>
                         <button
                           id={`table-delete-btn-${company._id}`}
                           onClick={() => onDelete(company)}
-                          className="p-1.5 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+                          className="p-1.5 rounded-lg text-[#D14343] hover:text-[#991B1B] hover:bg-[#FEF2F2] transition-colors"
                           title="Delete Company"
                         >
                           <Trash2 className="w-4 h-4" />

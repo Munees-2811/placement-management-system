@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, User2, Phone, BookOpen, Calendar, GraduationCap, Loader2 } from 'lucide-react';
+import { X, Save, User2, Phone, BookOpen, Calendar, GraduationCap, Loader2, AlertCircle } from 'lucide-react';
 
 const DEPARTMENTS = [
   'Computer Science and Engineering',
@@ -90,125 +90,144 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800/80 rounded-2xl shadow-2xl shadow-black/50 overflow-y-auto max-h-[90vh]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !saving) onClose();
+      }}
+    >
+      <div className="relative w-full max-w-lg bg-white border border-[#E4E8EF] rounded-2xl shadow-xl overflow-hidden my-8">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-800">
+        <div className="px-6 py-4 border-b border-[#E4E8EF] flex items-center justify-between bg-[#F8FAFC]">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-indigo-600/10 text-indigo-400 border border-indigo-500/20">
-              <User2 className="w-4 h-4" />
+            <div className="p-2.5 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#3569A8]">
+              <User2 className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Edit Academic Profile</h2>
-              <p className="text-xs text-slate-400">Update your personal and academic details</p>
+              <h2 className="text-base font-bold text-[#202B3C]">Edit Academic Profile</h2>
+              <p className="text-xs text-[#667085]">Update your academic standing and placement contact</p>
             </div>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            disabled={saving}
+            className="p-1.5 rounded-lg text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Phone */}
           <div>
-            <label htmlFor="phone" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
+            <label htmlFor="phone" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
               Phone Number
             </label>
-            <input
-              id="phone"
-              name="phone"
-              type="text"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="+91 9876543210"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
+                <Phone className="w-4 h-4" />
+              </div>
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="+91 9876543210"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E4E8EF] rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-blue-100 transition-all font-mono"
+              />
+            </div>
           </div>
 
           {/* Department */}
           <div>
-            <label htmlFor="department" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
+            <label htmlFor="department" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
               Department
             </label>
-            <select
-              id="department"
-              name="department"
-              value={form.department}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none"
-            >
-              <option value="">Select your department...</option>
-              {DEPARTMENTS.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <select
+                id="department"
+                name="department"
+                value={form.department}
+                onChange={handleChange}
+                className="w-full pl-10 pr-8 py-2.5 bg-white border border-[#E4E8EF] rounded-lg text-sm text-[#202B3C] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer"
+              >
+                <option value="">Select your department...</option>
+                {DEPARTMENTS.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Batch & CGPA side by side */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="batch" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+              <label htmlFor="batch" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
                 Batch / Year
               </label>
-              <input
-                id="batch"
-                name="batch"
-                type="text"
-                value={form.batch}
-                onChange={handleChange}
-                placeholder="e.g. 2022-2026"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <input
+                  id="batch"
+                  name="batch"
+                  type="text"
+                  value={form.batch}
+                  onChange={handleChange}
+                  placeholder="e.g. 2022-2026"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E4E8EF] rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-blue-100 transition-all"
+                />
+              </div>
             </div>
 
             <div>
-              <label htmlFor="cgpa" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-amber-400" />
-                CGPA (0–10)
+              <label htmlFor="cgpa" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
+                CGPA (0.00 – 10.00)
               </label>
-              <input
-                id="cgpa"
-                name="cgpa"
-                type="number"
-                step="0.01"
-                min="0"
-                max="10"
-                value={form.cgpa}
-                onChange={handleChange}
-                placeholder="e.g. 8.75"
-                className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all ${
-                  errors.cgpa ? 'border-rose-500' : 'border-slate-800'
-                }`}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
+                  <GraduationCap className="w-4 h-4" />
+                </div>
+                <input
+                  id="cgpa"
+                  name="cgpa"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="10"
+                  value={form.cgpa}
+                  onChange={handleChange}
+                  placeholder="e.g. 8.75"
+                  className={`w-full pl-10 pr-4 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
+                    errors.cgpa
+                      ? 'border-[#D14343] focus:ring-red-100'
+                      : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
+                  }`}
+                />
+              </div>
               {errors.cgpa && (
-                <p className="text-rose-400 text-xs mt-1">{errors.cgpa}</p>
+                <p className="text-[#D14343] text-xs mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.cgpa}
+                </p>
               )}
             </div>
           </div>
 
           {/* Active Backlogs */}
           <div>
-            <label htmlFor="backlogs" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              <GraduationCap className="w-3.5 h-3.5 text-rose-400" />
+            <label htmlFor="backlogs" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider mb-1.5">
               Active Backlogs
-              <span className="text-slate-500 font-normal text-[10px] ml-1">(standing arrears)</span>
+              <span className="text-[#667085] font-normal text-[11px] ml-1">(Standing Arrears)</span>
             </label>
             <input
               id="backlogs"
@@ -220,25 +239,31 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
               value={form.backlogs}
               onChange={handleChange}
               placeholder="0"
-              className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all ${
-                errors.backlogs ? 'border-rose-500' : 'border-slate-800'
+              className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all ${
+                errors.backlogs
+                  ? 'border-[#D14343] focus:ring-red-100'
+                  : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
               }`}
             />
             {errors.backlogs && (
-              <p className="text-rose-400 text-xs mt-1">{errors.backlogs}</p>
+              <p className="text-[#D14343] text-xs mt-1 flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5" />
+                {errors.backlogs}
+              </p>
             )}
-            <p className="text-slate-500 text-[11px] mt-1">
-              Enter 0 if you have no active backlogs. This is used for drive eligibility checks.
+            <p className="text-[#667085] text-[11px] mt-1">
+              Enter 0 if all semesters are cleared. Automated drive filters evaluate this count.
             </p>
           </div>
 
           {/* Bio */}
           <div>
-            <label htmlFor="bio" className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              <User2 className="w-3.5 h-3.5 text-violet-400" />
-              Career Objective / Bio
-              <span className="text-slate-500 font-normal ml-auto">{form.bio.length}/500</span>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label htmlFor="bio" className="block text-xs font-semibold text-[#202B3C] uppercase tracking-wider">
+                Career Objective / Brief Bio
+              </label>
+              <span className="text-[#667085] text-[11px]">{form.bio.length}/500</span>
+            </div>
             <textarea
               id="bio"
               name="bio"
@@ -246,36 +271,47 @@ const EditProfileModal = ({ profile, isOpen, onClose, onSave, saving }) => {
               maxLength={500}
               value={form.bio}
               onChange={handleChange}
-              placeholder="A brief personal statement or career objective to attract recruiters..."
-              className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none ${
-                errors.bio ? 'border-rose-500' : 'border-slate-800'
+              placeholder="Brief professional summary highlighting your career goals and core strengths..."
+              className={`w-full px-3.5 py-2.5 bg-white border rounded-lg text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:ring-2 transition-all resize-none ${
+                errors.bio
+                  ? 'border-[#D14343] focus:ring-red-100'
+                  : 'border-[#E4E8EF] focus:border-[#3569A8] focus:ring-blue-100'
               }`}
             />
             {errors.bio && (
-              <p className="text-rose-400 text-xs mt-1">{errors.bio}</p>
+              <p className="text-[#D14343] text-xs mt-1 flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5" />
+                {errors.bio}
+              </p>
             )}
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E4E8EF]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 text-sm font-medium transition-colors"
+              disabled={saving}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-[#667085] hover:text-[#202B3C] hover:bg-[#F1F5F9] border border-[#E4E8EF] transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-md shadow-indigo-600/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#19365C] hover:bg-[#132B4A] text-white text-sm font-semibold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
             >
               {saving ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Saving...</span>
+                </>
               ) : (
-                <Save className="w-4 h-4" />
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>Save Changes</span>
+                </>
               )}
-              {saving ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>

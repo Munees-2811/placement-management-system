@@ -21,11 +21,11 @@ const DriveFilterBar = ({
     selectedDepartment !== 'All';
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-4 sm:p-5 mb-8 shadow-xl">
+    <div className="bg-white border border-[#E4E8EF] rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search input */}
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
             <Search className="w-4 h-4" />
           </div>
           <input
@@ -34,13 +34,13 @@ const DriveFilterBar = ({
             placeholder="Search by job role, company name, keywords, or package..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+            className="w-full pl-10 pr-10 py-2.5 bg-white border border-[#E4E8EF] rounded-xl text-sm text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-blue-100 transition-all"
           />
           {search && (
             <button
               id="drive-search-clear-btn"
               onClick={() => setSearch('')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#94A3B8] hover:text-[#202B3C]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -54,7 +54,7 @@ const DriveFilterBar = ({
             id="drive-status-filter"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-medium text-slate-300 hover:text-white focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+            className="px-3 py-2.5 bg-white border border-[#E4E8EF] rounded-xl text-xs font-medium text-[#202B3C] hover:border-[#CBD5E1] focus:outline-none focus:border-[#3569A8] transition-colors cursor-pointer"
           >
             <option value="All">All Statuses</option>
             <option value="UPCOMING">Upcoming</option>
@@ -65,14 +65,14 @@ const DriveFilterBar = ({
 
           {/* Department selector */}
           <div className="relative flex items-center">
-            <div className="absolute left-3 pointer-events-none text-slate-500">
+            <div className="absolute left-3 pointer-events-none text-[#94A3B8]">
               <Filter className="w-3.5 h-3.5" />
             </div>
             <select
               id="drive-department-filter"
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="pl-8 pr-6 py-2.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-medium text-slate-300 hover:text-white focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer max-w-[200px] truncate"
+              className="pl-8 pr-6 py-2.5 bg-white border border-[#E4E8EF] rounded-xl text-xs font-medium text-[#202B3C] hover:border-[#CBD5E1] focus:outline-none focus:border-[#3569A8] transition-colors cursor-pointer max-w-[200px] truncate"
             >
               <option value="All">All Departments</option>
               {departments.map((dept) => (
@@ -88,7 +88,7 @@ const DriveFilterBar = ({
             <button
               id="drive-filter-reset-btn"
               onClick={onReset}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#667085] hover:text-[#202B3C] text-xs font-medium transition-colors"
               title="Reset all filters"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -97,14 +97,14 @@ const DriveFilterBar = ({
           )}
 
           {/* View Mode Toggle */}
-          <div className="flex items-center p-1 bg-slate-950 border border-slate-800 rounded-2xl">
+          <div className="flex items-center p-1 bg-[#F8FAFC] border border-[#E4E8EF] rounded-xl">
             <button
               id="drive-view-grid-btn"
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-xl transition-colors ${
+              className={`p-1.5 rounded-lg transition-colors ${
                 viewMode === 'grid'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-[#19365C] shadow-sm font-semibold'
+                  : 'text-[#667085] hover:text-[#202B3C]'
               }`}
               title="Grid View"
             >
@@ -113,10 +113,10 @@ const DriveFilterBar = ({
             <button
               id="drive-view-table-btn"
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-xl transition-colors ${
+              className={`p-1.5 rounded-lg transition-colors ${
                 viewMode === 'table'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-[#19365C] shadow-sm font-semibold'
+                  : 'text-[#667085] hover:text-[#202B3C]'
               }`}
               title="Table View"
             >
@@ -127,11 +127,11 @@ const DriveFilterBar = ({
       </div>
 
       {/* Filter summary status */}
-      <div className="mt-3 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+      <div className="mt-3 pt-3 border-t border-[#E4E8EF] flex items-center justify-between text-xs text-[#667085]">
         <div>
-          Showing <span className="font-semibold text-white">{filteredCount}</span> of{' '}
-          <span className="font-semibold text-white">{totalCount}</span> campus placement drives
-          {isFiltered && <span className="text-indigo-400 ml-1">(filtered)</span>}
+          Showing <span className="font-semibold text-[#202B3C]">{filteredCount}</span> of{' '}
+          <span className="font-semibold text-[#202B3C]">{totalCount}</span> campus placement drives
+          {isFiltered && <span className="text-[#3569A8] ml-1">(filtered)</span>}
         </div>
       </div>
     </div>

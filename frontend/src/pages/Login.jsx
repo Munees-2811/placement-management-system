@@ -1,33 +1,37 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Eye, EyeOff, AlertCircle, Loader2, GraduationCap, ShieldCheck, Briefcase } from 'lucide-react';
-import studentPortalArt from '../assets/student-portal-art.jpg';
+import {
+  GraduationCap,
+  ShieldCheck,
+  Briefcase,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Loader2,
+  Building2,
+  Award,
+  Users,
+} from 'lucide-react';
 
 const ROLES = [
   {
     value: 'STUDENT',
     label: 'Student',
     icon: GraduationCap,
-    description: 'Access your placement profile, browse drives & track applications.',
-    panelTitle: 'Welcome, Student!',
-    panelSub: 'Login to access your student portal',
+    description: 'Browse campus placement drives, track applications & manage portfolio.',
   },
   {
     value: 'PLACEMENT_OFFICER',
     label: 'TPO Officer',
     icon: ShieldCheck,
-    description: 'Manage placement drives, verify students & coordinate recruitment.',
-    panelTitle: 'Welcome, TPO Officer!',
-    panelSub: 'Login to manage placement activities',
+    description: 'Announce recruitment drives, verify candidates & screen applicant pools.',
   },
   {
     value: 'ADMIN',
     label: 'Admin',
     icon: Briefcase,
-    description: 'Oversee all operations, manage users & export analytics.',
-    panelTitle: 'Welcome, Admin!',
-    panelSub: 'Login to access the admin portal',
+    description: 'Oversee placement operations, manage enterprise partners & portal records.',
   },
 ];
 
@@ -60,7 +64,7 @@ const Login = () => {
     setError('');
 
     if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -78,190 +82,217 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#101014] flex items-center justify-center p-4 sm:p-6 lg:p-10">
-      {/* Main Dual-Panel Card */}
-      <div className="w-full max-w-5xl rounded-[32px] overflow-hidden shadow-2xl shadow-black/80 flex flex-col md:flex-row min-h-[640px] border border-white/5 bg-[#18181c]">
+    <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      {/* Dual-Panel Card Container */}
+      <div className="w-full max-w-5xl bg-white border border-[#E4E8EF] rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
         
-        {/* Left Column: Dark Login Form */}
-        <div className="w-full md:w-[45%] lg:w-[42%] bg-[#18181c] p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
+        {/* Left Column: Clean White Login Form */}
+        <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-white">
           <div>
-            {/* Header */}
-            <div className="mb-10">
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2">
-                Login
+            {/* Logo at top */}
+            <div className="flex items-center gap-2.5 mb-8">
+              <div className="w-9 h-9 rounded-lg bg-[#19365C] text-white flex items-center justify-center shrink-0">
+                <GraduationCap size={20} strokeWidth={1.8} />
+              </div>
+              <div>
+                <span className="font-bold text-lg text-[#19365C] tracking-tight block leading-tight">
+                  PlacementPortal
+                </span>
+                <span className="text-[11px] text-[#667085]">
+                  University Career Services
+                </span>
+              </div>
+            </div>
+
+            {/* Heading */}
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-[#202B3C] tracking-tight">
+                Login to your account
               </h1>
-              <p className="text-sm text-zinc-400 font-normal">
-                Enter your account details
+              <p className="text-xs sm:text-sm text-[#667085] mt-1">
+                Enter your credentials to access the placement management portal.
               </p>
             </div>
 
-            {/* Role Selector */}
-            <div className="mb-8">
-              <label className="block text-xs text-zinc-400 font-medium mb-3">Select Role</label>
-              <div className="grid grid-cols-3 gap-2">
-                {ROLES.map(({ value, label, icon: Icon, description }) => (
+            {/* Role Selector Tabs */}
+            <div className="mb-6">
+              <label className="block text-xs font-semibold text-[#202B3C] mb-2 uppercase tracking-wider">
+                Select Your Role
+              </label>
+              <div className="grid grid-cols-3 gap-2 p-1 bg-[#F5F7FA] border border-[#E4E8EF] rounded-xl">
+                {ROLES.map(({ value, label, icon: Icon }) => (
                   <button
                     key={value}
                     type="button"
                     onClick={() => setSelectedRole(value)}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer
-                      ${selectedRole === value
-                        ? 'bg-[#8c52ff]/15 border-[#8c52ff] text-[#a97dff]'
-                        : 'bg-[#1e1e24] border-zinc-700/60 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200'
-                      }`}
+                    className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      selectedRole === value
+                        ? 'bg-white text-[#19365C] shadow-sm border border-[#E4E8EF]'
+                        : 'text-[#667085] hover:text-[#202B3C]'
+                    }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-[11px] font-semibold leading-tight">{label}</span>
+                    <Icon size={14} strokeWidth={1.8} />
+                    <span>{label}</span>
                   </button>
                 ))}
               </div>
-              <p className="mt-2.5 text-[11px] text-zinc-500 leading-relaxed">
-                {ROLES.find(r => r.value === selectedRole)?.description}
+              <p className="mt-2 text-[11px] text-[#667085] leading-normal">
+                {ROLES.find((r) => r.value === selectedRole)?.description}
               </p>
             </div>
 
-            {/* Error Message */}
+            {/* Error Banner */}
             {error && (
-              <div className="mb-6 flex items-start gap-2.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs animate-fadeIn">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+              <div className="mb-5 flex items-start gap-2.5 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#D14343] text-xs">
+                <AlertCircle size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
                 <span>{error}</span>
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-7">
-              {/* Username / Email Field */}
-              <div className="space-y-1">
-                <label className="block text-xs text-zinc-400 font-medium">
-                  Username
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#202B3C] mb-1.5">
+                  Email Address or Username
                 </label>
-                <div className="relative border-b border-zinc-700/80 focus-within:border-purple-400 transition-colors pb-1">
-                  <input
-                    type="text"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter email or username"
-                    autoComplete="username"
-                    className="w-full bg-transparent text-white placeholder-zinc-600 focus:outline-none text-sm py-1.5 transition-colors"
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="e.g. student@university.edu"
+                  autoComplete="username"
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-[#3569A8]/10 transition-all"
+                />
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-1">
-                <label className="block text-xs text-zinc-400 font-medium">
-                  Password
-                </label>
-                <div className="relative border-b border-zinc-700/80 focus-within:border-purple-400 transition-colors pb-1 flex items-center">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-[#202B3C]">
+                    Password
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => alert('Password recovery: Please contact your campus placement coordinator or administrator.')}
+                    className="text-[11px] font-medium text-[#3569A8] hover:text-[#19365C] transition-colors"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+                <div className="relative flex items-center">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    placeholder="••••••••••••"
+                    placeholder="Enter your password"
                     autoComplete="current-password"
-                    className="w-full bg-transparent text-white placeholder-zinc-600 focus:outline-none text-sm py-1.5 pr-8 transition-colors"
+                    className="w-full px-3.5 py-2.5 pr-10 text-xs sm:text-sm bg-white border border-[#E4E8EF] rounded-lg text-[#202B3C] placeholder-[#94A3B8] focus:outline-none focus:border-[#3569A8] focus:ring-2 focus:ring-[#3569A8]/10 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-1 text-zinc-500 hover:text-zinc-300 transition-colors focus:outline-none p-1"
+                    className="absolute right-3 text-[#667085] hover:text-[#202B3C] transition-colors"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
+                      <EyeOff size={16} strokeWidth={1.8} />
                     ) : (
-                      <Eye className="w-4 h-4" />
+                      <Eye size={16} strokeWidth={1.8} />
                     )}
                   </button>
                 </div>
               </div>
 
-              {/* Forgot Password */}
-              <div className="pt-1">
-                <button
-                  type="button"
-                  onClick={() => alert('Password recovery: Please contact your campus placement coordinator or admin.')}
-                  className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors focus:outline-none"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
-              {/* Submit Button */}
+              {/* Login Submit Button */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3.5 px-6 rounded-xl bg-[#8c52ff] hover:bg-[#7e45ea] active:bg-[#7036dc] text-white font-medium text-sm shadow-lg shadow-purple-600/25 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full mt-2 py-2.5 px-4 rounded-lg bg-[#3569A8] hover:bg-[#19365C] text-white font-semibold text-xs sm:text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {submitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 size={16} strokeWidth={1.8} className="animate-spin" />
                     <span>Signing in...</span>
                   </>
                 ) : (
-                  <span>Login</span>
+                  <span>Sign In</span>
                 )}
               </button>
             </form>
           </div>
 
-          {/* Bottom Footer inside Left Column */}
-          <div className="pt-10 mt-6 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+          {/* Bottom Footer */}
+          <div className="pt-6 mt-6 border-t border-[#E4E8EF] flex items-center justify-between text-xs text-[#667085]">
             <span>Don't have an account?</span>
             <Link
               to="/register"
-              className="px-4 py-2 rounded-xl bg-[#24242c] hover:bg-[#2e2e38] text-zinc-200 border border-zinc-700/60 font-medium transition-all"
+              className="font-semibold text-[#3569A8] hover:text-[#19365C] transition-colors"
             >
-              Sign up
+              Register here →
             </Link>
           </div>
         </div>
 
-        {/* Right Column: Purple Welcome & Illustration Panel */}
-        <div className="hidden md:flex md:w-[55%] lg:w-[58%] bg-[#8c52ff] relative flex-col justify-between overflow-hidden p-8 sm:p-12 lg:p-14 select-none">
-          {/* Organic Fluid Blob Background Accents */}
-          <div className="absolute inset-0 pointer-events-none opacity-40">
-            <svg
-              className="w-full h-full object-cover"
-              viewBox="0 0 600 600"
-              preserveAspectRatio="none"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M120 -50 C240 20, 320 80, 420 50 C520 20, 580 120, 620 240 C660 360, 560 480, 460 540 C360 600, 220 560, 120 500 C20 440, -40 320, 0 200 C40 80, 0 -120, 120 -50 Z"
-                fill="#783be3"
-              />
-              <path
-                d="M450 100 C550 180, 620 300, 580 420 C540 540, 420 620, 300 600 C180 580, 140 480, 80 400 C20 320, 60 200, 140 120 C220 40, 350 20, 450 100 Z"
-                fill="#9d6bfc"
-                opacity="0.6"
-              />
-            </svg>
-          </div>
+        {/* Right Column: Professional Navy Branding Panel */}
+        <div className="hidden md:flex md:w-1/2 bg-[#19365C] text-white p-8 sm:p-12 flex-col justify-between relative overflow-hidden select-none">
+          {/* Subtle background geometric accent */}
+          <div className="absolute top-0 right-0 -mt-16 -mr-16 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
 
-          {/* Welcome Text Header */}
-          <div className="relative z-10 mb-6">
-            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-white tracking-tight leading-[1.15]">
-              {ROLES.find(r => r.value === selectedRole)?.panelTitle.split('!')[0]}!
+          {/* Branding Content */}
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium border border-white/15 mb-6">
+              <Award size={14} strokeWidth={1.8} />
+              <span>Campus Recruitment Management</span>
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-snug">
+              Student Placement Management System
             </h2>
-            <p className="text-sm sm:text-base text-purple-100/90 font-normal mt-2.5">
-              {ROLES.find(r => r.value === selectedRole)?.panelSub}
+            <p className="text-xs sm:text-sm text-white/80 mt-3 leading-relaxed max-w-md">
+              Connecting university scholars with world-class corporate recruitment partners. Streamline eligibility checks, drive applications, and interview selections.
             </p>
           </div>
 
-          {/* Central Line-Art Illustration */}
-          <div className="relative z-10 flex-1 flex items-end justify-center min-h-[300px] sm:min-h-[380px]">
-            <img
-              src={studentPortalArt}
-              alt="Student Portal Illustration"
-              className="w-full max-w-[460px] object-contain drop-shadow-xl"
-              draggable="false"
-            />
+          {/* Key Portal Statistics */}
+          <div className="relative z-10 my-8 space-y-3">
+            <div className="p-4 rounded-xl bg-white/8 border border-white/15 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                <Users size={20} strokeWidth={1.8} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-white tracking-tight">500+ Students Placed</p>
+                <p className="text-[11px] text-white/70">Across leading national &amp; global tech firms</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white/8 border border-white/15 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                <Building2 size={20} strokeWidth={1.8} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-white tracking-tight">150+ Partner Companies</p>
+                <p className="text-[11px] text-white/70">Actively hiring for engineering &amp; management roles</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white/8 border border-white/15 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                <ShieldCheck size={20} strokeWidth={1.8} />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-white tracking-tight">95% Placement Rate</p>
+                <p className="text-[11px] text-white/70">Verified eligible candidate recruitment benchmark</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer note */}
+          <div className="relative z-10 pt-4 border-t border-white/10 text-[11px] text-white/60">
+            Training &amp; Placement Cell • Verified Academic Portal
           </div>
         </div>
 
