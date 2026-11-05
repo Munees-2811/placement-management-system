@@ -210,16 +210,17 @@ const StudentDashboard = () => {
     } finally { setSaving(false); }
   };
 
-  const handleSaveResume = async (data) => {
+  const handleSaveResume = async (_resumeData, responseData) => {
     try {
-      setSaving(true);
-      const res = await updateResume(data);
-      setProfile(res.data);
+      // The modal already performed the upload; just update local profile state
+      if (responseData?.data) {
+        setProfile(responseData.data);
+      }
       setResumeModalOpen(false);
-      showToast('Resume updated.');
+      showToast('Resume uploaded successfully!');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
-    } finally { setSaving(false); }
+      showToast(err?.message || 'Failed to update resume', 'error');
+    }
   };
 
   const handleDeleteResume = async () => {

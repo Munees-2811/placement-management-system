@@ -11,8 +11,10 @@ import {
   deleteCertification,
   updateResume,
   deleteResume,
+  uploadResumeFile,
 } from '../controllers/studentProfileController.js';
 import { protect } from '../middlewares/authMiddleware.js';
+import { uploadResume } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -43,5 +45,8 @@ router.route('/certifications/:certId')
 router.route('/resume')
   .post(updateResume)
   .delete(deleteResume);
+
+// PDF file upload route
+router.post('/resume/upload', uploadResume, uploadResumeFile);
 
 export default router;

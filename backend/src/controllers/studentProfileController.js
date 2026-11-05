@@ -410,6 +410,45 @@ export const deleteCertification = async (req, res, next) => {
   }
 };
 
+// @desc    Upload resume PDF file
+// @route   POST /api/student/profile/resume/upload
+// @access  Private (Authenticated)
+export const uploadResumeFile = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No PDF file provided. Please upload a valid PDF.',
+      });
+    }
+
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const fileUrl = `${baseUrl}/uploads/resumes/${req.file.filename}`;
+
+    const resumeData = {
+      url: fileUrl,
+      fileName: req.file.originalname,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await StudentProfile.findOneAndUpdate(
+      { user: req.user._id },
+      { $set: { resume: resumeData } },
+      { new: true, upsert: true }
+    );
+
+    const updatedProfile = await getOrCreateProfile(req.user._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Resume uploaded successfully',
+      data: updatedProfile,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Update resume details
 // @route   POST /api/student/profile/resume
 // @access  Private (Authenticated)

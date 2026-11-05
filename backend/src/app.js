@@ -1,12 +1,17 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import studentProfileRoutes from './routes/studentProfileRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import placementDriveRoutes from './routes/placementDriveRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -21,6 +26,9 @@ app.use(
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded resume files statically
+app.use('/uploads', express.static(path.join(__dirname, '..', '..', 'uploads')));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,8 +1,27 @@
 import React from 'react';
 import { FileText, Upload, ExternalLink, Trash2, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 
+// Detect format badge info from fileName or url
+const getFormatInfo = (fileName, url) => {
+  const name = (fileName || url || '').toLowerCase();
+  if (name.includes('.docx') || name.includes('.doc')) {
+    return { label: 'DOCX', color: '#60a5fa' }; // blue
+  }
+  if (name.includes('.pdf')) {
+    return { label: 'PDF', color: '#f87171' }; // red
+  }
+  if (name.includes('notion.') || name.includes('notion.so')) {
+    return { label: 'NOTION', color: '#a78bfa' };
+  }
+  if (name.includes('drive.google')) {
+    return { label: 'DRIVE', color: '#34d399' };
+  }
+  return { label: 'LINK', color: '#a78bfa' }; // violet fallback
+};
+
 const ResumeSection = ({ resume, onUpdateResume, onDeleteResume }) => {
   const hasResume = resume?.url && resume.url.trim().length > 0;
+  const formatInfo = getFormatInfo(resume?.fileName, resume?.url);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return null;
@@ -29,11 +48,11 @@ const ResumeSection = ({ resume, onUpdateResume, onDeleteResume }) => {
               </span>
             )}
           </div>
-          <p className="sd-section__sub">Your placement-ready CV or resume link for job applications</p>
+          <p className="sd-section__sub">Upload your resume as a PDF file (max 5 MB)</p>
         </div>
         <button onClick={onUpdateResume} type="button" className="sd-btn sd-btn--ghost">
           <Upload style={{ width: 14, height: 14 }} />
-          {hasResume ? 'Update' : 'Upload Link'}
+          {hasResume ? 'Replace PDF' : 'Upload PDF'}
         </button>
       </div>
 
@@ -58,8 +77,8 @@ const ResumeSection = ({ resume, onUpdateResume, onDeleteResume }) => {
               alignItems: 'center', justifyContent: 'center',
               flexShrink: 0,
             }}>
-              <FileText style={{ width: 16, height: 16, color: '#818cf8' }} />
-              <span style={{ fontSize: '8px', fontWeight: 700, color: '#818cf8', letterSpacing: '0.1em', marginTop: '2px' }}>PDF</span>
+              <FileText style={{ width: 16, height: 16, color: formatInfo.color }} />
+              <span style={{ fontSize: '8px', fontWeight: 700, color: formatInfo.color, letterSpacing: '0.1em', marginTop: '2px' }}>{formatInfo.label}</span>
             </div>
             <div style={{ minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
@@ -107,11 +126,11 @@ const ResumeSection = ({ resume, onUpdateResume, onDeleteResume }) => {
         <div className="sd-empty-state">
           <p className="sd-empty-state__title">No resume uploaded</p>
           <p className="sd-empty-state__body">
-            Add a Google Drive, Notion, or any public link to your professional resume.
+            Upload your resume as a <strong style={{ color: '#f87171' }}>PDF file</strong> (max 5 MB). It will be saved and viewable by recruiters.
           </p>
           <button onClick={onUpdateResume} type="button" className="sd-btn sd-btn--primary" style={{ marginTop: '12px' }}>
             <Upload style={{ width: 14, height: 14 }} />
-            Upload Resume Link
+            Upload PDF Resume
           </button>
         </div>
       )}
