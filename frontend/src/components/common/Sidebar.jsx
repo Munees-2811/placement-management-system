@@ -1,19 +1,23 @@
 import React from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNotifications } from '../../context/NotificationContext';
 import {
   GraduationCap,
   LayoutDashboard,
   BriefcaseBusiness,
   Building2,
   FileCheck,
+  Bell,
   UserPlus,
+  FileUp,
   LogOut,
   X,
 } from 'lucide-react';
 
 const Sidebar = ({ mobileOpen = false, onClose = () => {} }) => {
   const { user, logout } = useAuth();
+  const { unreadCount } = useNotifications();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,6 +48,12 @@ const Sidebar = ({ mobileOpen = false, onClose = () => {} }) => {
       label: user?.role === 'STUDENT' ? 'My Applications' : 'All Applications',
       icon: FileCheck,
     },
+    {
+      to: '/notifications',
+      label: 'Notifications',
+      icon: Bell,
+      badge: unreadCount > 0 ? unreadCount : null,
+    },
   ];
 
   // Admin-only navigation items
@@ -53,6 +63,11 @@ const Sidebar = ({ mobileOpen = false, onClose = () => {} }) => {
           to: '/admin/add-student',
           label: 'Add Students',
           icon: UserPlus,
+        },
+        {
+          to: '/admin/bulk-import',
+          label: 'Bulk Import Students',
+          icon: FileUp,
         },
       ]
     : [];
@@ -138,7 +153,12 @@ const Sidebar = ({ mobileOpen = false, onClose = () => {} }) => {
               }
             >
               <Icon size={18} strokeWidth={1.8} className="shrink-0" />
-              <span className="truncate">{item.label}</span>
+              <span className="truncate flex-1">{item.label}</span>
+              {item.badge ? (
+                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-[#3569A8] text-white shrink-0 tracking-tight leading-none shadow-sm">
+                  {item.badge > 99 ? '99+' : item.badge}
+                </span>
+              ) : null}
             </NavLink>
           );
         })}

@@ -1,0 +1,66 @@
+[
+  {
+    "_id": "6aed6bd768928dd4419158ca",
+    "recipient": null,
+    "targetRole": "STUDENT",
+    "title": "Microsoft Campus Drive",
+    "message": "Microsoft SWE internship and full-time hiring is now active.",
+    "type": "DRIVE_ANNOUNCED",
+    "link": "/drives",
+    "isRead": false,
+    "readBy": [
+      "student-test-1",
+      "6ab2ad6b0c830a4e4924efed"
+    ],
+    "deletedBy": [
+      "student-test-1"
+    ],
+    "metadata": {},
+    "createdAt": "2026-11-06T05:55:35.964Z",
+    "updatedAt": "2026-11-06T05:59:54.520Z",
+    "$addToSet": {
+      "readBy": "6ab2ad6b0c830a4e4924efed"
+    }
+  },
+  {
+    "_id": "6aed6bb8260557e3b008c8fe",
+    "recipient": null,
+    "targetRole": "ADMIN",
+    "title": "New Student Registered",
+    "message": "Rohan Sharma (REG2026CS001) registered on the portal.",
+    "type": "USER_REGISTRATION",
+    "link": "/admin-portal",
+    "isRead": false,
+    "readBy": [],
+    "deletedBy": [],
+    "metadata": {
+      "userRole": "STUDENT"
+    },
+    "createdAt": "2026-11-06T05:55:04.335Z",
+    "updatedAt": "2026-11-06T05:55:04.335Z"
+  },
+  {
+    "_id": "6aed6bb8260557e3b008c8fd",
+    "recipient": null,
+    "targetRole": "STUDENT",
+    "title": "Google Placement Drive Announced",
+    "message": "Google is hiring for Software Engineering roles with 18 LPA CTC.",
+    "type": "DRIVE_ANNOUNCED",
+    "link": "/drives",
+    "isRead": false,
+    "readBy": [
+      "student-test-1"
+    ],
+    "deletedBy": [
+      "student-test-1"
+    ],
+    "metadata": {
+      "driveId": "test-drive-123"
+    },
+    "createdAt": "2026-11-06T05:55:04.332Z",
+    "updatedAt": "2026-11-06T05:56:48.397Z",
+    "$addToSet": {
+      "deletedBy": "student-test-1"
+    }
+  }
+]

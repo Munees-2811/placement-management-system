@@ -62,6 +62,7 @@ import {
   ExternalLink,
   Users,
   UserPlus,
+  FileUp,
   Hash,
   Search,
 } from 'lucide-react';
@@ -1054,6 +1055,15 @@ const OfficerAdminDashboard = () => {
               >
                 <RefreshCw size={14} strokeWidth={1.8} className={loadingStudents ? 'animate-spin' : ''} />
               </button>
+              {/* Bulk Import */}
+              <Link
+                to="/admin/bulk-import"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#202B3C] border border-[#E4E8EF] text-xs font-semibold shadow-sm transition-colors"
+                title="Bulk Import Students via CSV / Excel"
+              >
+                <FileUp size={13} className="text-[#3569A8]" />
+                <span className="hidden sm:inline">Bulk Import</span>
+              </Link>
               {/* Add Student */}
               <Link
                 to="/admin/add-student"

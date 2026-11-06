@@ -1,5 +1,10 @@
 import express from 'express';
-import { registerUser, loginUser, getMe } from '../controllers/authController.js';
+import {
+  registerUser,
+  loginUser,
+  getMe,
+  changePassword,
+} from '../controllers/authController.js';
 import { protect, authorizeRoles } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -7,6 +12,7 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/me', protect, getMe);
+router.post('/change-password', protect, changePassword);
 
 // Verification routes for role-based authorization testing
 router.get('/student-only', protect, authorizeRoles('STUDENT'), (req, res) => {

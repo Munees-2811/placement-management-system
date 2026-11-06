@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
 import Navbar from './components/common/Navbar';
 import Sidebar from './components/common/Sidebar';
 import Topbar from './components/common/Topbar';
@@ -22,6 +23,7 @@ function AppContent() {
   }
 
   const isPublicRoute = location.pathname === '/login' || location.pathname === '/register';
+  const isPasswordChangeRoute = location.pathname === '/change-password' || (isAuthenticated && user?.mustChangePassword);
 
   if (!isAuthenticated || isPublicRoute) {
     return (
@@ -34,6 +36,14 @@ function AppContent() {
           <p>© {new Date().getFullYear()} University Placement &amp; Training Cell • All rights reserved</p>
         </footer>
       </div>
+    );
+  }
+
+  if (isPasswordChangeRoute) {
+    return (
+      <main className="min-h-screen bg-[#F5F7FA]">
+        <AppRoutes />
+      </main>
     );
   }
 
@@ -74,6 +84,22 @@ function AppContent() {
         ],
       };
     }
+    if (path.startsWith('/admin/bulk-import')) {
+      return {
+        title: 'Bulk Import Students',
+        breadcrumb: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Admin' },
+          { label: 'Bulk Import' },
+        ],
+      };
+    }
+    if (path.startsWith('/notifications')) {
+      return {
+        title: 'Notifications',
+        breadcrumb: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Notifications' }],
+      };
+    }
     return {
       title: 'Dashboard',
       breadcrumb: [{ label: 'Dashboard' }],
@@ -110,7 +136,9 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent />
+        <NotificationProvider>
+          <AppContent />
+        </NotificationProvider>
       </AuthProvider>
     </Router>
   );

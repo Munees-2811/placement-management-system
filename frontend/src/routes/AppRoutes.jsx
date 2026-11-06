@@ -7,6 +7,9 @@ import Companies from '../pages/Companies';
 import PlacementDrives from '../pages/PlacementDrives';
 import Applications from '../pages/Applications';
 import AddStudent from '../pages/AddStudent';
+import BulkImportStudents from '../pages/BulkImportStudents';
+import ChangePassword from '../pages/ChangePassword';
+import Notifications from '../pages/Notifications';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
 const AppRoutes = () => {
@@ -48,6 +51,14 @@ const AppRoutes = () => {
         }
       />
       <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <Notifications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/officer-portal"
         element={
           <ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}>
@@ -68,6 +79,22 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
             <AddStudent />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/bulk-import"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <BulkImportStudents />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/change-password"
+        element={
+          <ProtectedRoute>
+            <ChangePassword />
           </ProtectedRoute>
         }
       />

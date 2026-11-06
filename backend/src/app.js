@@ -9,6 +9,7 @@ import companyRoutes from './routes/companyRoutes.js';
 import placementDriveRoutes from './routes/placementDriveRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,6 +55,7 @@ app.use('/api/companies', companyRoutes);
 app.use('/api/drives', placementDriveRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Error Middlewares
 app.use(notFound);

@@ -2,6 +2,7 @@ import Application, { APPLICATION_STATUSES } from '../models/Application.js';
 import PlacementDrive from '../models/PlacementDrive.js';
 import StudentProfile from '../models/StudentProfile.js';
 import { checkEligibility } from '../utils/eligibilityEngine.js';
+import { createNotification } from '../utils/notificationService.js';
 
 /**
  * @desc    Apply to a placement drive
@@ -98,6 +99,35 @@ export const applyToPlacementDrive = async (req, res, next) => {
       status: 'APPLIED',
       remarks: remarks.trim(),
     });
+
+    // Notify student of successful application submission
+    createNotification({
+      recipient: studentId,
+      title: 'Application Submitted',
+      message: `Your application for ${drive.jobRole} has been submitted successfully and is pending review.`,
+      type: 'APPLICATION_STATUS',
+      link: '/applications',
+      metadata: { applicationId: application._id, driveId: drive._id },
+    }).catch((e) => console.error('[Notification Trigger]', e.message));
+
+    // Notify Placement Officers & Admins of new student candidate application
+    createNotification({
+      targetRole: 'PLACEMENT_OFFICER',
+      title: 'New Student Application',
+      message: `${req.user?.name || 'A student'} applied for ${drive.jobRole}.`,
+      type: 'NEW_APPLICATION',
+      link: '/applications',
+      metadata: { applicationId: application._id, driveId: drive._id, studentId },
+    }).catch((e) => console.error('[Notification Trigger]', e.message));
+
+    createNotification({
+      targetRole: 'ADMIN',
+      title: 'New Drive Applicant',
+      message: `${req.user?.name || 'A student'} submitted an application for ${drive.jobRole}.`,
+      type: 'NEW_APPLICATION',
+      link: '/applications',
+      metadata: { applicationId: application._id, driveId: drive._id, studentId },
+    }).catch((e) => console.error('[Notification Trigger]', e.message));
 
     return res.status(201).json({
       success: true,
@@ -281,6 +311,32 @@ export const updateApplicationStatus = async (req, res, next) => {
       new: true,
       runValidators: true,
     });
+
+    // Notify the student about their application status update
+    const isInterview = updated.status === 'INTERVIEW';
+    const isSelected = updated.status === 'SELECTED';
+    const isRejected = updated.status === 'REJECTED';
+
+    let notifTitle = `Application Status: ${updated.status}`;
+    let notifType = 'APPLICATION_STATUS';
+
+    if (isInterview) {
+      notifTitle = 'Interview Round Scheduled!';
+      notifType = 'INTERVIEW_SCHEDULED';
+    } else if (isSelected) {
+      notifTitle = 'Congratulations! You Have Been Selected';
+    } else if (isRejected) {
+      notifTitle = 'Application Status Updated: Not Selected';
+    }
+
+    createNotification({
+      recipient: existing.student,
+      title: notifTitle,
+      message: `Your application has been updated to "${updated.status}". ${remarks ? `Remarks: "${remarks}"` : ''}`,
+      type: notifType,
+      link: '/applications',
+      metadata: { applicationId: existing._id, status: updated.status },
+    }).catch((e) => console.error('[Notification Trigger]', e.message));
 
     return res.status(200).json({
       success: true,

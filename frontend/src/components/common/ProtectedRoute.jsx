@@ -20,6 +20,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Force password change on first login before dashboard access is permitted
+  if (user?.mustChangePassword && location.pathname !== '/change-password') {
+    return <Navigate to="/change-password" replace />;
+  }
+
+  // If password change is no longer needed, redirect to dashboard
+  if (!user?.mustChangePassword && location.pathname === '/change-password') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   if (allowedRoles && allowedRoles.length > 0) {
     const normalizedAllowedRoles = allowedRoles.map((r) => r.toUpperCase());
     const userRole = user?.role ? user.role.toUpperCase() : '';

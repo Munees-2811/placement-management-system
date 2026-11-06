@@ -245,6 +245,16 @@ npm run preview
 | `POST` | `/api/auth/register` | Register new user | Public |
 | `POST` | `/api/auth/login` | Login & receive JWT | Public |
 | `GET` | `/api/auth/me` | Get current user profile | 🔒 Protected |
+| `POST` | `/api/auth/change-password` | Update password (first login / voluntary) | 🔒 Protected |
+
+### Admin Operations
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/api/admin/students` | List all registered students | 🔒 Admin Only |
+| `POST` | `/api/admin/students` | Register single student account | 🔒 Admin Only |
+| `POST` | `/api/admin/students/bulk-import` | Bulk import students via CSV/Excel | 🔒 Admin Only |
+| `POST` | `/api/admin/students/:id/resend-credentials` | Regenerate & email temporary credentials | 🔒 Admin Only |
 
 ### Companies
 
@@ -332,8 +342,22 @@ npm run preview
 - Overview of active drives, total applications, company partnerships.
 - Quick actions to manage drives and review applicant pipelines.
 
-### ⚙️ Admin Portal (`/admin-portal`)
-- All officer permissions plus system-wide user and configuration management.
+### ⚙️ Admin Portal & Student Management (`/admin-portal`, `/admin/add-student`, `/admin/bulk-import`)
+- **Registered Students Directory**: Centralized table on the Admin Dashboard listing all registered student accounts with live search and filtering.
+- **Single Student Registration (`/admin/add-student`)**: Form to register individual students with validation against duplicate emails and register numbers.
+- **Bulk Student Import (`/admin/bulk-import`)**:
+  - Drag-and-drop file upload supporting `.xlsx`, `.xls`, and `.csv`.
+  - Downloadable Excel and CSV sample templates.
+  - Client-side pre-import validation and live preview with Valid / Invalid filters.
+  - Automatic cryptographically secure temporary password generation (10-character high-entropy strings).
+  - Passwords hashed with `bcryptjs` before storage; plaintext passwords are never saved.
+  - Automatic dispatch of branded onboarding emails with login credentials via Nodemailer (or dev simulation).
+  - Metric KPI tiles tracking processed rows, created accounts, dispatched emails, and failed records.
+  - Resend Credentials action allowing administrators to regenerate and re-email temporary credentials safely.
+- **First-Time Password Change (`/change-password`)**:
+  - Enforced via `mustChangePassword` flag on the user model.
+  - Redirects students directly on first sign-in before allowing access to the placement hub or drives.
+  - Password strength validation (6+ characters, uppercase, number/special symbol).
 
 ---
 

@@ -91,9 +91,19 @@ export const localUserStore = {
       const user = users.find((u) => String(u._id) === String(id));
       if (!user) return null;
 
+      const includePassword = typeof selectFields === 'string' && selectFields.includes('+password');
       const copy = { ...user };
-      delete copy.password;
-      return copy;
+      if (!includePassword) {
+        delete copy.password;
+      }
+
+      return {
+        ...copy,
+        password: includePassword ? user.password : undefined,
+        async matchPassword(enteredPassword) {
+          return await bcrypt.compare(enteredPassword, user.password);
+        },
+      };
     };
 
     const queryObj = {
@@ -156,7 +166,7 @@ export const localUserStore = {
     return queryObj;
   },
 
-  async create({ name, email, password, role }) {
+  async create({ name, email, password, role, mustChangePassword = false }) {
     const users = readUsers();
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -167,6 +177,7 @@ export const localUserStore = {
       email: email.trim().toLowerCase(),
       password: hashedPassword,
       role: role ? role.toUpperCase() : 'STUDENT',
+      mustChangePassword: Boolean(mustChangePassword),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -180,6 +191,42 @@ export const localUserStore = {
       ...userObj,
       async matchPassword(enteredPassword) {
         return await bcrypt.compare(enteredPassword, newUser.password);
+      },
+    };
+  },
+
+  async findByIdAndUpdate(id, updateData) {
+    const users = readUsers();
+    const index = users.findIndex((u) => String(u._id) === String(id));
+    if (index === -1) return null;
+
+    const user = users[index];
+    const updates = updateData.$set ? updateData.$set : updateData;
+
+    for (const key of Object.keys(updates)) {
+      if (key === 'password') {
+        const isAlreadyHashed = typeof updates.password === 'string' && updates.password.startsWith('$2a$');
+        if (isAlreadyHashed) {
+          user.password = updates.password;
+        } else {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(updates.password, salt);
+        }
+      } else if (key !== '_id') {
+        user[key] = updates[key];
+      }
+    }
+
+    user.updatedAt = new Date().toISOString();
+    users[index] = user;
+    writeUsers(users);
+
+    const userObj = { ...user };
+    delete userObj.password;
+    return {
+      ...userObj,
+      async matchPassword(enteredPassword) {
+        return await bcrypt.compare(enteredPassword, user.password);
       },
     };
   },

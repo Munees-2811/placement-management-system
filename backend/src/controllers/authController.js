@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
+import { createNotification } from '../utils/notificationService.js';
 
 // Helper to generate JWT token
 const generateToken = (id) => {
@@ -43,6 +45,18 @@ export const registerUser = async (req, res, next) => {
     });
 
     const token = generateToken(user._id);
+
+    // Notify administrators of new user registration
+    if (user.role === 'STUDENT') {
+      createNotification({
+        targetRole: 'ADMIN',
+        title: 'New Student Registration',
+        message: `${user.name} (${user.email}) registered as a student candidate.`,
+        type: 'USER_REGISTRATION',
+        link: '/admin-portal',
+        metadata: { userId: user._id },
+      }).catch((e) => console.error('[Notification Trigger]', e.message));
+    }
 
     res.status(201).json({
       success: true,
@@ -103,6 +117,81 @@ export const loginUser = async (req, res, next) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          mustChangePassword: Boolean(user.mustChangePassword),
+        },
+        token,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Change password (for first login temporary password or voluntary update)
+// @route   POST /api/auth/change-password
+// @access  Private (Authenticated)
+export const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide both current and new passwords.',
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 6 characters long.',
+      });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be different from your temporary password.',
+      });
+    }
+
+    // Find user with password selected
+    const user = await User.findById(req.user._id).select('+password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const isMatch = typeof user.matchPassword === 'function'
+      ? await user.matchPassword(currentPassword)
+      : await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password does not match.',
+      });
+    }
+
+    // Update password and clear mustChangePassword flag
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await User.findByIdAndUpdate(user._id, {
+      password: hashedPassword,
+      mustChangePassword: false,
+    });
+
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully! You may now access the placement portal.',
+      data: {
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          mustChangePassword: false,
         },
         token,
       },
@@ -119,7 +208,13 @@ export const getMe = async (req, res) => {
   res.status(200).json({
     success: true,
     data: {
-      user: req.user,
+      user: {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+        mustChangePassword: Boolean(req.user.mustChangePassword),
+      },
     },
   });
 };

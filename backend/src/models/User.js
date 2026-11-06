@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
+    mustChangePassword: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -90,6 +94,13 @@ const User = {
       return MongooseUser.create(...args);
     }
     return localUserStore.create(...args);
+  },
+
+  findByIdAndUpdate(...args) {
+    if (mongoose.connection.readyState === 1) {
+      return MongooseUser.findByIdAndUpdate(...args);
+    }
+    return localUserStore.findByIdAndUpdate(...args);
   },
 };
 

@@ -70,8 +70,12 @@ const Login = () => {
 
     try {
       setSubmitting(true);
-      await login(formData.email, formData.password);
-      navigate(from, { replace: true });
+      const res = await login(formData.email, formData.password);
+      if (res.data?.user?.mustChangePassword) {
+        navigate('/change-password', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || 'Login failed. Please check your credentials.'

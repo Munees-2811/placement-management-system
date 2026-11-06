@@ -2,6 +2,7 @@ import PlacementDrive from '../models/PlacementDrive.js';
 import Company from '../models/Company.js';
 import StudentProfile from '../models/StudentProfile.js';
 import { checkEligibility } from '../utils/eligibilityEngine.js';
+import { createNotification } from '../utils/notificationService.js';
 
 /**
  * @desc    Get all placement drives (search, department, status filters)
@@ -129,6 +130,16 @@ export const createDrive = async (req, res, next) => {
       status: status || 'UPCOMING',
       createdBy: req.user?._id || null,
     });
+
+    // Notify all students about the new placement drive
+    createNotification({
+      targetRole: 'STUDENT',
+      title: 'New Placement Drive Announced',
+      message: `${companyExists?.companyName || 'Corporate Partner'} has announced a campus recruitment drive for ${drive.jobRole} (${drive.salaryPackage || 'Competitive'}).`,
+      type: 'DRIVE_ANNOUNCED',
+      link: '/drives',
+      metadata: { driveId: drive._id, company: companyExists?.companyName },
+    }).catch((e) => console.error('[Notification Trigger]', e.message));
 
     return res.status(201).json({
       success: true,
