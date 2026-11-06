@@ -9,8 +9,6 @@
 ### Student Profile & Placement Hub
 ![Student Profile Page](./screenshots/student-profile.jpg)
 
-### Company Directory
-![Companies Page](./screenshots/companies-page.png)
 
 ---
 
