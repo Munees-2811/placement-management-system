@@ -6,9 +6,38 @@
 
 ## 📸 Screenshots
 
-### Student Profile & Placement Hub
-![Student Profile Page](./screenshots/student-profile.jpg)
+### 1. Unified Multi-Role Login Portal
+A centralized, enterprise authentication portal with role selection tabs (**Student**, **TPO Officer**, and **Admin**), university placement metrics, and secure JWT-based login.
 
+![Login with Role Selection](./screenshots/login-role-selector.png)
+
+---
+
+### 2. Student Portal — Profile & Placement Hub
+Students can track CGPA eligibility, review academic credentials, manage technical skills, upload resumes, and track their application progress.
+
+![Student Portal Dashboard](./screenshots/student-dashboard.jpg)
+
+---
+
+### 3. Placement Officer (TPO) Portal — Drive Management
+Training & Placement Officers configure and publish campus recruitment drives with detailed salary packages, eligibility cutoffs, allowed departments, and applicant tracking.
+
+![TPO Officer Placement Drives](./screenshots/tpo-placement-drives.jpg)
+
+---
+
+### 4. Administrator Portal — Student & System Management
+System Administrators oversee university placement operations, review student registrations, perform single student account creation, and execute **Bulk CSV/Excel Student Imports**.
+
+![Administrator Portal Dashboard](./screenshots/admin-dashboard.jpg)
+
+---
+
+### 5. Corporate Partner Directory
+A comprehensive directory of recruiting partner companies featuring placement liaison contacts, location details, industry domains, and drive schedules.
+
+![Partner Companies Directory](./screenshots/companies-page.png)
 
 ---
 
@@ -42,15 +71,20 @@
 placement-management-system/
 │
 ├── screenshots/                          # UI screenshots for documentation
-│   ├── student-profile.jpg
-│   └── companies-page.png
+│   ├── login-role-selector.png           # Multi-role authentication & credentials
+│   ├── student-dashboard.jpg             # Student portal & profile dashboard
+│   ├── tpo-placement-drives.jpg          # Placement officer drives & CTC tracking
+│   ├── admin-dashboard.jpg               # Admin dashboard & student roster
+│   └── companies-page.png                # Partner companies directory
 │
 ├── backend/
 │   ├── src/
 │   │   ├── config/
 │   │   │   └── db.js                        # MongoDB connection (Mongoose)
 │   │   ├── controllers/
-│   │   │   ├── authController.js            # Register, login, profile
+│   │   │   ├── authController.js            # Register, login, profile, password change
+│   │   │   ├── adminController.js           # Add student, CSV/Excel bulk import
+│   │   │   ├── notificationController.js    # Multi-role notification engine
 │   │   │   ├── companyController.js         # CRUD for partner companies
 │   │   │   ├── placementDriveController.js  # Placement drive lifecycle
 │   │   │   ├── applicationController.js     # Student application management
@@ -61,20 +95,26 @@ placement-management-system/
 │   │   │   ├── companyValidation.js         # Company field validation
 │   │   │   ├── placementDriveValidation.js  # Drive validation rules
 │   │   │   ├── applicationValidation.js     # Application validation
-│   │   │   └── uploadMiddleware.js          # File upload handling
+│   │   │   └── uploadMiddleware.js          # File upload handling (Multer)
 │   │   ├── models/
 │   │   │   ├── User.js                      # User schema (bcrypt, roles)
+│   │   │   ├── Notification.js              # Multi-role notification schema
+│   │   │   ├── notificationStore.js         # Dual JSON/Mongo persistence
 │   │   │   ├── StudentProfile.js            # Academic & placement profile
 │   │   │   ├── Company.js                   # Partner company schema
 │   │   │   ├── PlacementDrive.js            # Recruitment drive schema
 │   │   │   └── Application.js              # Student application schema
 │   │   ├── routes/
 │   │   │   ├── authRoutes.js                # /api/auth
+│   │   │   ├── adminRoutes.js               # /api/admin
+│   │   │   ├── notificationRoutes.js        # /api/notifications
 │   │   │   ├── companyRoutes.js             # /api/companies
 │   │   │   ├── placementDriveRoutes.js      # /api/drives
 │   │   │   ├── applicationRoutes.js         # /api/applications
 │   │   │   └── studentProfileRoutes.js      # /api/student-profile
 │   │   ├── utils/
+│   │   │   ├── notificationService.js       # Real-time SSE & broadcast service
+│   │   │   ├── emailService.js              # Credentials email delivery (Nodemailer)
 │   │   │   └── eligibilityEngine.js         # CGPA/backlog eligibility logic
 │   │   ├── app.js                           # Express app setup & middleware
 │   │   └── server.js                        # HTTP server bootstrap
@@ -88,14 +128,16 @@ placement-management-system/
 │   ├── src/
 │   │   ├── api/
 │   │   │   ├── axios.js                     # Axios instance with Bearer token
+│   │   │   ├── adminApi.js                  # Admin single & bulk import calls
+│   │   │   ├── notificationApi.js           # Notifications API & SSE stream
 │   │   │   ├── companyApi.js                # Company API calls
 │   │   │   ├── placementDriveApi.js         # Drive API calls
 │   │   │   ├── applicationApi.js            # Application API calls
 │   │   │   └── studentProfileApi.js         # Profile API calls
 │   │   ├── components/
 │   │   │   ├── common/
-│   │   │   │   ├── Sidebar.jsx              # Fixed enterprise sidebar nav
-│   │   │   │   ├── Topbar.jsx               # Top bar with breadcrumb & search
+│   │   │   │   ├── Sidebar.jsx              # Enterprise sidebar nav with unread badges
+│   │   │   │   ├── Topbar.jsx               # Top bar with notifications popover
 │   │   │   │   ├── Navbar.jsx               # Public page navigation
 │   │   │   │   ├── PageHeader.jsx           # Reusable page title + actions
 │   │   │   │   ├── StatusBadge.jsx          # Colored status indicator chips
@@ -131,12 +173,17 @@ placement-management-system/
 │   │   │       ├── CertificationModal.jsx   # Add/Edit certification modal
 │   │   │       └── ResumeModal.jsx          # Resume PDF upload modal
 │   │   ├── context/
-│   │   │   └── AuthContext.jsx              # Global auth state & token mgmt
+│   │   │   ├── AuthContext.jsx              # Global auth state & token mgmt
+│   │   │   └── NotificationContext.jsx      # Live notification state & stream
 │   │   ├── pages/
 │   │   │   ├── Home.jsx                     # Public landing page
-│   │   │   ├── Login.jsx                    # Sign-in page
+│   │   │   ├── Login.jsx                    # Multi-role sign-in page
 │   │   │   ├── Register.jsx                 # Registration with role selection
 │   │   │   ├── Dashboard.jsx                # Role-aware dashboard hub
+│   │   │   ├── AddStudent.jsx               # Admin single student account creation
+│   │   │   ├── BulkImportStudents.jsx       # Admin CSV/Excel bulk student onboarding
+│   │   │   ├── ChangePassword.jsx           # First-login password change page
+│   │   │   ├── Notifications.jsx            # Dedicated full notification center
 │   │   │   ├── Companies.jsx                # Company directory page
 │   │   │   ├── PlacementDrives.jsx          # Placement drives page
 │   │   │   └── Applications.jsx             # Applications management page
@@ -297,6 +344,18 @@ npm run preview
 | `POST` | `/api/student-profile/me/certifications` | Add certification | 🔒 Student |
 | `PUT` | `/api/student-profile/me/certifications/:id` | Edit certification | 🔒 Student |
 | `DELETE` | `/api/student-profile/me/certifications/:id` | Delete certification | 🔒 Student |
+
+### Notifications
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/api/notifications` | Get user notifications (`all`, `unread`, `read`) | 🔒 Protected |
+| `GET` | `/api/notifications/unread-count` | Get count of unread notifications | 🔒 Protected |
+| `PATCH` | `/api/notifications/:id/read` | Mark single notification as read | 🔒 Protected |
+| `PATCH` | `/api/notifications/read-all` | Mark all notifications as read | 🔒 Protected |
+| `DELETE` | `/api/notifications/:id` | Delete notification | 🔒 Protected |
+| `DELETE` | `/api/notifications/clear-read` | Clear all read notifications | 🔒 Protected |
+| `GET` | `/api/notifications/stream` | Server-Sent Events (SSE) live notification stream | 🔒 Protected |
 
 ---
 
