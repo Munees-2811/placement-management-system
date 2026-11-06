@@ -1,109 +1,179 @@
-# Student Placement Management System (MERN)
+# Student Placement Management System
 
-A full-stack web application built with the **MERN** stack (MongoDB, Express.js, React.js, Node.js) designed to manage campus placements, recruitment drives, student applications, and placement officer operations.
+> A full-stack **Enterprise University Placement Portal** built with the **MERN** stack (MongoDB, Express.js, React.js, Node.js). Designed for universities to manage campus recruitment drives, student applications, company partnerships, and placement officer operations — all from a single professional portal.
+
+---
+
+## 📸 Screenshots
+
+### Student Profile & Placement Hub
+![Student Profile Page](./screenshots/student-profile.jpg)
+
+### Company Directory
+![Companies Page](./screenshots/companies-page.png)
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Frontend**:
-  - **React.js** (scaffolded via **Vite**)
-  - **Tailwind CSS** for responsive styling and dark mode UI
-  - **Axios** (configured with interceptors for JWT token injection)
-  - **React Router (v7)** for client-side routing
-  - **Lucide React** for modern iconography
+### Frontend
+| Technology | Version | Purpose |
+|---|---|---|
+| **React.js** | 18+ | UI framework (Vite scaffold) |
+| **Tailwind CSS** | 3.x | Utility-first responsive styling |
+| **Lucide React** | Latest | Consistent professional iconography |
+| **Axios** | Latest | HTTP client with JWT interceptors |
+| **React Router** | v7 | Client-side navigation & routing |
+| **Inter** | Google Fonts | Professional typography |
 
-- **Backend**:
-  - **Node.js** & **Express.js** (ES Modules)
-  - **MongoDB** with **Mongoose ODM**
-  - **JSON Web Token (JWT)** for stateless authentication
-  - **bcryptjs** for secure password hashing and verification
-  - **CORS** & **dotenv** for cross-origin management and environment configuration
+### Backend
+| Technology | Version | Purpose |
+|---|---|---|
+| **Node.js** | v18+ | Server runtime |
+| **Express.js** | 4.x | REST API framework (ES Modules) |
+| **MongoDB** | 6.x | Primary NoSQL database |
+| **Mongoose** | 8.x | ODM with schema validation |
+| **JSON Web Token** | Latest | Stateless authentication |
+| **bcryptjs** | Latest | Secure password hashing |
 
 ---
 
-## 📁 Project Folder Structure
+## 📁 Project Structure
 
 ```
 placement-management-system/
+│
+├── screenshots/                          # UI screenshots for documentation
+│   ├── student-profile.jpg
+│   └── companies-page.png
+│
 ├── backend/
 │   ├── src/
 │   │   ├── config/
-│   │   │   └── db.js                 # MongoDB connection logic via Mongoose
+│   │   │   └── db.js                        # MongoDB connection (Mongoose)
 │   │   ├── controllers/
-│   │   │   └── authController.js     # User registration, login, and profile fetching
+│   │   │   ├── authController.js            # Register, login, profile
+│   │   │   ├── companyController.js         # CRUD for partner companies
+│   │   │   ├── placementDriveController.js  # Placement drive lifecycle
+│   │   │   ├── applicationController.js     # Student application management
+│   │   │   └── studentProfileController.js  # Student profile & academic data
 │   │   ├── middlewares/
-│   │   │   ├── authMiddleware.js     # JWT verification & role authorization guards
-│   │   │   └── errorMiddleware.js    # 404 Route Not Found & centralized error handling
+│   │   │   ├── authMiddleware.js            # JWT verification & RBAC guards
+│   │   │   ├── errorMiddleware.js           # Centralized error handling
+│   │   │   ├── companyValidation.js         # Company field validation
+│   │   │   ├── placementDriveValidation.js  # Drive validation rules
+│   │   │   ├── applicationValidation.js     # Application validation
+│   │   │   └── uploadMiddleware.js          # File upload handling
 │   │   ├── models/
-│   │   │   └── User.js               # User schema with bcrypt pre-save hash & methods
+│   │   │   ├── User.js                      # User schema (bcrypt, roles)
+│   │   │   ├── StudentProfile.js            # Academic & placement profile
+│   │   │   ├── Company.js                   # Partner company schema
+│   │   │   ├── PlacementDrive.js            # Recruitment drive schema
+│   │   │   └── Application.js              # Student application schema
 │   │   ├── routes/
-│   │   │   └── authRoutes.js         # /api/auth routes (register, login, me)
-│   │   ├── app.js                    # Express application setup, middlewares, & routes
-│   │   └── server.js                 # HTTP listener bootstrap & DB initialization
-│   ├── .env                          # Local environment variables
-│   ├── .env.example                  # Environment template
-│   ├── .gitignore                    # Ignored files (node_modules, .env, etc.)
-│   └── package.json                  # Backend scripts and dependencies
+│   │   │   ├── authRoutes.js                # /api/auth
+│   │   │   ├── companyRoutes.js             # /api/companies
+│   │   │   ├── placementDriveRoutes.js      # /api/drives
+│   │   │   ├── applicationRoutes.js         # /api/applications
+│   │   │   └── studentProfileRoutes.js      # /api/student-profile
+│   │   ├── utils/
+│   │   │   └── eligibilityEngine.js         # CGPA/backlog eligibility logic
+│   │   ├── app.js                           # Express app setup & middleware
+│   │   └── server.js                        # HTTP server bootstrap
+│   ├── .env
+│   ├── .env.example
+│   └── package.json
 │
 ├── frontend/
+│   ├── public/
+│   │   └── student-portal-art.jpg
 │   ├── src/
 │   │   ├── api/
-│   │   │   └── axios.js              # Centralized Axios instance with bearer token auth
+│   │   │   ├── axios.js                     # Axios instance with Bearer token
+│   │   │   ├── companyApi.js                # Company API calls
+│   │   │   ├── placementDriveApi.js         # Drive API calls
+│   │   │   ├── applicationApi.js            # Application API calls
+│   │   │   └── studentProfileApi.js         # Profile API calls
 │   │   ├── components/
-│   │   │   └── common/
-│   │   │       ├── Navbar.jsx        # Responsive navigation with auth-aware links
-│   │   │       └── ProtectedRoute.jsx# Client-side route protection component
+│   │   │   ├── common/
+│   │   │   │   ├── Sidebar.jsx              # Fixed enterprise sidebar nav
+│   │   │   │   ├── Topbar.jsx               # Top bar with breadcrumb & search
+│   │   │   │   ├── Navbar.jsx               # Public page navigation
+│   │   │   │   ├── PageHeader.jsx           # Reusable page title + actions
+│   │   │   │   ├── StatusBadge.jsx          # Colored status indicator chips
+│   │   │   │   └── ProtectedRoute.jsx       # Auth & role-based route guard
+│   │   │   ├── companies/
+│   │   │   │   ├── CompanyCard.jsx          # Grid card for company
+│   │   │   │   ├── CompanyTableView.jsx     # Table view for companies
+│   │   │   │   ├── CompanyModal.jsx         # Create/Edit company form modal
+│   │   │   │   ├── CompanyDetailModal.jsx   # Full detail inspection modal
+│   │   │   │   ├── CompanyFilterBar.jsx     # Search & industry filter bar
+│   │   │   │   └── DeleteConfirmModal.jsx   # Deletion confirmation dialog
+│   │   │   ├── drives/
+│   │   │   │   ├── DriveCard.jsx            # Grid card for placement drive
+│   │   │   │   ├── DriveTableView.jsx       # Table view for drives
+│   │   │   │   ├── DriveModal.jsx           # Create/Edit drive form modal
+│   │   │   │   ├── DriveDetailModal.jsx     # Full drive detail view
+│   │   │   │   ├── DriveFilterBar.jsx       # Drive filter controls
+│   │   │   │   └── DeleteDriveModal.jsx     # Drive deletion confirmation
+│   │   │   ├── applications/
+│   │   │   │   ├── ApplicantActionModal.jsx # Officer update status modal
+│   │   │   │   ├── ApplicationStatusBadge.jsx # Application status chip
+│   │   │   │   ├── ApplicationTimeline.jsx  # Status history timeline
+│   │   │   │   └── ApplyConfirmModal.jsx    # Student apply confirmation
+│   │   │   └── student/
+│   │   │       ├── AcademicStatsCard.jsx    # CGPA, backlogs, dept card
+│   │   │       ├── ProfileCompletionCard.jsx # Completion progress card
+│   │   │       ├── SkillsManager.jsx        # Add/remove technical skills
+│   │   │       ├── ProjectsSection.jsx      # Student projects list
+│   │   │       ├── CertificationsSection.jsx # Certifications list
+│   │   │       ├── ResumeSection.jsx        # Resume upload/view section
+│   │   │       ├── EditProfileModal.jsx     # Edit personal details modal
+│   │   │       ├── ProjectModal.jsx         # Add/Edit project modal
+│   │   │       ├── CertificationModal.jsx   # Add/Edit certification modal
+│   │   │       └── ResumeModal.jsx          # Resume PDF upload modal
 │   │   ├── context/
-│   │   │   └── AuthContext.jsx       # Global authentication state (user, token, login, logout)
+│   │   │   └── AuthContext.jsx              # Global auth state & token mgmt
 │   │   ├── pages/
-│   │   │   ├── Home.jsx              # Landing page explaining roles & features
-│   │   │   ├── Login.jsx             # User sign-in interface
-│   │   │   ├── Register.jsx          # User registration interface with role selection
-│   │   │   └── Dashboard.jsx         # Protected user dashboard & API health test
+│   │   │   ├── Home.jsx                     # Public landing page
+│   │   │   ├── Login.jsx                    # Sign-in page
+│   │   │   ├── Register.jsx                 # Registration with role selection
+│   │   │   ├── Dashboard.jsx                # Role-aware dashboard hub
+│   │   │   ├── Companies.jsx                # Company directory page
+│   │   │   ├── PlacementDrives.jsx          # Placement drives page
+│   │   │   └── Applications.jsx             # Applications management page
 │   │   ├── routes/
-│   │   │   └── AppRoutes.jsx         # Application routing structure
-│   │   ├── App.css                   # Component-level styles
-│   │   ├── App.jsx                   # Application root with context providers
-│   │   ├── index.css                 # Tailwind CSS directives and base styles
-│   │   └── main.jsx                  # React DOM mount point
-│   ├── .env                          # Local frontend environment variables
-│   ├── .env.example                  # Frontend environment template
-│   ├── .gitignore                    # Frontend gitignore
-│   ├── index.html                    # HTML entry point with metadata
-│   ├── package.json                  # Frontend scripts and dependencies
-│   └── vite.config.js                # Vite configuration with Tailwind CSS plugin
+│   │   │   └── AppRoutes.jsx                # Centralized route definitions
+│   │   ├── App.jsx                          # Root layout & context providers
+│   │   ├── index.css                        # Tailwind directives & base styles
+│   │   └── main.jsx                         # React DOM mount
+│   ├── index.html
+│   ├── vite.config.js
+│   └── package.json
 │
-└── README.md                         # Project documentation
+└── README.md
 ```
 
 ---
 
-## 🚀 Getting Started & Running Independently
+## 🚀 Getting Started
 
-The frontend and backend are completely decoupled and can be run independently in separate terminal windows.
+The frontend and backend are fully decoupled and run in separate terminals.
 
-### 1. Prerequisites
-- **Node.js**: v18+ (tested on Node v24)
-- **MongoDB**: A running local MongoDB instance (`mongodb://127.0.0.1:27017`) or MongoDB Atlas URI.
+### Prerequisites
+- **Node.js** v18 or higher (tested on v24)
+- **MongoDB** — local (`mongodb://127.0.0.1:27017`) or MongoDB Atlas URI
 
 ---
 
-### 2. Backend Setup & Execution
-
-Open a terminal and navigate to the `backend/` directory:
+### 1. Backend Setup
 
 ```bash
 cd backend
-```
-
-#### Install dependencies:
-```bash
 npm install
 ```
 
-#### Configure Environment Variables:
-A `.env` file is already created for local development. You can customize the settings in `backend/.env`:
+Create or verify `backend/.env`:
 ```env
 PORT=5000
 NODE_ENV=development
@@ -113,118 +183,203 @@ JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
 ```
 
-#### Run the Backend:
-- **Development mode (auto-restart with nodemon)**:
-  ```bash
-  npm run dev
-  ```
-- **Production mode**:
-  ```bash
-  npm start
-  ```
-The backend API will start at: `http://localhost:5000`
-- Health check endpoint: `http://localhost:5000/api/health`
+Run the backend:
+```bash
+# Development (auto-restart)
+npm run dev
+
+# Production
+npm start
+```
+
+> API available at `http://localhost:5000`  
+> Health check: `http://localhost:5000/api/health`
 
 ---
 
-### 3. Frontend Setup & Execution
-
-Open a second terminal and navigate to the `frontend/` directory:
+### 2. Frontend Setup
 
 ```bash
 cd frontend
-```
-
-#### Install dependencies:
-```bash
 npm install
 ```
 
-#### Configure Environment Variables:
-The `frontend/.env` file points to the backend API:
+Verify `frontend/.env`:
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-#### Run the Frontend:
-- **Start Vite development server**:
-  ```bash
-  npm run dev
-  ```
-- **Build production bundle**:
-  ```bash
-  npm run build
-  ```
-- **Preview production build**:
-  ```bash
-  npm run preview
-  ```
+Run the frontend:
+```bash
+# Development server
+npm run dev
 
-Open your browser and navigate to: `http://localhost:5173`
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+> App available at `http://localhost:5173`
 
 ---
 
-## 🔐 Authentication & API Reference
+## 👥 User Roles
 
-### Available Endpoints
+| Role | Access Level | Description |
+|---|---|---|
+| `STUDENT` | Read + Self-manage | Browse companies & drives, apply, manage own profile |
+| `PLACEMENT_OFFICER` | Full operational | Manage companies, drives, review applications |
+| `ADMIN` | Full system | All officer permissions + user management |
+
+---
+
+## 🔐 API Reference
+
+### Authentication
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
-| `GET` | `/api/health` | Service health status check | Public |
-| `POST` | `/api/auth/register` | Register new user (student, tpo, company, admin) | Public |
-| `POST` | `/api/auth/login` | Authenticate user & receive JWT token | Public |
-| `GET` | `/api/auth/me` | Retrieve authenticated user profile | Protected (Bearer Token) |
+| `GET` | `/api/health` | Service health check | Public |
+| `POST` | `/api/auth/register` | Register new user | Public |
+| `POST` | `/api/auth/login` | Login & receive JWT | Public |
+| `GET` | `/api/auth/me` | Get current user profile | 🔒 Protected |
 
-### Supported User Roles
-- `STUDENT` (Student Candidate)
-- `PLACEMENT_OFFICER` (Placement Liaison / TPO)
-- `ADMIN` (System Administrator)
+### Companies
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/api/companies` | List all companies | 🔒 All roles |
+| `GET` | `/api/companies/:id` | Get company details | 🔒 All roles |
+| `POST` | `/api/companies` | Create new company | 🔒 Officer / Admin |
+| `PUT` | `/api/companies/:id` | Update company | 🔒 Officer / Admin |
+| `DELETE` | `/api/companies/:id` | Delete company | 🔒 Officer / Admin |
+
+### Placement Drives
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/api/drives` | List all drives | 🔒 All roles |
+| `GET` | `/api/drives/:id` | Get drive details | 🔒 All roles |
+| `POST` | `/api/drives` | Create placement drive | 🔒 Officer / Admin |
+| `PUT` | `/api/drives/:id` | Update drive | 🔒 Officer / Admin |
+| `DELETE` | `/api/drives/:id` | Delete drive | 🔒 Officer / Admin |
+
+### Applications
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/api/applications` | List applications | 🔒 Role-filtered |
+| `POST` | `/api/applications` | Submit application | 🔒 Student |
+| `PUT` | `/api/applications/:id` | Update status / remarks | 🔒 Officer / Admin |
+| `DELETE` | `/api/applications/:id` | Withdraw application | 🔒 Student (own only) |
+
+### Student Profile
+
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/api/student-profile/me` | Get own profile | 🔒 Student |
+| `PUT` | `/api/student-profile/me` | Update profile | 🔒 Student |
+| `POST` | `/api/student-profile/me/skills` | Add skill | 🔒 Student |
+| `DELETE` | `/api/student-profile/me/skills/:skill` | Remove skill | 🔒 Student |
+| `POST` | `/api/student-profile/me/projects` | Add project | 🔒 Student |
+| `PUT` | `/api/student-profile/me/projects/:id` | Edit project | 🔒 Student |
+| `DELETE` | `/api/student-profile/me/projects/:id` | Delete project | 🔒 Student |
+| `POST` | `/api/student-profile/me/certifications` | Add certification | 🔒 Student |
+| `PUT` | `/api/student-profile/me/certifications/:id` | Edit certification | 🔒 Student |
+| `DELETE` | `/api/student-profile/me/certifications/:id` | Delete certification | 🔒 Student |
 
 ---
 
-## 🏢 Company Management Module
+## 🏢 Module Overview
 
-### Overview
-The **Company Management Module** allows placement departments to manage enterprise recruiters, corporate partnerships, campus recruitment contacts, and hiring guidelines.
+### 🎓 Student Dashboard & Profile Hub (`/dashboard`)
+- Role-aware dashboard with KPI stats, recent applications, and upcoming drives.
+- Student profile tabs: **Overview · Academic Credentials · Skills · Projects · Certifications · Resume**
+- **Profile Completion** tracker showing 8-point checklist.
+- **Academic Stats Card** — CGPA, backlog count, department, batch, phone.
+- **Skills Manager** — add/remove technical skills with tag chips.
+- **Projects Section** — card-per-project layout with tech stack and links.
+- **Certifications Section** — certificate name, issuer, year, credential link.
+- **Resume Section** — PDF upload with file preview.
 
-### Role-Based Access Control (RBAC) Matrix
+### 🏢 Company Directory (`/companies`)
+- Browse all campus recruitment partner organizations.
+- **Dual layout**: Interactive grid cards + data-dense table view.
+- Live search by name, industry, location, or keywords.
+- Industry category filter dropdown.
+- **Officer / Admin**: Add, Edit, Delete companies.
+- **Student**: Read-only with recruiter contact details and website links.
 
-| Operation | HTTP Route | Access Level | Description |
-|---|---|---|---|
-| **List Companies** | `GET /api/companies` | `STUDENT`, `PLACEMENT_OFFICER`, `ADMIN` | View and search all partner companies |
-| **View Company** | `GET /api/companies/:id` | `STUDENT`, `PLACEMENT_OFFICER`, `ADMIN` | View full details, contacts, and overview |
-| **Create Company** | `POST /api/companies` | `PLACEMENT_OFFICER`, `ADMIN` **Only** | Register a new partner company |
-| **Edit Company** | `PUT /api/companies/:id` | `PLACEMENT_OFFICER`, `ADMIN` **Only** | Update company profile and contact details |
-| **Delete Company** | `DELETE /api/companies/:id` | `PLACEMENT_OFFICER`, `ADMIN` **Only** | Remove company from placement directory |
+### 📋 Placement Drives (`/drives`)
+- Browse, filter, and apply for active campus placement drives.
+- Filter by company, job role, status, eligibility criteria.
+- **Drive cards** show company, role, package, eligibility, deadline.
+- **Student**: One-click apply with remarks; tracks already-applied status.
+- **Officer / Admin**: Create, edit, delete drives; manage drive lifecycle.
+- Eligibility engine checks CGPA and backlog requirements before allowing applications.
 
-*Note: Students have strict read-only access. Attempting to create, edit, or delete companies results in a `403 Forbidden` response.*
+### 📂 Applications (`/applications`)
+- **Student view**: Track all submitted applications with status and timeline.
+- **Officer / Admin view**: Review all applications, filter by drive/status/student.
+- Status management: `PENDING → SHORTLISTED → INTERVIEW → SELECTED / REJECTED`.
+- Application status timeline with remarks history.
+- Withdraw option for pending applications (students).
 
-### Company Fields & Schema
+### 🧑‍💼 Officer Command Center (`/officer-portal`)
+- Full operational dashboard for Placement Officers.
+- Overview of active drives, total applications, company partnerships.
+- Quick actions to manage drives and review applicant pipelines.
 
-- **`companyName`** *(String, Required, Indexed)*: Unique official corporate name (2 - 120 characters).
-- **`industry`** *(String, Required)*: Industry or business domain (e.g., Software & Cloud, Fintech, Automotive).
-- **`location`** *(String, Required)*: Primary corporate/campus office or recruitment location.
-- **`website`** *(String, Optional)*: Official website URL with automated prefix formatting and regex validation.
-- **`description`** *(String, Optional)*: Detailed profile of company, work culture, and recruitment overview (up to 2000 characters).
-- **`contactPerson`** *(String, Required)*: Primary HR or university recruitment liaison.
-- **`contactEmail`** *(String, Required)*: Validated corporate email address of contact person.
-- **`createdBy`** *(ObjectId Ref)*: Identifier of the admin or officer who registered the company.
-- **`createdAt` / `updatedAt`** *(Timestamps)*: Automatic Mongoose timestamps.
+### ⚙️ Admin Portal (`/admin-portal`)
+- All officer permissions plus system-wide user and configuration management.
 
-### Frontend Features
+---
 
-- **Responsive Company Directory (`/companies`)**:
-  - Live instantaneous search by company name, location, or keywords.
-  - Industry categorization dropdown filter.
-  - Dual layout options: **Interactive Grid Cards** and **Data-Dense Table View**.
-  - Metric counters: Total Partner Companies, Industries Represented, and Recruitment Hubs.
-- **Role-Aware UI Adaptation**:
-  - **Officer / Admin View**: Displays `+ Add Company` action, row edit/delete triggers, and direct edit shortcuts.
-  - **Student View**: Informative banner indicating read-only access, hides all mutating controls, provides direct contact person inspection and website links.
-- **Company Modal (`CompanyModal.jsx`)**:
-  - Pre-filled edit mode and fresh creation mode.
-  - Live client-side validation with real-time error messages, URL tester, and character countdown (0 / 2000).
-- **Detail Inspection Modal (`CompanyDetailModal.jsx`)**:
-  - Deep inspection modal with company monogram, industry tags, one-click email copying, and visit link.
-- **Safe Deletion (`DeleteConfirmModal.jsx`)**:
-  - Explicit confirmation modal displaying company information before permanent removal.
+## 🎨 Design System
+
+| Token | Value | Usage |
+|---|---|---|
+| Primary | `#19365C` | Buttons, sidebar, headings |
+| Secondary | `#3569A8` | Links, accents, highlights |
+| Background | `#F5F7FA` | App background |
+| Surface | `#FFFFFF` | Cards, modals, panels |
+| Text Primary | `#202B3C` | Body text, headings |
+| Text Secondary | `#667085` | Subtitles, labels, placeholders |
+| Border | `#E4E8EF` | Dividers, card borders |
+| Success | `#16845B` | Selected, active, approved |
+| Warning | `#C58A25` | Pending, in-progress states |
+| Danger | `#D14343` | Rejected, delete, errors |
+
+**Font:** Inter (Google Fonts)  
+**Icons:** Lucide React — consistent 18–22px, strokeWidth 1.8  
+
+---
+
+## 🔒 Security
+
+- JWT tokens stored in `localStorage` and injected via Axios interceptor.
+- All protected routes verified with `authMiddleware` on every request.
+- Role-based access enforced at both API (middleware) and UI (component) levels.
+- Passwords hashed with `bcryptjs` using salted rounds before storage.
+- CORS configured to allow only the frontend origin.
+
+---
+
+## 📦 Build & Deployment
+
+```bash
+# Build frontend for production
+npm run build --prefix frontend
+
+# Output: frontend/dist/
+```
+
+For deployment, serve the `frontend/dist/` folder via a static host (Netlify, Vercel, Nginx) and deploy the backend to any Node.js platform (Render, Railway, EC2).
+
+---
+
+## 📄 License
+
+MIT License — Free to use and modify for academic and educational purposes.

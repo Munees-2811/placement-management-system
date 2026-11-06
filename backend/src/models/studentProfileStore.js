@@ -85,6 +85,13 @@ export const localStudentProfileStore = {
   findOne(query) {
     const execute = async () => {
       const profiles = readProfiles();
+
+      // Support query by registerNumber
+      if (query?.registerNumber) {
+        const profile = profiles.find((p) => p.registerNumber === query.registerNumber);
+        return profile || null;
+      }
+
       const userId = query?.user?.toString ? query.user.toString() : query?.user;
       if (!userId) return null;
 
@@ -182,6 +189,8 @@ export const localStudentProfileStore = {
       phone: data.phone || '',
       department: data.department || '',
       batch: data.batch || '',
+      registerNumber: data.registerNumber || '',
+      academicYear: data.academicYear || '',
       cgpa: data.cgpa ?? null,
       backlogs: data.backlogs ?? 0,
       bio: data.bio || '',
@@ -202,5 +211,37 @@ export const localStudentProfileStore = {
       completionPercentage: stats.percentage,
       completionBreakdown: stats.breakdown,
     };
+  },
+
+  // find() — returns all profiles, optionally filtering by user IDs
+  find(query = {}) {
+    let selectFields = null;
+
+    const execute = async () => {
+      let profiles = readProfiles();
+
+      // Support { user: { $in: [...ids] } }
+      if (query?.user?.$in) {
+        const ids = query.user.$in.map(String);
+        profiles = profiles.filter((p) => ids.includes(String(p.user)));
+      }
+
+      return profiles;
+    };
+
+    const queryObj = {
+      select(fields) {
+        selectFields = fields;
+        return queryObj;
+      },
+      then(onFulfilled, onRejected) {
+        return execute().then(onFulfilled, onRejected);
+      },
+      catch(onRejected) {
+        return execute().catch(onRejected);
+      },
+    };
+
+    return queryObj;
   },
 };

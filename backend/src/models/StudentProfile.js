@@ -97,6 +97,18 @@ const studentProfileSchema = new mongoose.Schema(
       maxlength: [20, 'Batch cannot exceed 20 characters'],
       default: '',
     },
+    registerNumber: {
+      type: String,
+      trim: true,
+      maxlength: [30, 'Register number cannot exceed 30 characters'],
+      default: '',
+    },
+    academicYear: {
+      type: String,
+      trim: true,
+      maxlength: [30, 'Academic year cannot exceed 30 characters'],
+      default: '',
+    },
     cgpa: {
       type: Number,
       min: [0, 'CGPA cannot be lower than 0.0'],
@@ -168,6 +180,13 @@ const StudentProfile = {
       return MongooseStudentProfile.findOne(...args);
     }
     return localStudentProfileStore.findOne(...args);
+  },
+
+  find(...args) {
+    if (mongoose.connection.readyState === 1) {
+      return MongooseStudentProfile.find(...args);
+    }
+    return localStudentProfileStore.find(...args);
   },
 
   findOneAndUpdate(...args) {

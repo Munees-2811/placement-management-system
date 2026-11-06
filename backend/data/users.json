@@ -43,5 +43,23 @@
     "role": "ADMIN",
     "createdAt": "2026-11-05T07:20:20.472Z",
     "updatedAt": "2026-11-05T07:20:20.472Z"
+  },
+  {
+    "_id": "6aed58d55d519805cef8f357",
+    "name": "vimal",
+    "email": "720824108123@hit.edu.in",
+    "password": "$2a$10$lcFlMSnuZs4.u2p9RnG02OfvtU/IDn7WX0Pd7.SGg/pWLMXdlW7Wm",
+    "role": "STUDENT",
+    "createdAt": "2026-11-06T04:34:29.312Z",
+    "updatedAt": "2026-11-06T04:34:29.312Z"
+  },
+  {
+    "_id": "6aed5a29ae4919fa6aeab601",
+    "name": "arjun",
+    "email": "arjun28@gmail.com",
+    "password": "$2a$10$A8uYhebIR1d5c7tgy/YbKO/I2INaTSHvA5nSLbsZVbBlmhUII8yHK",
+    "role": "STUDENT",
+    "createdAt": "2026-11-06T04:40:09.567Z",
+    "updatedAt": "2026-11-06T04:40:09.567Z"
   }
 ]

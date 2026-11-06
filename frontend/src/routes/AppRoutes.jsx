@@ -6,6 +6,7 @@ import Dashboard from '../pages/Dashboard';
 import Companies from '../pages/Companies';
 import PlacementDrives from '../pages/PlacementDrives';
 import Applications from '../pages/Applications';
+import AddStudent from '../pages/AddStudent';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
 const AppRoutes = () => {
@@ -59,6 +60,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/add-student"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <AddStudent />
           </ProtectedRoute>
         }
       />

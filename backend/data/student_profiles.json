@@ -53,5 +53,49 @@
     },
     "createdAt": "2026-09-23T14:57:34.524Z",
     "updatedAt": "2026-11-05T06:45:06.054Z"
+  },
+  {
+    "_id": "6aed58d55d519805cef8f358",
+    "user": "6aed58d55d519805cef8f357",
+    "phone": "",
+    "department": "Data Science and Artificial Intelligence",
+    "batch": "III Year",
+    "registerNumber": "720824108123",
+    "academicYear": "III Year",
+    "cgpa": null,
+    "backlogs": 0,
+    "bio": "",
+    "skills": [],
+    "projects": [],
+    "certifications": [],
+    "resume": {
+      "url": "",
+      "fileName": "",
+      "updatedAt": null
+    },
+    "createdAt": "2026-11-06T04:34:29.320Z",
+    "updatedAt": "2026-11-06T04:34:29.320Z"
+  },
+  {
+    "_id": "6aed5a29ae4919fa6aeab602",
+    "user": "6aed5a29ae4919fa6aeab601",
+    "phone": "",
+    "department": "Artificial Intelligence and Machine Learning",
+    "batch": "III Year",
+    "registerNumber": "",
+    "academicYear": "III Year",
+    "cgpa": null,
+    "backlogs": 0,
+    "bio": "",
+    "skills": [],
+    "projects": [],
+    "certifications": [],
+    "resume": {
+      "url": "",
+      "fileName": "",
+      "updatedAt": null
+    },
+    "createdAt": "2026-11-06T04:40:09.570Z",
+    "updatedAt": "2026-11-06T04:40:09.570Z"
   }
 ]

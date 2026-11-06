@@ -64,6 +64,16 @@ function AppContent() {
         breadcrumb: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Officer Hub' }],
       };
     }
+    if (path.startsWith('/admin/add-student')) {
+      return {
+        title: 'Add Student',
+        breadcrumb: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Admin' },
+          { label: 'Add Student' },
+        ],
+      };
+    }
     return {
       title: 'Dashboard',
       breadcrumb: [{ label: 'Dashboard' }],

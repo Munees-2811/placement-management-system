@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -15,6 +15,7 @@ import {
   deleteResume,
 } from '../api/studentProfileApi';
 import api from '../api/axios';
+import { adminListStudents } from '../api/adminApi';
 
 import PageHeader from '../components/common/PageHeader';
 import StatusBadge from '../components/common/StatusBadge';
@@ -59,6 +60,10 @@ import {
   Mail,
   GraduationCap,
   ExternalLink,
+  Users,
+  UserPlus,
+  Hash,
+  Search,
 } from 'lucide-react';
 
 const getUserInitials = (name) => {
@@ -792,6 +797,30 @@ const OfficerAdminDashboard = () => {
   const [roleTestResult, setRoleTestResult] = useState(null);
   const [testingRoleEndpoint, setTestingRoleEndpoint] = useState('');
 
+  // Student list — ADMIN only
+  const [students, setStudents] = useState([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  const [studentError, setStudentError] = useState(null);
+  const [studentSearch, setStudentSearch] = useState('');
+
+  const fetchStudents = useCallback(async () => {
+    if (user?.role !== 'ADMIN') return;
+    setLoadingStudents(true);
+    setStudentError(null);
+    try {
+      const res = await adminListStudents();
+      setStudents(res.data?.data || []);
+    } catch (err) {
+      setStudentError(err.response?.data?.message || 'Failed to load students.');
+    } finally {
+      setLoadingStudents(false);
+    }
+  }, [user?.role]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
+
   const testApiConnection = async () => {
     try {
       setCheckingHealth(true);
@@ -986,9 +1015,238 @@ const OfficerAdminDashboard = () => {
         </div>
       </div>
 
+      {/* ── Admin-only: Registered Students Table ─────────────────────────── */}
+      {user?.role === 'ADMIN' && (
+        <div className="bg-white border border-[#E4E8EF] rounded-xl shadow-sm overflow-hidden mb-8">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-[#E4E8EF] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-[#EFF6FF] flex items-center justify-center shrink-0">
+                <Users size={18} strokeWidth={1.8} className="text-[#3569A8]" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-[#202B3C]">Registered Students</h2>
+                <p className="text-xs text-[#667085]">
+                  {loadingStudents
+                    ? 'Loading…'
+                    : `${students.length} student${students.length !== 1 ? 's' : ''} in the system`}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Search */}
+              <div className="relative">
+                <Search size={14} strokeWidth={1.8} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#667085] pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search students…"
+                  value={studentSearch}
+                  onChange={(e) => setStudentSearch(e.target.value)}
+                  className="pl-8 pr-3 py-2 text-xs border border-[#E4E8EF] rounded-lg bg-[#F8FAFC] text-[#202B3C] placeholder:text-[#A0AABA] focus:outline-none focus:ring-2 focus:ring-[#3569A8]/25 focus:border-[#3569A8] w-48 transition-colors"
+                />
+              </div>
+              {/* Refresh */}
+              <button
+                onClick={fetchStudents}
+                disabled={loadingStudents}
+                title="Refresh"
+                className="p-2 rounded-lg border border-[#E4E8EF] bg-white text-[#667085] hover:text-[#202B3C] hover:bg-[#F5F7FA] transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={14} strokeWidth={1.8} className={loadingStudents ? 'animate-spin' : ''} />
+              </button>
+              {/* Add Student */}
+              <Link
+                to="/admin/add-student"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#19365C] hover:bg-[#122844] text-white text-xs font-semibold shadow-sm transition-colors"
+              >
+                <UserPlus size={14} strokeWidth={1.8} />
+                <span className="hidden sm:inline">Add Student</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Table Body */}
+          {loadingStudents ? (
+            <div className="flex items-center justify-center gap-2 py-14 text-[#667085]">
+              <Loader2 size={20} className="animate-spin" />
+              <span className="text-sm">Loading student records…</span>
+            </div>
+          ) : studentError ? (
+            <div className="flex flex-col items-center justify-center gap-2 py-12 text-center px-6">
+              <AlertCircle size={28} className="text-[#D14343]/60" />
+              <p className="text-sm text-[#D14343]">{studentError}</p>
+              <button onClick={fetchStudents} className="text-xs text-[#3569A8] hover:underline mt-1 flex items-center gap-1">
+                <RefreshCw size={12} /> Retry
+              </button>
+            </div>
+          ) : students.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-14 text-center px-6">
+              <div className="w-12 h-12 rounded-full bg-[#F5F7FA] flex items-center justify-center">
+                <GraduationCap size={24} strokeWidth={1.5} className="text-[#CBD5E1]" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[#667085]">No students registered yet</p>
+                <p className="text-xs text-[#A0AABA] mt-0.5">Use Add Student to create the first student account.</p>
+              </div>
+              <Link
+                to="/admin/add-student"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#19365C] text-white text-xs font-semibold mt-1"
+              >
+                <UserPlus size={14} strokeWidth={1.8} />
+                Add First Student
+              </Link>
+            </div>
+          ) : (() => {
+              const q = studentSearch.toLowerCase().trim();
+              const filtered = q
+                ? students.filter(
+                    (s) =>
+                      s.name?.toLowerCase().includes(q) ||
+                      s.email?.toLowerCase().includes(q) ||
+                      s.registerNumber?.toLowerCase().includes(q) ||
+                      s.department?.toLowerCase().includes(q) ||
+                      s.academicYear?.toLowerCase().includes(q)
+                  )
+                : students;
+
+              return (
+                <>
+                  {/* Desktop Table */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-[#F8FAFC] border-b border-[#E4E8EF]">
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-6 py-3">#</th>
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-4 py-3">Student</th>
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-4 py-3">Reg. No.</th>
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-4 py-3">Department</th>
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-4 py-3">Year / Batch</th>
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-4 py-3">Registered</th>
+                          <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#667085] px-4 py-3">Role</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#E4E8EF]">
+                        {filtered.length === 0 ? (
+                          <tr>
+                            <td colSpan={7} className="text-center py-10 text-sm text-[#667085]">
+                              No students match "<span className="font-medium text-[#202B3C]">{studentSearch}</span>"
+                            </td>
+                          </tr>
+                        ) : (
+                          filtered.map((s, idx) => (
+                            <tr key={s._id} className="hover:bg-[#F8FAFC] transition-colors">
+                              <td className="px-6 py-3.5 text-xs text-[#A0AABA] font-mono">{idx + 1}</td>
+                              <td className="px-4 py-3.5">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-full bg-[#19365C] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                                    {s.name?.trim().split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()}
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-sm font-semibold text-[#202B3C] truncate leading-tight">{s.name}</p>
+                                    <p className="text-xs text-[#667085] truncate">{s.email}</p>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3.5">
+                                {s.registerNumber ? (
+                                  <span className="inline-flex items-center gap-1 text-xs font-mono text-[#202B3C] bg-[#F5F7FA] border border-[#E4E8EF] px-2 py-0.5 rounded">
+                                    <Hash size={10} /> {s.registerNumber}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-[#A0AABA]">—</span>
+                                )}
+                              </td>
+                              <td className="px-4 py-3.5 text-xs text-[#667085] max-w-[200px] truncate">
+                                {s.department || <span className="text-[#A0AABA]">—</span>}
+                              </td>
+                              <td className="px-4 py-3.5 text-xs text-[#667085]">
+                                {s.academicYear || s.batch || <span className="text-[#A0AABA]">—</span>}
+                              </td>
+                              <td className="px-4 py-3.5 text-xs text-[#667085]">
+                                {s.createdAt
+                                  ? new Date(s.createdAt).toLocaleDateString('en-IN', {
+                                      day: '2-digit',
+                                      month: 'short',
+                                      year: 'numeric',
+                                    })
+                                  : '—'}
+                              </td>
+                              <td className="px-4 py-3.5">
+                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#EFF6FF] text-[#3569A8] border border-[#BFDBFE]">
+                                  <GraduationCap size={10} /> Student
+                                </span>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Card List */}
+                  <div className="md:hidden divide-y divide-[#E4E8EF]">
+                    {filtered.length === 0 ? (
+                      <p className="text-center py-8 text-sm text-[#667085]">No results found.</p>
+                    ) : (
+                      filtered.map((s) => (
+                        <div key={s._id} className="px-5 py-4 hover:bg-[#F8FAFC] transition-colors">
+                          <div className="flex items-start gap-3">
+                            <div className="w-9 h-9 rounded-full bg-[#19365C] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                              {s.name?.trim().split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="text-sm font-semibold text-[#202B3C] truncate">{s.name}</p>
+                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#3569A8] border border-[#BFDBFE] shrink-0">
+                                  STUDENT
+                                </span>
+                              </div>
+                              <p className="text-xs text-[#667085] truncate mt-0.5">{s.email}</p>
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5">
+                                {s.registerNumber && (
+                                  <span className="text-[11px] text-[#667085] flex items-center gap-0.5 font-mono">
+                                    <Hash size={10} /> {s.registerNumber}
+                                  </span>
+                                )}
+                                {s.department && (
+                                  <span className="text-[11px] text-[#667085] truncate max-w-[180px]">
+                                    {s.department}
+                                  </span>
+                                )}
+                                {(s.academicYear || s.batch) && (
+                                  <span className="text-[11px] text-[#667085]">{s.academicYear || s.batch}</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Table Footer */}
+                  <div className="px-6 py-3 border-t border-[#E4E8EF] bg-[#F8FAFC] flex items-center justify-between">
+                    <p className="text-xs text-[#667085]">
+                      {q
+                        ? `${filtered.length} of ${students.length} students`
+                        : `${students.length} student${students.length !== 1 ? 's' : ''} total`}
+                    </p>
+                    <Link
+                      to="/admin/add-student"
+                      className="text-xs text-[#3569A8] hover:underline font-medium flex items-center gap-1"
+                    >
+                      <UserPlus size={12} /> Add another student
+                    </Link>
+                  </div>
+                </>
+              );
+            })()
+          }
+        </div>
+      )}
+
       {/* Role Authorization Tester */}
-      <div className="bg-white border border-[#E4E8EF] rounded-xl p-6 shadow-sm">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="bg-white border border-[#E4E8EF] rounded-xl p-6 shadow-sm">        <div className="flex items-center gap-2 mb-2">
           <ShieldCheck size={18} strokeWidth={1.8} className="text-[#3569A8]" />
           <h2 className="text-sm font-bold text-[#202B3C]">Role-Based Access Verification</h2>
         </div>

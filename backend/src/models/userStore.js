@@ -112,6 +112,50 @@ export const localUserStore = {
     return queryObj;
   },
 
+  // find() — returns all users matching a query object (supports role filter)
+  find(query = {}) {
+    let selectFields = null;
+    let sortField = null;
+
+    const execute = async () => {
+      let users = readUsers();
+
+      // Apply simple equality filters
+      if (query.role) {
+        users = users.filter((u) => u.role?.toUpperCase() === query.role.toUpperCase());
+      }
+
+      // Sort by createdAt descending
+      users = users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      // Strip passwords
+      return users.map((u) => {
+        const copy = { ...u };
+        delete copy.password;
+        return copy;
+      });
+    };
+
+    const queryObj = {
+      select(fields) {
+        selectFields = fields;
+        return queryObj;
+      },
+      sort(fields) {
+        sortField = fields;
+        return queryObj;
+      },
+      then(onFulfilled, onRejected) {
+        return execute().then(onFulfilled, onRejected);
+      },
+      catch(onRejected) {
+        return execute().catch(onRejected);
+      },
+    };
+
+    return queryObj;
+  },
+
   async create({ name, email, password, role }) {
     const users = readUsers();
     const salt = await bcrypt.genSalt(10);

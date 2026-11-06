@@ -7,6 +7,7 @@ import {
   BriefcaseBusiness,
   Building2,
   FileCheck,
+  UserPlus,
   LogOut,
   X,
 } from 'lucide-react';
@@ -44,6 +45,17 @@ const Sidebar = ({ mobileOpen = false, onClose = () => {} }) => {
       icon: FileCheck,
     },
   ];
+
+  // Admin-only navigation items
+  const adminItems = user?.role === 'ADMIN'
+    ? [
+        {
+          to: '/admin/add-student',
+          label: 'Add Students',
+          icon: UserPlus,
+        },
+      ]
+    : [];
 
   const getRoleDisplayName = (role) => {
     switch (role) {
@@ -130,6 +142,38 @@ const Sidebar = ({ mobileOpen = false, onClose = () => {} }) => {
             </NavLink>
           );
         })}
+
+        {/* Admin-only section */}
+        {adminItems.length > 0 && (
+          <>
+            <div className="pt-3 pb-1 px-3.5">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40">
+                Administration
+              </p>
+            </div>
+            {adminItems.map((item) => {
+              const Icon = item.icon;
+              const isItemActive = location.pathname === item.to;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={onClose}
+                  className={() =>
+                    `group flex items-center gap-3 px-3.5 py-2.5 rounded-md text-sm font-medium transition-all duration-150 ${
+                      isItemActive
+                        ? 'text-white bg-white/12 border-l-[3px] border-[#3569A8] font-semibold pl-[11px]'
+                        : 'text-[#CBD5E1] hover:text-white hover:bg-white/8 border-l-[3px] border-transparent pl-[11px]'
+                    }`
+                  }
+                >
+                  <Icon size={18} strokeWidth={1.8} className="shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* Divider */}

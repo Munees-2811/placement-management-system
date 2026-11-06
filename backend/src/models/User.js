@@ -71,6 +71,13 @@ const User = {
     return localUserStore.findOne(...args);
   },
 
+  find(...args) {
+    if (mongoose.connection.readyState === 1) {
+      return MongooseUser.find(...args);
+    }
+    return localUserStore.find(...args);
+  },
+
   findById(...args) {
     if (mongoose.connection.readyState === 1) {
       return MongooseUser.findById(...args);
