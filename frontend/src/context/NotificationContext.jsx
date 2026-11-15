@@ -115,14 +115,10 @@ export const NotificationProvider = ({ children }) => {
     return () => clearInterval(pollInterval);
   }, [isAuthenticated, fetchUnreadCount, fetchNotifications]);
 
-  // Setup real-time updates via EventSource if supported
+  // Refresh notifications when the window regains focus.
   useEffect(() => {
     if (!isAuthenticated || !token) return;
 
-    // Connect SSE using backend stream URL
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-    // Native EventSource does not support custom headers in browser, so we poll reliably every 10s
-    // And when window regains focus, we immediately refresh:
     const handleFocus = () => {
       fetchUnreadCount();
     };

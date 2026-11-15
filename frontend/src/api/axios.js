@@ -1,7 +1,15 @@
 import axios from 'axios';
 
+// Accept either the Render service origin or a complete API base URL.
+const configuredBaseURL = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '');
+const baseURL = configuredBaseURL
+  ? new URL(configuredBaseURL).pathname === '/'
+    ? `${configuredBaseURL}/api`
+    : configuredBaseURL
+  : 'http://localhost:5000/api';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
