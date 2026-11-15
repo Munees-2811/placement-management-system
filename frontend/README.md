@@ -1,16 +1,23 @@
-# React + Vite
+# Placement Management Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React and Vite frontend for the placement management backend.
 
-Currently, two official plugins are available:
+## Connect a Render backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Until a valid backend URL is configured, registration displays an awaiting-setup placeholder and account API requests are blocked. No mock accounts or login sessions are created. Render dashboard links are rejected; use the public service URL shown on the Render service page. Set `VITE_API_BASE_URL` and redeploy to enable the real backend automatically.
 
-## React Compiler
+Configure `VITE_API_BASE_URL` in the Netlify project's environment variables for the deploy contexts you use. Set it to your Render backend's public HTTPS service URL. Both the service origin and the full API URL ending in `/api` are supported. A custom API path is preserved when supplied.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+All API requests use this setting, including authentication, students, companies, placement drives, applications, resume uploads, and notifications.
 
-## Expanding the Oxlint configuration
+Redeploy the frontend after changing the variable: Vite embeds it at build time. This is a public URL, so do not put passwords, API keys, or other secrets in it.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+On the Render backend, allow `https://placementmanagementportal.netlify.app` in its CORS configuration, along with any preview or local frontend origins you use. Permit the API's HTTP methods and the `Authorization` and `Content-Type` request headers. The frontend sends the existing JWT as a Bearer token.
+
+To check the connection after deployment, use the login page and inspect the browser Network tab. API requests should target your Render service under `/api`. A CORS error requires updating the Render backend's allowed origins; a 404 usually means the API base path differs from the backend routes.
+
+## Local development
+
+Copy `.env.example` to `.env.local` and configure the backend URL. Without a configured URL, the frontend uses the local backend on port 5000 under `/api`.
+
+Install dependencies with `npm install` and start the frontend with `npm run dev`. Restart the development server after changing environment variables.

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { isApiConfigured } from '../api/axios';
 import {
   GraduationCap,
   User,
@@ -40,6 +41,8 @@ const Register = () => {
     e.preventDefault();
     setError('');
 
+    if (!isApiConfigured) return;
+
     if (!formData.name || !formData.email || !formData.password) {
       setError('Please fill in all required fields');
       return;
@@ -56,7 +59,12 @@ const Register = () => {
       navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(
-        err.response?.data?.message || 'Registration failed. Please try again.'
+        err.response?.data?.message ||
+          (err.request && !err.response
+            ? 'Unable to reach the registration service. Please try again shortly.'
+            : err.response?.status >= 500
+              ? 'The registration service is temporarily unavailable. Please try again shortly.'
+              : err.message || 'Registration failed. Please try again.')
       );
     } finally {
       setSubmitting(false);
@@ -96,6 +104,12 @@ const Register = () => {
             </div>
 
             {/* Error Banner */}
+            {!isApiConfigured && (
+              <div role="status" className="mb-5 flex items-start gap-2.5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs">
+                <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                <span>Registration is awaiting setup. Account services are not connected yet. Please contact the placement office to create an account.</span>
+              </div>
+            )}
             {error && (
               <div className="mb-5 flex items-start gap-2.5 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#D14343] text-xs">
                 <AlertCircle size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
@@ -181,7 +195,7 @@ const Register = () => {
 
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || !isApiConfigured}
                 className="w-full mt-2 py-2.5 px-4 rounded-lg bg-[#3569A8] hover:bg-[#19365C] text-white font-semibold text-xs sm:text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {submitting ? (

@@ -51,6 +51,9 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password, role) => {
     const response = await api.post('/auth/register', { name, email, password, role });
+    if (!response.data?.data?.user || !response.data?.data?.token) {
+      throw new Error('The registration service returned an unexpected response. Please contact support.');
+    }
     const { user: userData, token: userToken } = response.data.data;
     setUser(userData);
     setToken(userToken);
