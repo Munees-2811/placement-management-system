@@ -1,12 +1,12 @@
 import axios from 'axios';
+import { resolveApiConfig } from './config';
 
 // Accept either the Render service origin or a complete API base URL.
-const configuredBaseURL = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '');
-const baseURL = configuredBaseURL
-  ? new URL(configuredBaseURL).pathname === '/'
-    ? `${configuredBaseURL}/api`
-    : configuredBaseURL
-  : 'http://localhost:5000/api';
+const { baseURL, isConfigured } = resolveApiConfig(
+  import.meta.env.VITE_API_BASE_URL,
+  import.meta.env.DEV
+);
+export const isApiConfigured = isConfigured;
 
 const api = axios.create({
   baseURL,
@@ -18,6 +18,9 @@ const api = axios.create({
 // Automatically attach JWT token to every outgoing request if present
 api.interceptors.request.use(
   (config) => {
+    if (!isApiConfigured) {
+      return Promise.reject(new Error('Account services are not connected yet. Please contact the placement office.'));
+    }
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -4,6 +4,8 @@ React and Vite frontend for the placement management backend.
 
 ## Connect a Render backend
 
+Until a valid backend URL is configured, registration displays an awaiting-setup placeholder and account API requests are blocked. No mock accounts or login sessions are created. Render dashboard links are rejected; use the public service URL shown on the Render service page. Set `VITE_API_BASE_URL` and redeploy to enable the real backend automatically.
+
 Configure `VITE_API_BASE_URL` in the Netlify project's environment variables for the deploy contexts you use. Set it to your Render backend's public HTTPS service URL. Both the service origin and the full API URL ending in `/api` are supported. A custom API path is preserved when supplied.
 
 All API requests use this setting, including authentication, students, companies, placement drives, applications, resume uploads, and notifications.
