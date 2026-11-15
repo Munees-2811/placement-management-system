@@ -1,5 +1,39 @@
 [
   {
+    "_id": "6af9cf261aa8979da4bcff85",
+    "recipient": null,
+    "targetRole": "ADMIN",
+    "title": "New Student Registration",
+    "message": "Production Test Student (test_prod_1794756390022@university.edu) registered as a student candidate.",
+    "type": "USER_REGISTRATION",
+    "link": "/admin-portal",
+    "isRead": false,
+    "readBy": [],
+    "deletedBy": [],
+    "metadata": {
+      "userId": "6af9cf261aa8979da4bcff84"
+    },
+    "createdAt": "2026-11-15T15:26:30.093Z",
+    "updatedAt": "2026-11-15T15:26:30.093Z"
+  },
+  {
+    "_id": "6af9ce5e1d50101a88f71a1d",
+    "recipient": null,
+    "targetRole": "ADMIN",
+    "title": "New Student Registration",
+    "message": "Production Test Student (test_prod_1794756190314@university.edu) registered as a student candidate.",
+    "type": "USER_REGISTRATION",
+    "link": "/admin-portal",
+    "isRead": false,
+    "readBy": [],
+    "deletedBy": [],
+    "metadata": {
+      "userId": "6af9ce5e1d50101a88f71a1c"
+    },
+    "createdAt": "2026-11-15T15:23:10.387Z",
+    "updatedAt": "2026-11-15T15:23:10.387Z"
+  },
+  {
     "_id": "6aed6bd768928dd4419158ca",
     "recipient": null,
     "targetRole": "STUDENT",

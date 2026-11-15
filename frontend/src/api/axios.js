@@ -1,7 +1,17 @@
 import axios from 'axios';
 
+// Resolve API base URL from VITE_API_BASE_URL, stripping any trailing slashes
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string') {
+    return envUrl.trim().replace(/\/+$/, '');
+  }
+  // In development, default to local backend; in production default to relative /api
+  return import.meta.env.DEV ? 'http://localhost:5000/api' : '/api';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },

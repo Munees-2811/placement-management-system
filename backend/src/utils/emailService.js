@@ -66,8 +66,15 @@ export const sendStudentCredentialsEmail = async ({
   studentName,
   temporaryPassword,
   registerNumber = '',
-  portalUrl = process.env.CLIENT_URL || 'http://localhost:5173/login',
+  portalUrl,
 }) => {
+  const defaultPortalUrl = process.env.CLIENT_URL
+    ? `${process.env.CLIENT_URL.split(',')[0].trim().replace(/\/+$/, '')}/login`
+    : (process.env.NODE_ENV === 'production'
+        ? 'https://placementmanagementportal.netlify.app/login'
+        : 'http://localhost:5173/login');
+
+  const targetLoginUrl = portalUrl || defaultPortalUrl;
   const { transporter, isLive } = getTransporter();
 
   const fromEmail = process.env.FROM_EMAIL || 'placement-cell@university.edu';
@@ -132,7 +139,7 @@ export const sendStudentCredentialsEmail = async ({
           </div>
 
           <div class="btn-wrapper">
-            <a href="${portalUrl}" class="btn">Sign In to Placement Portal</a>
+            <a href="${targetLoginUrl}" class="btn">Sign In to Placement Portal</a>
           </div>
         </div>
         <div class="footer">

@@ -97,5 +97,49 @@
     },
     "createdAt": "2026-11-06T04:40:09.570Z",
     "updatedAt": "2026-11-06T04:40:09.570Z"
+  },
+  {
+    "_id": "6af9ce5e1d50101a88f71a20",
+    "user": "6af9ce5e1d50101a88f71a1f",
+    "phone": "",
+    "department": "Computer Science and Engineering",
+    "batch": "2024-2028",
+    "registerNumber": "REG190576",
+    "academicYear": "2024-2028",
+    "cgpa": null,
+    "backlogs": 0,
+    "bio": "",
+    "skills": [],
+    "projects": [],
+    "certifications": [],
+    "resume": {
+      "url": "",
+      "fileName": "",
+      "updatedAt": null
+    },
+    "createdAt": "2026-11-15T15:23:10.643Z",
+    "updatedAt": "2026-11-15T15:23:10.643Z"
+  },
+  {
+    "_id": "6af9cf261aa8979da4bcff88",
+    "user": "6af9cf261aa8979da4bcff87",
+    "phone": "",
+    "department": "Computer Science and Engineering",
+    "batch": "2024-2028",
+    "registerNumber": "REG390267",
+    "academicYear": "2024-2028",
+    "cgpa": null,
+    "backlogs": 0,
+    "bio": "",
+    "skills": [],
+    "projects": [],
+    "certifications": [],
+    "resume": {
+      "url": "",
+      "fileName": "",
+      "updatedAt": null
+    },
+    "createdAt": "2026-11-15T15:26:30.329Z",
+    "updatedAt": "2026-11-15T15:26:30.329Z"
   }
 ]

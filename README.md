@@ -448,16 +448,49 @@ npm run preview
 
 ---
 
-## 📦 Build & Deployment
+## 📦 Production Deployment Guide
 
-```bash
-# Build frontend for production
-npm run build --prefix frontend
+### 🚀 Backend Deployment on Render (Web Service)
 
-# Output: frontend/dist/
-```
+1. Sign in to your [Render Dashboard](https://dashboard.render.com/) and click **New + > Web Service**.
+2. Connect your Git repository (`placement-management-system`).
+3. Configure the service settings:
+   - **Name**: `placement-management-system-backend` (or your choice)
+   - **Root Directory**: `backend`
+   - **Runtime**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start` (runs `node src/server.js`)
+   - **Health Check Path**: `/api/health`
+4. Add the following **Environment Variables** in Render Dashboard (**Environment** tab):
 
-For deployment, serve the `frontend/dist/` folder via a static host (Netlify, Vercel, Nginx) and deploy the backend to any Node.js platform (Render, Railway, EC2).
+| Variable Name | Description | Example / Recommended Value |
+|---|---|---|
+| `NODE_ENV` | Environment mode | `production` |
+| `PORT` | Server listen port | `10000` (Render sets automatically) |
+| `MONGO_URI` | MongoDB Atlas connection string | `mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/placement_management_db?retryWrites=true&w=majority` |
+| `JWT_SECRET` | Secret key for signing JWT tokens | Strong 32+ character random string |
+| `JWT_EXPIRES_IN` | Token validity duration | `7d` |
+| `CLIENT_URL` | Allowed frontend URL for CORS & emails | `https://placementmanagementportal.netlify.app` |
+
+> 💡 **MongoDB Atlas Tip:** In your MongoDB Atlas Dashboard under **Network Access**, ensure you add `0.0.0.0/0` (Allow access from anywhere) so Render cloud instances can connect.
+
+---
+
+### 🌐 Frontend Deployment on Netlify (Web App)
+
+1. Sign in to your [Netlify Dashboard](https://app.netlify.com/) and click **Add new site > Import an existing project**.
+2. Select your Git repository.
+3. Configure the build settings:
+   - **Base directory**: `frontend`
+   - **Build command**: `npm run build`
+   - **Publish directory**: `dist`
+4. Add the following **Environment Variable** in Netlify Dashboard (**Site configuration > Environment variables**):
+
+| Variable Name | Description | Example / Recommended Value |
+|---|---|---|
+| `VITE_API_BASE_URL` | Render backend API endpoint | `https://<your-render-service-name>.onrender.com/api` |
+
+> 💡 **SPA Routing Included:** The repository includes `_redirects` and `netlify.toml` pre-configured to rewrite `/*` to `/index.html` with a 200 status code, ensuring full page refreshes work across all React routes without 404s.
 
 ---
 

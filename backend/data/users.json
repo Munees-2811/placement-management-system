@@ -61,5 +61,65 @@
     "role": "STUDENT",
     "createdAt": "2026-11-06T04:40:09.567Z",
     "updatedAt": "2026-11-06T04:40:09.567Z"
+  },
+  {
+    "_id": "6af9ce5e1d50101a88f71a1c",
+    "name": "Production Test Student",
+    "email": "test_prod_1794756190314@university.edu",
+    "password": "$2a$10$a2hfLJ6nN4Ska9dolLGAKeawujO.CbnAkntUSK/naHr5QOtQpQr9G",
+    "role": "STUDENT",
+    "mustChangePassword": false,
+    "createdAt": "2026-11-15T15:23:10.383Z",
+    "updatedAt": "2026-11-15T15:23:10.383Z"
+  },
+  {
+    "_id": "6af9ce5e1d50101a88f71a1e",
+    "name": "Super Admin",
+    "email": "admin_prod_1794756190516@university.edu",
+    "password": "$2a$10$JYSnLvpaKuYT.TKIBZ2jOOTDjJV6JgDRNBodM5Mh5.rG4MNyyqCoa",
+    "role": "ADMIN",
+    "mustChangePassword": false,
+    "createdAt": "2026-11-15T15:23:10.575Z",
+    "updatedAt": "2026-11-15T15:23:10.575Z"
+  },
+  {
+    "_id": "6af9ce5e1d50101a88f71a1f",
+    "name": "Onboarded Candidate",
+    "email": "onboarded_student_1794756190576@university.edu",
+    "password": "$2a$10$UwPoYp4a16Lj9XhfWwmIEOzz5qR8AhSJLLymeUfOvIBQ1mQW1N9wa",
+    "role": "STUDENT",
+    "mustChangePassword": false,
+    "createdAt": "2026-11-15T15:23:10.642Z",
+    "updatedAt": "2026-11-15T15:23:10.642Z"
+  },
+  {
+    "_id": "6af9cf261aa8979da4bcff84",
+    "name": "Production Test Student",
+    "email": "test_prod_1794756390022@university.edu",
+    "password": "$2a$10$32je5Ps/LN0XhkHn60.IT.50iDQiDBQbV5LxBg8rHQf/n42PNoqou",
+    "role": "STUDENT",
+    "mustChangePassword": false,
+    "createdAt": "2026-11-15T15:26:30.090Z",
+    "updatedAt": "2026-11-15T15:26:30.090Z"
+  },
+  {
+    "_id": "6af9cf261aa8979da4bcff86",
+    "name": "Super Admin",
+    "email": "admin_prod_1794756390211@university.edu",
+    "password": "$2a$10$.6PjF2wDhsnx5kIADsiK8OotU0FfxKNm0Oq6O8hoKDo5pmUtoRyc.",
+    "role": "ADMIN",
+    "mustChangePassword": false,
+    "createdAt": "2026-11-15T15:26:30.266Z",
+    "updatedAt": "2026-11-15T15:26:30.266Z"
+  },
+  {
+    "_id": "6af9cf261aa8979da4bcff87",
+    "name": "Onboarded Candidate",
+    "email": "onboarded_student_1794756390267@university.edu",
+    "password": "$2a$10$.iZvXEg9xJZup.N76nGFtuemmhd/x.xHwzc553q5QSyVbJUIYhvuq",
+    "role": "STUDENT",
+    "mustChangePassword": false,
+    "createdAt": "2026-11-15T15:26:30.328Z",
+    "updatedAt": "2026-11-15T15:26:30.328Z"
   }
 ]

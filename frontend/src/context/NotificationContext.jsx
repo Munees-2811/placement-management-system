@@ -120,7 +120,10 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated || !token) return;
 
     // Connect SSE using backend stream URL
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+    const rawUrl = import.meta.env.VITE_API_BASE_URL;
+    const baseUrl = (rawUrl && typeof rawUrl === 'string')
+      ? rawUrl.trim().replace(/\/+$/, '')
+      : (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
     // Native EventSource does not support custom headers in browser, so we poll reliably every 10s
     // And when window regains focus, we immediately refresh:
     const handleFocus = () => {
