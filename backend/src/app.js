@@ -31,32 +31,34 @@ const allowedOrigins = [
   'http://localhost:3000',
 ].filter(Boolean);
 
-// Enable Cross-Origin Resource Sharing with strict domain validation
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, server-to-server, Render health checks)
-      if (!origin) return callback(null, true);
+// Helper: check if a given origin is permitted
+export const isAllowedOrigin = (origin) => {
+  if (!origin) return true; // curl / Postman / server-to-server / health checks
+  const normalized = origin.trim().replace(/\/+$/, '');
+  if (allowedOrigins.includes(normalized)) return true;
+  // Allow Netlify branch/deploy-preview subdomains
+  if (/^https:\/\/[a-z0-9-]+--placementmanagementportal\.netlify\.app$/.test(normalized)) return true;
+  return false;
+};
 
-      const normalizedOrigin = origin.trim().replace(/\/+$/, '');
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) return callback(null, true);
+    console.warn(`[CORS] Blocked origin: ${origin}`);
+    return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'X-Request-Id'],
+  optionsSuccessStatus: 200, // IE11 & legacy Safari cannot handle 204
+};
 
-      if (allowedOrigins.includes(normalizedOrigin)) {
-        return callback(null, true);
-      }
-
-      // Allow Netlify branch/preview deploys (e.g. https://deploy-preview-12--placementmanagementportal.netlify.app)
-      if (/^https:\/\/[a-z0-9-]+--placementmanagementportal\.netlify\.app$/.test(normalizedOrigin)) {
-        return callback(null, true);
-      }
-
-      console.warn(`[CORS] Access denied for origin: ${origin}`);
-      return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  })
-);
+// ── CORS ────────────────────────────────────────────────────────────────────
+// 1. Handle OPTIONS preflight FIRST on every route — must be before any other middleware
+app.options('*', cors(corsOptions));
+// 2. Apply CORS headers to all subsequent requests
+app.use(cors(corsOptions));
 
 // Body parser
 app.use(express.json());

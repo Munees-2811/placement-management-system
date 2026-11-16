@@ -8,11 +8,18 @@ const { baseURL, isConfigured } = resolveApiConfig(
 );
 export const isApiConfigured = isConfigured;
 
+// Log the resolved base URL in development to aid debugging
+if (import.meta.env.DEV) {
+  console.info(`[API] baseURL resolved to: ${baseURL}`);
+}
+
 const api = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
+  // Increase timeout to 30 s to tolerate Render free-tier cold starts
+  timeout: 30000,
 });
 
 // Automatically attach JWT token to every outgoing request if present
@@ -36,6 +43,14 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     }
+
+    // Translate network/CORS errors into a human-readable message
+    if (!error.response && error.request) {
+      // Request was sent but no response received — backend is down or CORS blocked the preflight
+      error.message =
+        'Unable to reach the server. The backend may be starting up (allow ~30 s on first load) or is offline.';
+    }
+
     return Promise.reject(error);
   }
 );
