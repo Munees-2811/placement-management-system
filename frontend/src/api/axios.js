@@ -1,17 +1,15 @@
 import axios from 'axios';
+import { resolveApiConfig } from './config';
 
-// Resolve API base URL from VITE_API_BASE_URL, stripping any trailing slashes
-const getApiBaseUrl = () => {
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
-  if (envUrl && typeof envUrl === 'string') {
-    return envUrl.trim().replace(/\/+$/, '');
-  }
-  // In development, default to local backend; in production default to relative /api
-  return import.meta.env.DEV ? 'http://localhost:5000/api' : '/api';
-};
+// Accept either the Render service origin or a complete API base URL.
+const { baseURL, isConfigured } = resolveApiConfig(
+  import.meta.env.VITE_API_BASE_URL,
+  import.meta.env.DEV
+);
+export const isApiConfigured = isConfigured;
 
 const api = axios.create({
-  baseURL: getApiBaseUrl(),
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -20,6 +18,9 @@ const api = axios.create({
 // Automatically attach JWT token to every outgoing request if present
 api.interceptors.request.use(
   (config) => {
+    if (!isApiConfigured) {
+      return Promise.reject(new Error('Account services are not connected yet. Please contact the placement office.'));
+    }
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
