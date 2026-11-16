@@ -115,10 +115,6 @@ export const NotificationProvider = ({ children }) => {
     return () => clearInterval(pollInterval);
   }, [isAuthenticated, fetchUnreadCount, fetchNotifications]);
 
-  // Refresh notifications when the window regains focus.
-  useEffect(() => {
-    if (!isAuthenticated || !token) return;
-
   // Refresh notifications when the window regains focus
   useEffect(() => {
     if (!isAuthenticated || !token) return;
