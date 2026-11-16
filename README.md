@@ -488,7 +488,7 @@ npm run preview
 
 | Variable Name | Description | Example / Recommended Value |
 |---|---|---|
-| `VITE_API_BASE_URL` | Render backend API endpoint | `https://<your-render-service-name>.onrender.com/api` |
+| `VITE_API_BASE_URL` | Render backend API endpoint | `https://placement-management-system-kc5t.onrender.com/api` |
 
 > 💡 **SPA Routing Included:** The repository includes `_redirects` and `netlify.toml` pre-configured to rewrite `/*` to `/index.html` with a 200 status code, ensuring full page refreshes work across all React routes without 404s.
 
