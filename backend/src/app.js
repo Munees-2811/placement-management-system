@@ -22,6 +22,7 @@ app.set('trust proxy', 1);
 
 // Allowed origins for CORS (Netlify production, custom CLIENT_URL, local development)
 const allowedOrigins = [
+  'https://placementmanagementsystem1.netlify.app',
   'https://placementmanagementportal.netlify.app',
   ...(process.env.CLIENT_URL
     ? process.env.CLIENT_URL.split(',').map((url) => url.trim().replace(/\/+$/, ''))
@@ -36,8 +37,8 @@ export const isAllowedOrigin = (origin) => {
   if (!origin) return true; // curl / Postman / server-to-server / health checks
   const normalized = origin.trim().replace(/\/+$/, '');
   if (allowedOrigins.includes(normalized)) return true;
-  // Allow Netlify branch/deploy-preview subdomains
-  if (/^https:\/\/[a-z0-9-]+--placementmanagementportal\.netlify\.app$/.test(normalized)) return true;
+  // Allow all Netlify deployments (production sites, branch deploys, preview builds)
+  if (/^https:\/\/([a-z0-9-]+--)?([a-z0-9-]+)\.netlify\.app$/i.test(normalized)) return true;
   return false;
 };
 

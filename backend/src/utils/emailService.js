@@ -71,7 +71,7 @@ export const sendStudentCredentialsEmail = async ({
   const defaultPortalUrl = process.env.CLIENT_URL
     ? `${process.env.CLIENT_URL.split(',')[0].trim().replace(/\/+$/, '')}/login`
     : (process.env.NODE_ENV === 'production'
-        ? 'https://placementmanagementportal.netlify.app/login'
+        ? 'https://placementmanagementsystem1.netlify.app/login'
         : 'http://localhost:5173/login');
 
   const targetLoginUrl = portalUrl || defaultPortalUrl;

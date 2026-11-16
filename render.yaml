@@ -21,4 +21,4 @@ services:
       # - key: JWT_SECRET
       #   value: <your-secret-32-chars-or-more>
       # - key: CLIENT_URL
-      #   value: https://placementmanagementportal.netlify.app
+      #   value: https://placementmanagementsystem1.netlify.app,https://placementmanagementportal.netlify.app

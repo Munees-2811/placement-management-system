@@ -1,5 +1,6 @@
 // Known allowed origins (must stay in sync with app.js corsOptions)
 const CORS_SAFE_ORIGINS = [
+  'https://placementmanagementsystem1.netlify.app',
   'https://placementmanagementportal.netlify.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
@@ -15,8 +16,8 @@ const isOriginAllowed = (origin) => {
     const extras = process.env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/+$/, ''));
     if (extras.includes(normalized)) return true;
   }
-  // Allow Netlify deploy-preview subdomains
-  if (/^https:\/\/[a-z0-9-]+--placementmanagementportal\.netlify\.app$/.test(normalized)) return true;
+  // Allow all Netlify deployments (production sites, branch deploys, preview builds)
+  if (/^https:\/\/([a-z0-9-]+--)?([a-z0-9-]+)\.netlify\.app$/i.test(normalized)) return true;
   return false;
 };
 
