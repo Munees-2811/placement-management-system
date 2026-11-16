@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: placement-management-backend
+    env: node
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Set these in the Render dashboard (do NOT commit secrets):
+      # - key: MONGO_URI
+      #   value: mongodb+srv://<user>:<pass>@cluster0.xxxxx.mongodb.net/placement_management_db?retryWrites=true&w=majority
+      # - key: JWT_SECRET
+      #   value: <your-secret-32-chars-or-more>
+      # - key: CLIENT_URL
+      #   value: https://placementmanagementportal.netlify.app
