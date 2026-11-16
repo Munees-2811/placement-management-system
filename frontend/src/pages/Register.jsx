@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { isApiConfigured } from '../api/axios';
 import {
   GraduationCap,
   User,
@@ -40,8 +39,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (!isApiConfigured) return;
 
     if (!formData.name || !formData.email || !formData.password) {
       setError('Please fill in all required fields');
@@ -104,12 +101,6 @@ const Register = () => {
             </div>
 
             {/* Error Banner */}
-            {!isApiConfigured && (
-              <div role="status" className="mb-5 flex items-start gap-2.5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs">
-                <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                <span>Registration is awaiting setup. Account services are not connected yet. Please contact the placement office to create an account.</span>
-              </div>
-            )}
             {error && (
               <div className="mb-5 flex items-start gap-2.5 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#D14343] text-xs">
                 <AlertCircle size={16} strokeWidth={1.8} className="shrink-0 mt-0.5" />
@@ -195,7 +186,7 @@ const Register = () => {
 
               <button
                 type="submit"
-                disabled={submitting || !isApiConfigured}
+                disabled={submitting}
                 className="w-full mt-2 py-2.5 px-4 rounded-lg bg-[#3569A8] hover:bg-[#19365C] text-white font-semibold text-xs sm:text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {submitting ? (

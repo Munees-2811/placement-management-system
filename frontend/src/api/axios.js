@@ -18,9 +18,6 @@ const api = axios.create({
 // Automatically attach JWT token to every outgoing request if present
 api.interceptors.request.use(
   (config) => {
-    if (!isApiConfigured) {
-      return Promise.reject(new Error('Account services are not connected yet. Please contact the placement office.'));
-    }
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
