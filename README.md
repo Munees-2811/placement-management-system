@@ -2,6 +2,11 @@
 
 > A full-stack **Enterprise University Placement Portal** built with the **MERN** stack (MongoDB, Express.js, React.js, Node.js). Designed for universities to manage campus recruitment drives, student applications, company partnerships, and placement officer operations — all from a single professional portal.
 
+### 🔗 Live Production Deployment
+* **Live Web Portal (Netlify):** [https://placementmanagementsystem1.netlify.app](https://placementmanagementsystem1.netlify.app)
+* **Backend API (Render):** [https://placement-management-system-kc5t.onrender.com](https://placement-management-system-kc5t.onrender.com)
+* **API Health Status:** [https://placement-management-system-kc5t.onrender.com/api/health](https://placement-management-system-kc5t.onrender.com/api/health)
+
 ---
 
 ## 📸 Screenshots
@@ -470,7 +475,9 @@ npm run preview
 | `MONGO_URI` | MongoDB Atlas connection string | `mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/placement_management_db?retryWrites=true&w=majority` |
 | `JWT_SECRET` | Secret key for signing JWT tokens | Strong 32+ character random string |
 | `JWT_EXPIRES_IN` | Token validity duration | `7d` |
-| `CLIENT_URL` | Allowed frontend URL for CORS & emails | `https://placementmanagementportal.netlify.app` |
+| `CLIENT_URL` | Allowed frontend URL for CORS & emails | `https://placementmanagementsystem1.netlify.app` |
+
+> 💡 **CORS & Deployment Tip:** The backend automatically whitelists `https://placementmanagementsystem1.netlify.app`, `https://placementmanagementportal.netlify.app`, and all Netlify branch/preview deploys via dynamic regex matching (`*.netlify.app`).
 
 > 💡 **MongoDB Atlas Tip:** In your MongoDB Atlas Dashboard under **Network Access**, ensure you add `0.0.0.0/0` (Allow access from anywhere) so Render cloud instances can connect.
 
